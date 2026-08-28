@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questões V3</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e5e7eb;--primary:#315efb;--primary2:#2448c8;--good:#0f9d68;--bad:#d92d20;--warn:#f79009;--shadow:0 10px 30px rgba(16,24,40,.07)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select{font:inherit}.app{display:flex;min-height:100vh}.sidebar{width:250px;background:#101828;color:#fff;padding:24px 16px;position:fixed;inset:0 auto 0 0}.brand{font-size:22px;font-weight:800;padding:0 12px 24px}.brand span{color:#84adff}.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;color:#cbd5e1;text-align:left;padding:12px;border-radius:10px;cursor:pointer}.nav button.active,.nav button:hover{background:#1d2939;color:#fff}.main{margin-left:250px;width:calc(100% - 250px);padding:28px;max-width:1600px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.top h1{margin:0;font-size:28px}.user{background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:999px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.stat,.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}.stat{padding:18px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:28px;margin-top:7px}.layout{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}.card{padding:22px}.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.filters select,.filters input{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}.question-head{display:flex;justify-content:space-between;gap:10px}.tag{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eef4ff;color:#315efb;font-size:12px;font-weight:700}.question{font-size:20px;line-height:1.5;margin:18px 0}.options{display:grid;gap:10px}.option{width:100%;text-align:left;padding:14px;border:1px solid var(--line);background:#fff;border-radius:12px;cursor:pointer}.option:hover{border-color:#9db2ff}.option.selected{border:2px solid var(--primary);background:#f4f7ff}.option.correct{border-color:var(--good);background:#ecfdf3}.option.wrong{border-color:var(--bad);background:#fef3f2}.actions{display:flex;justify-content:space-between;gap:10px;margin-top:18px}.btn{border:0;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:700}.primary{background:var(--primary);color:#fff}.primary:hover{background:var(--primary2)}.secondary{background:#fff;border:1px solid var(--line)}.danger{color:var(--bad)}.explanation{margin-top:16px;padding:14px;border-radius:12px;background:#f8fafc;border:1px solid var(--line);color:#475467}.side-list{display:grid;gap:9px}.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}.progress{height:9px;background:#eef2f6;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:var(--primary)}.hidden{display:none}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}.empty{text-align:center;padding:40px;color:var(--muted)}
+@media(max-width:900px){.sidebar{width:74px}.brand{font-size:0}.brand span{font-size:20px}.nav button{font-size:0;text-align:center}.nav button:before{content:"•";font-size:20px}.main{margin-left:74px;width:calc(100% - 74px)}.grid{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
+@media(max-width:560px){.main{padding:16px}.grid{grid-template-columns:1fr}.top h1{font-size:22px}}
+</style>
+
+<style>
+body{ -webkit-tap-highlight-color:transparent; }
+button,.option,select,input{min-height:44px}
+.nav button{font-size:15px}
+@media(max-width:900px){
+ .sidebar{position:sticky;top:0;z-index:10;width:100%;height:auto;padding:10px;display:flex;overflow-x:auto}
+ .brand{padding:6px 12px;white-space:nowrap}
+ .nav{display:flex;overflow-x:auto;gap:5px}
+ .nav button{white-space:nowrap;font-size:14px}
+ .nav button:before{display:none}
+ .main{margin-left:0;width:100%;padding:18px}
+ .app{display:block}
+}
+.ipad-tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.ipad-tools button{flex:1;min-width:150px}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">Questões <span>V3</span></div>
+  <div class="nav">
+    <button data-page="dashboard" class="active">Dashboard</button>
+    <button data-page="questions">Questões</button>
+    <button data-page="notebooks">Cadernos</button>
+    <button data-page="simulados">Simulados</button>
+    <button data-page="history">Histórico</button>
+    <button data-page="favorites">Favoritas</button>
+    <button data-page="admin">Administração</button>
+  </div>
+</aside>
+<main class="main">
+  <div class="top"><h1 id="title">Dashboard</h1><div class="user">Aluno • V3</div></div>
+  <section id="content"></section>
+</main>
+</div>
+<script>
+const questions=[
+{id:1,type:"mc",subject:"Direito Constitucional",topic:"Direitos Fundamentais",sub:"Direitos e Garantias",difficulty:"Fácil",text:"Qual princípio está expressamente previsto como fundamento da República Federativa do Brasil?",options:["Soberania","Eficiência","Anterioridade","Duplo grau de jurisdição"],answer:0,explain:"A soberania está no art. 1º, I, da Constituição Federal."},
+{id:2,type:"tf",subject:"Direito Constitucional",topic:"Administração Pública",sub:"Princípios",difficulty:"Médio",text:"A administração pública direta e indireta obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência.",options:["Certo","Errado"],answer:0,explain:"Certo. É a regra do art. 37, caput, da Constituição."},
+{id:3,type:"mc",subject:"Português",topic:"Interpretação",sub:"Compreensão textual",difficulty:"Médio",text:"Em uma questão de interpretação, a resposta correta deve ser fundamentada principalmente:",options:["Em opinião pessoal","No texto apresentado","No senso comum","Na alternativa mais longa"],answer:1,explain:"A compreensão textual deve partir das informações e relações presentes no próprio texto."},
+{id:4,type:"mc",subject:"Raciocínio Lógico",topic:"Proposições",sub:"Lógica proposicional",difficulty:"Difícil",text:"Se uma proposição P é verdadeira e Q é falsa, então P ∧ Q é:",options:["Verdadeira","Falsa","Indeterminada","Uma tautologia"],answer:1,explain:"A conjunção só é verdadeira quando ambas as proposições são verdadeiras."},
+{id:5,type:"tf",subject:"Direito Administrativo",topic:"Atos Administrativos",sub:"Atributos",difficulty:"Fácil",text:"Todo ato administrativo possui presunção absoluta de legitimidade.",options:["Certo","Errado"],answer:1,explain:"Errado. A presunção de legitimidade é, em regra, relativa (juris tantum)."},
+{id:6,type:"mc",subject:"Informática",topic:"Segurança",sub:"Boas práticas",difficulty:"Fácil",text:"Qual prática reduz o risco de comprometimento de uma conta?",options:["Reutilizar a mesma senha","Ativar autenticação em dois fatores","Desativar atualizações","Compartilhar códigos de acesso"],answer:1,explain:"A autenticação em dois fatores acrescenta uma camada de proteção além da senha."}
+];
+
+const defaultState={answers:{},favorites:[],notebooks:[{name:"Revisão geral",ids:[]}],history:[],simulados:[]};
+let state=JSON.parse(localStorage.getItem("questoesV3")||JSON.stringify(defaultState));
+let current=0, filter={subject:"Todos",type:"Todos",difficulty:"Todos"};
+
+function save(){localStorage.setItem("questoesV3",JSON.stringify(state))}
+function stats(){
+ const vals=Object.values(state.answers), done=vals.length, correct=vals.filter(v=>v.correct).length;
+ return {done,correct,wrong:done-correct,rate:done?Math.round(correct/done*100):0};
+}
+function setPage(page){
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ const titles={dashboard:"Dashboard",questions:"Banco de Questões",notebooks:"Cadernos",simulados:"Simulados",history:"Histórico",favorites:"Favoritas",admin:"Administração"};
+ document.getElementById("title").textContent=titles[page]||"Questões";
+ ({dashboard:renderDashboard,questions:renderQuestions,notebooks:renderNotebooks,simulados:renderSimulados,history:renderHistory,favorites:renderFavorites,admin:renderAdmin}[page]||renderDashboard)();
+}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>setPage(b.dataset.page));
+
+function renderDashboard(){
+ const s=stats(), by={}; questions.forEach(q=>{by[q.subject]??={d:0,c:0}; if(state.answers[q.id]){by[q.subject].d++;if(state.answers[q.id].correct)by[q.subject].c++}});
+ document.getElementById("content").innerHTML=`
+ <div class="grid">
+  <div class="stat"><small>Resolvidas</small><strong>${s.done}</strong></div><div class="stat"><small>Acertos</small><strong>${s.correct}</strong></div>
+  <div class="stat"><small>Erros</small><strong>${s.wrong}</strong></div><div class="stat"><small>Aproveitamento</small><strong>${s.rate}%</strong></div>
+ </div>
+ <div class="layout"><div class="card"><h2>Desempenho por matéria</h2>${Object.entries(by).map(([k,v])=>`<div class="row"><span>${k}</span><b>${v.d?Math.round(v.c/v.d*100):0}%</b></div>`).join("")||'<div class="empty">Resolva questões para visualizar seu desempenho.</div>'}</div>
+ <div class="card"><h2>Atalhos</h2><div class="side-list"><button class="btn primary" onclick="setPage('questions')">Resolver questões</button><button class="btn secondary" onclick="setPage('simulados')">Montar simulado</button><button class="btn secondary" onclick="setPage('favorites')">Revisar favoritas</button></div></div></div>`;
+}
+function renderQuestions(){
+ const subjects=["Todos",...new Set(questions.map(q=>q.subject))];
+ const filtered=questions.filter(q=>(filter.subject==="Todos"||q.subject===filter.subject)&&(filter.type==="Todos"||q.type===filter.type)&&(filter.difficulty==="Todos"||q.difficulty===filter.difficulty));
+ if(current>=filtered.length)current=0; const q=filtered[current]||questions[0], a=state.answers[q.id], fav=state.favorites.includes(q.id);
+ document.getElementById("content").innerHTML=`
+ <div class="card"><div class="filters">
+ <select id="subject">${subjects.map(x=>`<option ${x===filter.subject?"selected":""}>${x}</option>`).join("")}</select>
+ <select id="type"><option>Todos</option><option value="mc" ${filter.type==="mc"?"selected":""}>Múltipla escolha</option><option value="tf" ${filter.type==="tf"?"selected":""}>Certo/Errado</option></select>
+ <select id="difficulty"><option>Todos</option>${["Fácil","Médio","Difícil"].map(x=>`<option ${filter.difficulty===x?"selected":""}>${x}</option>`).join("")}</select>
+ </div>
+ <div class="question-head"><div><span class="tag">${q.subject}</span> <span class="tag">${q.topic}</span> <span class="tag">${q.difficulty}</span></div><button class="btn secondary" onclick="toggleFav(${q.id})">${fav?"★ Favorita":"☆ Favoritar"}</button></div>
+ <div class="question">${q.text}</div><div class="options">${q.options.map((o,i)=>`<button class="option ${a&&i===q.answer?'correct':''} ${a&&i===a.choice&&!a.correct?'wrong':''} ${a&&i===a.choice?'selected':''}" onclick="answer(${q.id},${i})">${String.fromCharCode(65+i)}) ${o}</button>`).join("")}</div>
+ ${a?`<div class="explanation"><b>${a.correct?"Resposta correta":"Resposta incorreta"}</b><br>${q.explain}</div>`:""}
+ <div class="actions"><button class="btn secondary" onclick="prevQuestion()">← Anterior</button><span>${current+1} / ${filtered.length}</span><button class="btn primary" onclick="nextQuestion()">Próxima →</button></div></div>`;
+ document.getElementById("subject").onchange=e=>{filter.subject=e.target.value;current=0;renderQuestions()};
+ document.getElementById("type").onchange=e=>{filter.type=e.target.value;current=0;renderQuestions()};
+ document.getElementById("difficulty").onchange=e=>{filter.difficulty=e.target.value;current=0;renderQuestions()};
+}
+function answer(id,choice){const q=questions.find(x=>x.id===id), correct=choice===q.answer;state.answers[id]={choice,correct,at:new Date().toISOString()};state.history.unshift({id,choice,correct,at:new Date().toISOString()});state.history=state.history.slice(0,1000);save();renderQuestions()}
+function toggleFav(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];save();renderQuestions()}
+function nextQuestion(){current++;renderQuestions()} function prevQuestion(){current=Math.max(0,current-1);renderQuestions()}
+
+function renderFavorites(){const qs=questions.filter(q=>state.favorites.includes(q.id));renderListPage("Favoritas",qs)}
+function renderListPage(name,qs){document.getElementById("content").innerHTML=`<div class="card"><h2>${name}</h2>${qs.length?`<table class="table"><tr><th>Questão</th><th>Matéria</th><th>Status</th></tr>${qs.map(q=>`<tr><td>${q.text}</td><td>${q.subject}</td><td>${state.answers[q.id]?.correct?"Acertada":state.answers[q.id]?"Errada":"Não resolvida"}</td></tr>`).join("")}</table>`:'<div class="empty">Nenhuma questão aqui ainda.</div>'}</div>`}
+
+function renderNotebooks(){document.getElementById("content").innerHTML=`<div class="layout"><div class="card"><h2>Seus cadernos</h2>${state.notebooks.map((n,i)=>`<div class="row"><span>${n.name}</span><b>${n.ids.length} questões</b></div>`).join("")}</div><div class="card"><h2>Novo caderno</h2><input id="newBook" placeholder="Nome do caderno" style="width:100%;padding:11px;border:1px solid var(--line);border-radius:10px"><button class="btn primary" style="margin-top:10px" onclick="addBook()">Criar caderno</button></div></div>`}
+function addBook(){const n=document.getElementById("newBook").value.trim();if(n){state.notebooks.push({name:n,ids:[]});save();renderNotebooks()}}
+function renderSimulados(){document.getElementById("content").innerHTML=`<div class="layout"><div class="card"><h2>Novo simulado</h2><p>Gere um simulado com questões aleatórias do banco.</p><button class="btn primary" onclick="startSimulado()">Gerar 5 questões</button></div><div class="card"><h2>Últimos simulados</h2>${state.simulados.length?state.simulados.map(s=>`<div class="row"><span>${s.date}</span><b>${s.correct}/${s.total}</b></div>`).join(""):'<div class="empty">Nenhum simulado realizado.</div>'}</div></div>`}
+function startSimulado(){const qs=[...questions].sort(()=>Math.random()-.5).slice(0,Math.min(5,questions.length));let score=0;for(const q of qs){const a=state.answers[q.id];if(a?.correct)score++}state.simulados.unshift({date:new Date().toLocaleString("pt-BR"),correct:score,total:qs.length});save();alert("Simulado criado! O histórico de respostas atuais foi usado para calcular o desempenho inicial.");renderSimulados()}
+function renderHistory(){document.getElementById("content").innerHTML=`<div class="card"><h2>Histórico individual</h2>${state.history.length?`<table class="table"><tr><th>Questão</th><th>Resultado</th><th>Data</th></tr>${state.history.slice(0,100).map(h=>`<tr><td>#${h.id}</td><td>${h.correct?"✓ Acerto":"✕ Erro"}</td><td>${new Date(h.at).toLocaleString("pt-BR")}</td></tr>`).join("")}</table>`:'<div class="empty">Seu histórico aparecerá aqui.</div>'}</div>`}
+function renderAdmin(){document.getElementById("content").innerHTML=`<div class="grid"><div class="stat"><small>Questões cadastradas</small><strong>${questions.length}</strong></div><div class="stat"><small>Matérias</small><strong>${new Set(questions.map(q=>q.subject)).size}</strong></div><div class="stat"><small>Favoritas</small><strong>${state.favorites.length}</strong></div><div class="stat"><small>Respostas registradas</small><strong>${state.history.length}</strong></div></div><div class="card" style="margin-top:18px"><h2>Seus dados</h2><p>Esta versão pessoal salva seu progresso no navegador do iPad.</p><div class="ipad-tools"><button class="btn primary" onclick="exportData()">Fazer backup</button><button class="btn secondary" onclick="document.getElementById('restoreFile').click()">Restaurar backup</button><button class="btn secondary danger" onclick="resetData()">Zerar meu progresso</button></div><input id="restoreFile" type="file" accept=".json" style="display:none" onchange="importData(event)"><p style="margin-top:16px;color:var(--muted)">Recomendação: faça um backup periodicamente para preservar seu histórico, favoritas e cadernos.</p></div>`}
+function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="backup-questoes-v3.json";a.click();URL.revokeObjectURL(a.href)}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.answers||!d.history)throw Error();state=d;save();alert("Backup restaurado com sucesso.");renderAdmin()}catch(x){alert("Não foi possível restaurar este backup.")}};r.readAsText(f)}
+function resetData(){if(confirm("Tem certeza? Isso apagará seu progresso salvo neste navegador.")){state=JSON.parse(JSON.stringify(defaultState));save();renderAdmin()}}
+setPage("dashboard");
+</script>
+</body>
+</html>
