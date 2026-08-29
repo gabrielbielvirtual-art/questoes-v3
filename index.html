@@ -346,6 +346,155 @@ div.filters-card{
 .sound-pressed{transform:scale(.97);transition:transform .06s ease}
 </style>
 
+<style id="dark-clean-questions-v1">
+:root{
+  --bg:#1b1d21 !important;--panel:#24272c !important;--panel2:#2b2f35 !important;
+  --line:#383d45 !important;--text:#f2f4f7 !important;--muted:#a9afb8 !important;
+  --primary:#6ea8ff !important;--primary2:#4f8fe8 !important;
+}
+html,body{background:#1b1d21 !important;color:#f2f4f7 !important}
+.app{background:#1b1d21 !important}
+.sidebar{background:#202328 !important;border-right:1px solid #343941 !important}
+.topbar{background:#1b1d21 !important;border-bottom:1px solid #343941 !important}
+.card,.stat,.filters-card,.question-card,.sim-card,.notebook-card{background:#24272c !important;border-color:#383d45 !important;color:#f2f4f7 !important}
+input,select,textarea{background:#1e2125 !important;color:#f2f4f7 !important;border-color:#3b4149 !important}
+.btn.primary,.primary{background:#4f8fe8 !important;color:#fff !important}
+/* Tela de questões: filtros ficam escondidos e são acessados pelo botão */
+.questions-filters-hidden{display:none !important}
+.questions-filter-panel{display:none !important}
+.question-card{max-width:920px !important;margin:24px auto !important;border-radius:14px !important;box-shadow:0 8px 28px rgba(0,0,0,.18) !important}
+.question-card .option{background:#2a2e34 !important;border-color:#3d434c !important;color:#eef1f5 !important}
+.question-card .option:hover{border-color:#6ea8ff !important;background:#30353c !important}
+.question-card .option.selected{border-color:#6ea8ff !important;background:#273c5b !important}
+.page-head{max-width:920px;margin:0 auto}
+.questions-toolbar{max-width:920px;margin:0 auto 10px;display:flex;justify-content:flex-end;gap:8px}
+.filters-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding:70px 20px;}
+.filters-modal{width:min(760px,100%);max-height:80vh;overflow:auto;background:#24272c;border:1px solid #424850;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.45);padding:22px;color:#f2f4f7}
+.filters-modal h2{margin:0 0 6px}.filters-modal .modal-close{float:right}.filters-modal .filters-card{display:block !important;box-shadow:none !important;position:static !important;margin:16px 0 0 !important;padding:0 !important}
+@media(max-width:700px){.question-card{margin:14px 0 !important}.filters-modal-backdrop{padding:20px 10px}.filters-modal{max-height:90vh}}
+</style>
+
+<style id="v25-clean-ui">
+:root{
+  --bg:#303236;
+  --panel:#3a3d42;
+  --panel-2:#41444a;
+  --line:#50545b;
+  --text:#f1f3f5;
+  --muted:#aeb3ba;
+  --accent:#6aa7ff;
+}
+body{background:var(--bg)!important;color:var(--text)!important}
+.sidebar,.topbar{background:#292b2f!important}
+.card,.question-card,.filters-card,.option-card{background:var(--panel)!important;border-color:var(--line)!important}
+.option,.btn,.link-btn,.shortcut,.icon-btn,.header-tool,.qdot,select,input,textarea{
+  border-radius:14px!important;
+}
+.btn.primary{border-radius:16px!important}
+.option{
+  min-height:58px!important;
+  padding:16px 18px!important;
+}
+.option-text{font-size:15px!important;line-height:1.55!important}
+.question-text,.question-statement,.enunciado{
+  font-size:19px!important;
+  line-height:1.75!important;
+  font-weight:500!important;
+}
+textarea.comment-input{
+  width:100%;
+  min-height:110px;
+  resize:vertical;
+  box-sizing:border-box;
+  background:#303338;
+  color:var(--text);
+  border:1px solid var(--line);
+  padding:14px;
+  border-radius:16px;
+  outline:none;
+}
+.manual-comment{
+  margin-top:18px;
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--panel-2);
+}
+.manual-comment-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.manual-comment-title{font-weight:700}
+.manual-comment-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.manual-comment-item{padding:12px 14px;background:#34373c;border:1px solid var(--line);border-radius:14px;white-space:pre-wrap;line-height:1.5}
+.comment-actions{display:flex;gap:8px;margin-top:10px}
+.comment-actions button{border:0;border-radius:12px;padding:8px 12px;cursor:pointer}
+</style>
+
+<style id="v26-question-reference-ui">
+/* Tela de questões inspirada na referência enviada */
+body{background:#eeeeef!important;color:#33363a!important}
+.question-page-clean{width:100%;max-width:1500px;margin:0 auto;background:#f5f5f6;border:1px solid #e1e1e2;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.question-header-clean{min-height:78px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;background:#f7f7f8;border-bottom:1px solid #e2e2e3;box-sizing:border-box}
+.question-title-clean{display:flex;align-items:center;gap:12px;font-size:24px;min-width:0}.question-title-clean b{color:#3d91df}.question-title-clean strong{font-size:24px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.question-link{font-size:25px;color:#4a4d52}.question-nav-clean{display:flex;gap:12px;flex-shrink:0}.top-icon,.bottom-icon{width:64px;height:54px;border:1px solid #d1d2d4;background:#fafafa;color:#697078;border-radius:5px;font-size:29px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.03)}.top-icon:hover,.bottom-icon:hover{background:#fff}
+.question-card-clean{margin:0;background:#fff;padding:62px 42px 28px}.question-statement-clean{font-size:25px;line-height:1.75;color:#3e4145;font-weight:500;margin:0 0 58px;max-width:1450px}
+.options-clean{display:flex;flex-direction:column;border:1px solid #dddfe1}.clean-option{position:relative;display:flex;align-items:center;gap:20px;width:100%;min-height:72px;padding:10px 18px;border:0;border-bottom:1px solid #d9dade;background:#f4f4f6;color:#383b40;text-align:left;cursor:pointer;font-size:21px;border-radius:0!important}.clean-option:last-child{border-bottom:0}.clean-option:hover:not(:disabled){background:#ececef}.clean-option .letter{width:45px;height:45px;border:1px solid #c6c8cb;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#fff;flex:0 0 45px;font-size:18px}.clean-option.selected .letter{background:#3f8fe7;color:#fff;border-color:#3f8fe7}.clean-option.selected{background:#f2dede}.clean-option.correct{background:#dff0d8}.clean-option.correct .letter{background:#fff}.clean-option.wrong{background:#f2dede}.answer-mark{margin-left:auto;font-size:24px}.answer-actions-clean{display:flex;gap:12px;margin-top:22px}.rounded{border-radius:18px!important;padding:12px 22px!important}
+.result-clean{margin-top:34px;display:flex;align-items:center;gap:10px;font-size:22px}.result-bad strong{color:#df5a50}.result-ok strong{color:#3caa6c}.result-clean a{color:#438fc8;text-decoration:underline}.resolution-clean{display:none;margin-top:14px;padding:16px;background:#f4f4f5;border-left:4px solid #5b9ee0;line-height:1.6;font-size:17px}.resolution-clean.show{display:block}.manual-comment{margin-top:32px!important;background:#f5f5f6!important;border-color:#d7d8da!important}.manual-comment textarea.comment-input{background:#fff!important;color:#333!important;border-color:#d1d2d4!important}.manual-comment-item{background:#fff!important;color:#333!important;border-color:#d7d8da!important}
+.question-bottom-clean{display:flex;gap:12px;padding:20px 42px 28px;background:#fff;border-top:1px solid #e0e0e1}.bottom-icon.active{color:#3f8fe7}.question-page-clean .side-panel,.question-page-clean .questions-filter-panel{display:none!important}
+@media(max-width:800px){.question-header-clean{padding:14px 16px;min-height:64px}.question-title-clean strong{font-size:17px}.question-title-clean{font-size:18px}.top-icon{width:45px;height:44px;font-size:22px}.question-card-clean{padding:32px 18px 20px}.question-statement-clean{font-size:19px;line-height:1.6;margin-bottom:30px}.clean-option{font-size:17px;min-height:60px}.question-bottom-clean{padding:14px 18px}.bottom-icon{width:48px;height:44px;font-size:23px}}
+</style>
+
+<style id="v26-question-size">
+/* Questão mais compacta */
+.question-text,
+.question-statement,
+.enunciado {
+  font-size: 16px !important;
+  line-height: 1.55 !important;
+  font-weight: 500 !important;
+}
+
+.option {
+  min-height: 46px !important;
+  padding: 11px 14px !important;
+}
+
+.option-text {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+</style>
+
+
+<style id="v27-compact-comments">
+.question-statement-clean{font-size:14px!important;line-height:1.45!important;font-weight:450!important;padding:16px 20px!important}
+.question-card-clean{padding:0!important}
+.options-clean{margin:0 20px!important}
+.clean-option{min-height:40px!important;padding:8px 11px!important;gap:9px!important}
+.clean-option .letter{width:25px!important;height:25px!important;flex:0 0 25px!important;font-size:12px!important}
+.clean-option .option-text{font-size:12.5px!important;line-height:1.35!important}
+.answer-actions-clean{padding:12px 20px!important}
+.result-clean{font-size:12px!important;padding:10px 20px!important}
+.question-bottom-clean{padding:8px 20px!important}
+.manual-comment{display:none;margin:12px 20px!important}
+.manual-comment.open{display:block}
+.bottom-icon.comment-active{background:#e8edf4!important}
+</style>
+
+<style id="v28-compact-options-comments">
+/* Alternativas compactas e centralizadas */
+.options-clean{max-width:920px!important;margin:0 auto!important}
+.clean-option{min-height:34px!important;padding:5px 10px!important;gap:8px!important;font-size:11.5px!important;line-height:1.25!important}
+.clean-option .letter{width:22px!important;height:22px!important;flex:0 0 22px!important;font-size:11px!important}
+.clean-option .option-text{font-size:11.5px!important;line-height:1.25!important}
+.question-statement-clean{max-width:920px!important;margin-left:auto!important;margin-right:auto!important}
+.answer-actions-clean{max-width:920px!important;margin-left:auto!important;margin-right:auto!important}
+.result-clean{max-width:920px!important;margin-left:auto!important;margin-right:auto!important}
+.manual-comment{max-width:920px!important;margin-left:auto!important;margin-right:auto!important}
+
+/* O comentário só aparece ao clicar no botão Comentário */
+.manual-comment{display:none!important}
+.manual-comment.open{display:block!important}
+.comment-label-btn{width:auto!important;min-width:118px!important;padding:9px 14px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;font-size:12px!important}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -447,44 +596,85 @@ function filtered(){return qs.filter(q=>{
  (filter.difficulty==='Todos'||q.difficulty===filter.difficulty)&&
  (filter.status==='Todos'||(filter.status==='Não resolvidas'&&!a)||(filter.status==='Acertadas'&&a?.correct)||(filter.status==='Erradas'&&a&&!a.correct)||(filter.status==='Favoritas'&&state.favorites.includes(q.id)));
 })}
+function toggleQuestionFilters(){
+ const old=document.getElementById('questionFiltersModal');
+ if(old){old.remove();return;}
+ const src=document.querySelector('.filters-card');
+ if(!src)return;
+ const wrap=document.createElement('div');wrap.id='questionFiltersModal';wrap.className='filters-modal-backdrop';
+ wrap.innerHTML='<div class="filters-modal"><button class="btn modal-close" onclick="toggleQuestionFilters()">Fechar</button><h2>Filtros</h2><p style="color:var(--muted);margin:4px 0 16px">Escolha os critérios para encontrar suas questões.</p></div>';
+ wrap.querySelector('.filters-modal').appendChild(src.cloneNode(true));document.body.appendChild(wrap);
+}
+
+function getComments(qid){
+  try{return JSON.parse(localStorage.getItem('manualComments')||'{}')[qid]||[]}
+  catch(e){return []}
+}
+function saveManualComment(qid){
+  const el=document.getElementById('manualCommentInput');
+  if(!el || !el.value.trim()) return;
+  let all={};
+  try{all=JSON.parse(localStorage.getItem('manualComments')||'{}')}catch(e){}
+  all[qid]=all[qid]||[];
+  all[qid].push({id:Date.now(),text:el.value.trim(),at:new Date().toISOString()});
+  localStorage.setItem('manualComments',JSON.stringify(all));
+  questions();
+}
+function deleteManualComment(qid,cid){
+  let all={};
+  try{all=JSON.parse(localStorage.getItem('manualComments')||'{}')}catch(e){}
+  all[qid]=(all[qid]||[]).filter(c=>c.id!==cid);
+  localStorage.setItem('manualComments',JSON.stringify(all));
+  questions();
+}
+function toggleManualComments(){
+ const p=document.getElementById('manualCommentPanel');
+ const b=document.getElementById('manualCommentButton');
+ if(!p)return;
+ p.classList.toggle('open');
+ if(b)b.classList.toggle('comment-active',p.classList.contains('open'));
+}
+function manualCommentsHtml(qid){
+  const cs=getComments(qid);
+  return `<section id="manualCommentPanel" class="manual-comment">
+    <div class="manual-comment-head">
+      <div><div class="manual-comment-title">Meu comentário</div>
+      <div style="font-size:12px;color:var(--muted)">Anote uma explicação, dúvida ou lembrete para esta questão.</div></div>
+    </div>
+    <textarea id="manualCommentInput" class="comment-input" placeholder="Escreva seu comentário..."></textarea>
+    <div class="comment-actions">
+      <button class="btn primary" onclick="saveManualComment(${qid})">Salvar comentário</button>
+    </div>
+    ${cs.length?`<div class="manual-comment-list">${cs.map(c=>`<div class="manual-comment-item"><div>${esc(c.text)}</div><div style="font-size:11px;color:var(--muted);margin-top:7px">${new Date(c.at).toLocaleString('pt-BR')}</div><div class="comment-actions"><button onclick="deleteManualComment(${qid},${c.id})">Excluir</button></div></div>`).join('')}</div>`:''}
+  </section>`;
+}
+
 function questions(){
  let arr=filtered(); if(current>=arr.length) current=0; let q=arr[current]||null;
- if(!q){$('content').innerHTML=pageHead('Banco de questões','Ajuste os filtros para encontrar questões.')+`<div class="card empty"><b>Nenhuma questão encontrada</b>Tente remover algum filtro ou termo de busca.</div>`;return}
+ if(!q){$('content').innerHTML=pageHead('Questões','Nenhuma questão encontrada.',`<div class="questions-toolbar"><button class="btn" onclick="toggleQuestionFilters()">⚙ Filtros</button></div>`)+`<div class="card empty"><b>Nenhuma questão encontrada</b><br>Tente remover algum filtro ou termo de busca.</div>`;return}
  let a=state.answers[q.id],fav=state.favorites.includes(q.id),selected=a?a.choice:(pendingChoice&&pendingChoice.id===q.id?pendingChoice.choice:null);
- let st=stats(), pct=arr.length?Math.round(((current+1)/arr.length)*100):0;
- let dots=arr.slice(Math.max(0,current-4),Math.min(arr.length,Math.max(0,current-4)+9)).map((x,i)=>{let pos=Math.max(0,current-4)+i,xa=state.answers[x.id];return `<button class="qdot ${pos===current?'active':''} ${xa?(xa.correct?'is-right':'is-wrong'):''}" onclick="current=${pos};pendingChoice=null;questions()">${pos+1}</button>`}).join('');
- let optsHtml=q.options.map((o,i)=>{let isSel=selected===i;let locked=!!a;return `<button class="option v22-option ${isSel?'selected':''} ${a&&i===q.answer?'correct':''} ${a&&isSel&&!a.correct?'wrong':''}" ${locked?'disabled':''} onclick="selectAnswer(${q.id},${i})"><span class="letter">${q.type==='tf'?(i===0?'C':'E'):String.fromCharCode(65+i)}</span><span class="option-text">${esc(o)}</span>${a&&i===q.answer?'<span class="answer-mark">✓</span>':''}</button>`}).join('');
- $('content').innerHTML=pageHead('Questões',`${arr.length} questões no filtro atual`)+
- `
- <div class="filters-card card"><div class="filters">
-  <input class="field" id="fsearch" placeholder="⌕ Buscar no enunciado..." value="${esc(filter.search)}">
-  <select class="field" id="fsubj">${opts(qs.map(x=>x.subject),filter.subject)}</select>
-  <select class="field" id="ftopic">${opts(qs.map(x=>x.topic),filter.topic)}</select>
-  <select class="field" id="fdiff">${opts(['Fácil','Médio','Difícil'],filter.difficulty)}</select>
- </div><div class="filters-more">
-  <select class="field" id="fstatus">${opts(['Não resolvidas','Acertadas','Erradas','Favoritas'],filter.status)}</select>
-  <button class="btn secondary" onclick="clearFilters()">Limpar filtros</button>
- </div></div>
- <div class="question-workspace">
-  <section class="card v22-question-card">
-   <div class="question-topline"><div class="question-ident"><span class="q-badge">QUESTÃO ${String(q.id).padStart(3,'0')}</span><span>${esc(q.subject)}</span><span>›</span><span>${esc(q.topic)}</span></div><div class="top-actions"><button class="icon-action performance-trigger" id="performanceBtn" title="Ver desempenho" aria-label="Ver desempenho">◔</button><button class="icon-action ${fav?'active':''}" onclick="toggleFavorite(${q.id})">${fav?'★':'☆'} <span>${fav?'Favoritada':'Favoritar'}</span></button></div></div>
-   <div class="question-content">
-    <div class="question-progress"><span>Questão <b>${current+1}</b> de <b>${qs.length}</b></span><span><b>${st.done}</b> resolvidas</span><span><b>${Math.max(0,qs.length-st.done)}</b> disponíveis restantes</span></div><div class="question-meta"><span class="difficulty-pill ${q.difficulty==='Difícil'?'hard':q.difficulty==='Médio'?'medium':'easy'}">${esc(q.difficulty)}</span><span class="type-pill">${q.type==='tf'?'CERTO / ERRADO':'MÚLTIPLA ESCOLHA'}</span></div>
-    <div class="question-text v22-text">${esc(q.text)}</div>
-    <div class="answer-heading"><b>Marque uma alternativa</b><span>${a?'Resposta registrada':'Você poderá alterar antes de responder'}</span></div>
-    <div class="options v22-options">${optsHtml}</div>
-    ${!a?`<div class="confirm-row"><button class="confirm-btn ${selected===null?'disabled':''}" ${selected===null?'disabled':''} onclick="confirmAnswer(${q.id})">Responder questão <span>→</span></button><button class="light-btn" onclick="pendingChoice=null;questions()">Limpar seleção</button></div>`:''}
-    ${a?`<div class="answer-box v22-answer ${a.correct?'ok':'bad'}"><div class="answer-head"><strong>${a.correct?'✓ Resposta correta':'✕ Resposta incorreta'}</strong><span>Gabarito: ${q.type==='tf'?(q.answer===0?'Certo':'Errado'):String.fromCharCode(65+q.answer)}</span></div><div class="comment-title">Comentário</div><div class="comment-text">${esc(q.explain)}</div></div>`:''}
-   </div>
-   <div class="question-footer"><button class="footer-btn" onclick="prevQ()">← Anterior</button><div class="q-pager"><b>${current+1}</b><span>/ ${arr.length}</span></div><button class="footer-btn next" onclick="nextQ()">Próxima questão <span>→</span></button></div>
+ let optsHtml=q.options.map((o,i)=>{let isSel=selected===i,locked=!!a;return `<button class="option clean-option ${isSel?'selected':''} ${a&&i===q.answer?'correct':''} ${a&&isSel&&!a.correct?'wrong':''}" ${locked?'disabled':''} onclick="selectAnswer(${q.id},${i})"><span class="letter">${q.type==='tf'?(i===0?'C':'E'):String.fromCharCode(65+i)}</span><span class="option-text">${esc(o)}</span>${a&&i===q.answer?'<span class="answer-mark">✓</span>':''}</button>`}).join('');
+ $('content').innerHTML=`
+ <div class="question-page-clean">
+  <div class="question-header-clean">
+   <div class="question-title-clean"><span class="question-link">↗</span><b>#${q.id}</b><strong>${esc(q.subject)} - ${esc(q.topic)}${q.sub&&q.sub!=='Geral'?' - '+esc(q.sub):''}</strong></div>
+   <div class="question-nav-clean"><button class="top-icon" title="Desempenho" onclick="$('performanceBtn')?.click()">◔</button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
+  </div>
+  <section class="question-card-clean">
+   <div class="question-statement-clean">${esc(q.text)}</div>
+   <div class="options-clean">${optsHtml}</div>
+   ${!a?`<div class="answer-actions-clean"><button class="btn primary rounded" ${selected===null?'disabled':''} onclick="confirmAnswer(${q.id})">Responder</button><button class="btn secondary rounded" onclick="pendingChoice=null;questions()">Limpar seleção</button></div>`:''}
+   ${a?`<div class="result-clean ${a.correct?'result-ok':'result-bad'}"><strong>${a.correct?'✕':'✕'} ${a.correct?'Você acertou!':'Você errou!'}</strong><span>Gabarito: <b>${q.type==='tf'?(q.answer===0?'Certo':'Errado'):String.fromCharCode(65+q.answer)}</b></span>${q.explain?`<a href="#" onclick="event.preventDefault();this.nextElementSibling.classList.toggle('show')">Ver resolução</a><div class="resolution-clean">${esc(q.explain)}</div>`:''}</div>`:''}
+   ${manualCommentsHtml(q.id)}
   </section>
-  <aside class="side-panel v22-side">
-   <div class="side-card card"><div class="side-title"><div><small>ÍNDICE</small><h3>Questões</h3></div><b>${arr.length}</b></div><div class="q-grid">${dots}</div><div class="legend"><span><i></i> Não respondida</span><span><i class="r"></i> Acerto</span><span><i class="w"></i> Erro</span></div></div>
-   <div class="side-card card"><div class="side-title"><div><small>QUESTÃO ATUAL</small><h3>Informações</h3></div></div><div class="info-list"><div><small>Matéria</small><b>${esc(q.subject)}</b></div><div><small>Assunto</small><b>${esc(q.topic)}</b></div><div><small>Subassunto</small><b>${esc(q.sub)}</b></div></div><button class="side-link" onclick="addToBook(${q.id})">＋ Adicionar ao caderno</button><button class="side-link" onclick="navigate('history')">◷ Ver histórico</button></div>
-  </aside>
+  <div class="question-bottom-clean">
+   <button class="bottom-icon" onclick="prevQ()" title="Anterior">←</button>
+   <button class="bottom-icon" onclick="nextQ()" title="Próxima">→</button>
+   <button class="bottom-icon" onclick="pendingChoice=null;questions()" title="Limpar">↻</button>
+   <button class="bottom-icon ${fav?'active':''}" onclick="toggleFavorite(${q.id})" title="Favoritar">${fav?'★':'☆'}</button>
+   <button id="manualCommentButton" class="bottom-icon comment-label-btn" onclick="toggleManualComments()" title="Comentário"><span>✎</span><span>Comentário</span></button>
+  </div>
  </div>`;
- [['fsubj','subject'],['ftopic','topic'],['fdiff','difficulty'],['fstatus','status']].forEach(([id,k])=>$(id).onchange=e=>{filter[k]=e.target.value;current=0;pendingChoice=null;questions()});
- $('fsearch').oninput=e=>{filter.search=e.target.value;current=0;pendingChoice=null;questions()};
 }
 function selectAnswer(id,ch){if(state.answers[id])return;pendingChoice={id,choice:ch};questions()}
 function confirmAnswer(id){if(!pendingChoice||pendingChoice.id!==id)return;answer(id,pendingChoice.choice);pendingChoice=null}
