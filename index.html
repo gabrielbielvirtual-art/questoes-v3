@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b1220">
-<title>Questões V32 · Plataforma de Estudos</title>
+<title>Questões · Plataforma de Estudos</title>
 <style>
 :root{
   --bg:#f4f6fa;--surface:#fff;--surface-2:#f8fafc;--text:#172033;--muted:#667085;
@@ -493,6 +493,8 @@ body{background:#eeeeef!important;color:#33363a!important}
 .manual-comment{display:none!important}
 .manual-comment.open{display:block!important}
 .comment-label-btn{width:auto!important;min-width:118px!important;padding:9px 14px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;font-size:12px!important}
+<style id="manual-question-ui">
+.manual-question-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start}.manual-question-form{max-width:100%}.manual-question-form .card-head{align-items:flex-start}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.form-grid label,.manual-question-form>label,.manual-option-grid label,.manual-answer-row label{display:grid;gap:5px;font-size:12px;font-weight:750;color:#5f646b}.manual-options-box{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface-2)}.manual-options-title{font-size:12px;font-weight:800;margin-bottom:10px}.manual-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.manual-answer-row{margin-top:10px;max-width:220px}.tf-choice{display:flex;gap:10px}.tf-choice label{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 14px;font-size:13px;font-weight:700;cursor:pointer}.manual-form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}.manual-tip{display:flex;gap:8px;margin-top:12px;padding:11px 13px;border-radius:10px;background:#f3f8ff;border:1px solid #d8e6fb;color:#56616f;font-size:11px;line-height:1.5}.manual-tip b{color:var(--text)}.manual-question-info{position:sticky;top:140px}.manual-question-info .info-list{gap:0}.manual-question-info .info-list div{padding:12px 0}.manual-question-info .info-list small{font-size:10px}.manual-question-info .info-list b{font-size:12px;line-height:1.45}@media(max-width:900px){.manual-question-layout{grid-template-columns:1fr}.manual-question-info{position:static}}@media(max-width:600px){.form-grid,.manual-option-grid{grid-template-columns:1fr}.manual-form-actions{justify-content:stretch}.manual-form-actions .btn{flex:1}}
 </style>
 
 </head>
@@ -503,12 +505,10 @@ body{background:#eeeeef!important;color:#33363a!important}
   <nav class="nav">
     <button data-page="dashboard" class="active"><span class="icon">⌂</span><span>Início</span></button>
     <button data-page="questions"><span class="icon">☷</span><span>Questões</span></button>
-    <button data-page="books"><span class="icon">▣</span><span>Cadernos</span></button>
-    <button data-page="sim"><span class="icon">◉</span><span>Simulados</span></button>
-    <button data-page="performance"><span class="icon">◔</span><span>Estatísticas</span></button>
+        <button data-page="performance"><span class="icon">◔</span><span>Estatísticas</span></button>
     <button data-page="history"><span class="icon">◷</span><span>Histórico</span></button>
     <button data-page="favorites"><span class="icon">☆</span><span>Favoritas</span></button>
-    <button data-page="admin"><span class="icon">⚙</span><span>Configurações</span></button>
+    <button data-page="admin"><span class="icon">＋</span><span>Inserir questões</span></button>
   </nav>
   <div class="header-tools">
     <button class="header-tool" id="printBtn" title="Imprimir">▣ <span>Imprimir</span></button>
@@ -548,7 +548,7 @@ function save(){localStorage.setItem('questoesV10',JSON.stringify(state))}
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
 function stats(){let a=Object.values(state.answers),c=a.filter(x=>x.correct).length;return{done:a.length,c,wrong:a.length-c,rate:a.length?Math.round(c/a.length*100):0}}
 function opts(arr,val='Todos'){return '<option>Todos</option>'+[...new Set(arr)].filter(Boolean).sort().map(x=>`<option ${x===val?'selected':''}>${esc(x)}</option>`).join('')}
-function navigate(p){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));({dashboard:dashboard,questions:questions,books:books,sim:simulados,performance:performance,history:historyPage,favorites:favorites,admin:admin}[p]||dashboard)();$('sidebar').classList.remove('open');$('overlay').classList.remove('show');window.scrollTo({top:0,behavior:'smooth'})}
+function navigate(p){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));({dashboard:dashboard,questions:questions,performance:performance,history:historyPage,favorites:favorites,admin:admin}[p]||dashboard)();$('sidebar').classList.remove('open');$('overlay').classList.remove('show');window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>navigate(b.dataset.page));
 $('mobileMenu').onclick=()=>{$('sidebar').classList.add('open');$('overlay').classList.add('show')};$('overlay').onclick=()=>{$('sidebar').classList.remove('open');$('overlay').classList.remove('show')};
 $('quickQuestion').onclick=()=>{current=Math.floor(Math.random()*qs.length);navigate('questions')};
@@ -571,8 +571,6 @@ function dashboard(){
   </section>
   <section class="card"><div class="card-head"><h2>Atalhos</h2></div><div class="shortcut-grid">
    <button class="shortcut" onclick="navigate('questions')"><b>Banco de questões</b><span>Filtre e resolva questões</span></button>
-   <button class="shortcut" onclick="navigate('sim')"><b>Montar simulado</b><span>Crie um teste personalizado</span></button>
-   <button class="shortcut" onclick="navigate('books')"><b>Meus cadernos</b><span>Continue suas revisões</span></button>
    <button class="shortcut" onclick="navigate('favorites')"><b>Favoritas</b><span>Revise questões salvas</span></button>
   </div></section>
  </div>
@@ -683,42 +681,80 @@ function clearFilters(){filter={search:'',subject:'Todos',topic:'Todos',difficul
 function answer(id,ch){let q=qs.find(x=>x.id===id),correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);save();toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions()}
 function toggleFavorite(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];save();questions()}
 function nextQ(){current++;questions()}function prevQ(){current=Math.max(0,current-1);questions()}
-function addToBook(id){let name=prompt('Digite o nome do caderno:');if(!name)return;let b=state.notebooks.find(x=>x.name.toLowerCase()===name.trim().toLowerCase());if(!b){b={name:name.trim(),ids:[]};state.notebooks.push(b)}if(!b.ids.includes(id))b.ids.push(id);save();toast('Questão adicionada ao caderno.')}
-function books(){
- $('content').innerHTML=pageHead('Cadernos','Organize suas questões para revisão.',`<button class="btn primary" onclick="newBook()">＋ Novo caderno</button>`)+
- `<div class="book-grid">${state.notebooks.map((b,i)=>{let done=b.ids.filter(id=>state.answers[id]).length,p=b.ids.length?Math.round(done/b.ids.length*100):0;return `<div class="book"><h3>${esc(b.name)}</h3><p>${b.ids.length} questão${b.ids.length===1?'':'ões'} · ${done} resolvida${done===1?'':'s'}</p><div class="progress"><i style="width:${p}%"></i></div><div style="display:flex;justify-content:space-between;align-items:center"><span class="badge gray">${p}% concluído</span><button class="btn secondary" onclick="openBook(${i})">Abrir</button></div></div>`}).join('')}</div>`;
-}
-function newBook(){let n=prompt('Nome do novo caderno:');if(!n?.trim())return;state.notebooks.push({name:n.trim(),ids:[]});save();books();toast('Caderno criado.')}
-function openBook(i){let b=state.notebooks[i],arr=qs.filter(q=>b.ids.includes(q.id));$('content').innerHTML=pageHead(b.name,`${arr.length} questão${arr.length===1?'':'ões'} neste caderno.`,`<button class="btn secondary" onclick="books()">← Voltar</button>`)+`<div class="card">${arr.length?`<div class="table-wrap"><table class="table"><tr><th>Questão</th><th>Matéria</th><th>Status</th><th></th></tr>${arr.map(q=>{let a=state.answers[q.id];return `<tr><td><b>#${q.id}</b> ${esc(q.text)}</td><td>${esc(q.subject)}</td><td>${a?(a.correct?'<span class="badge green">Acertada</span>':'<span class="badge red">Errada</span>'):'<span class="badge gray">Não resolvida</span>'}</td><td><button class="btn secondary" onclick="removeFromBook(${i},${q.id})">Remover</button></td></tr>`}).join('')}</table></div>`:'<div class="empty"><b>Caderno vazio</b>Adicione questões pelo banco de questões.</div>'}</div>`}
-function removeFromBook(i,id){state.notebooks[i].ids=state.notebooks[i].ids.filter(x=>x!==id);save();openBook(i);toast('Questão removida.')}
-function simulados(){
- $('content').innerHTML=pageHead('Simulados','Monte provas personalizadas e acompanhe seus resultados.')+
- `<div class="sim-grid"><section class="card"><div class="card-head"><h2>Novo simulado</h2></div><div class="form-stack">
- <label>Quantidade<select class="field" id="simN"><option>5</option><option>10</option><option>20</option><option>30</option></select></label>
- <label>Matéria<select class="field" id="simS"><option>Todos</option>${[...new Set(qs.map(q=>q.subject))].sort().map(x=>`<option>${esc(x)}</option>`).join('')}</select></label>
- <label>Nível<select class="field" id="simD"><option>Todos</option><option>Fácil</option><option>Médio</option><option>Difícil</option></select></label>
- <button class="btn primary" onclick="startSim()">Iniciar simulado</button></div></section>
- <section class="card"><div class="card-head"><h2>Últimos resultados</h2></div>${state.simulados.length?state.simulados.slice(0,8).map(s=>`<div class="row"><div class="row-title"><b>${esc(s.date)}</b><span>${s.correct}/${s.total}</span></div><span class="badge ${s.rate>=70?'green':s.rate>=50?'orange':'red'}">${s.rate}%</span></div>`).join(''):'<div class="empty"><b>Nenhum simulado realizado</b>Seu histórico aparecerá aqui.</div>'}</section></div>`;
-}
-function startSim(){let n=+$('simN').value,sub=$('simS').value,d=$('simD').value,p=qs.filter(q=>(sub==='Todos'||q.subject===sub)&&(d==='Todos'||q.difficulty===d));p=[...p].sort(()=>Math.random()-.5).slice(0,n);if(!p.length){toast('Não há questões para essa combinação.');return}sim={qs:p,i:0,a:[]};simQuestion()}
-function simQuestion(){let q=sim.qs[sim.i],ch=sim.a[sim.i];$('content').innerHTML=pageHead('Simulado em andamento',`Questão ${sim.i+1} de ${sim.qs.length}`)+`<section class="card question-card"><div class="q-meta"><div class="tags"><span class="badge">${esc(q.subject)}</span><span class="badge gray">${esc(q.difficulty)}</span></div><span class="badge gray">Sem gabarito durante a prova</span></div><div class="question-text">${esc(q.text)}</div><div class="options">${q.options.map((o,i)=>`<button class="option ${ch===i?'selected':''}" onclick="simPick(${i})"><span class="letter">${String.fromCharCode(65+i)}</span><span>${esc(o)}</span></button>`).join('')}</div><div class="q-actions"><button class="btn secondary" onclick="simPrev()">← Anterior</button><span class="center">${ch==null?'Escolha uma alternativa':'Resposta marcada'}</span>${sim.i===sim.qs.length-1?'<button class="btn primary" onclick="finishSim()">Finalizar</button>':'<button class="btn primary" onclick="simNext()">Próxima →</button>'}</div></section>`}
-function simPick(i){sim.a[sim.i]=i;simQuestion()}function simNext(){if(sim.i<sim.qs.length-1){sim.i++;simQuestion()}}function simPrev(){if(sim.i>0){sim.i--;simQuestion()}}
-function finishSim(){let c=sim.qs.reduce((n,q,i)=>n+(sim.a[i]===q.answer?1:0),0),t=sim.qs.length,r=Math.round(c/t*100);state.simulados.unshift({date:new Date().toLocaleString('pt-BR'),correct:c,total:t,rate:r});save();let oldSim=sim;sim=null;$('content').innerHTML=pageHead('Resultado do simulado','Confira seu desempenho e continue estudando.')+`<section class="card"><div class="result-hero"><strong>${r}%</strong><span>${c} acerto${c===1?'':'s'} de ${t} questão${t===1?'':'ões'}</span></div><div class="q-actions"><button class="btn secondary" onclick="navigate('sim')">Voltar</button><button class="btn primary" onclick="navigate('questions')">Continuar estudando</button></div></section>`}
 function performance(){let s=stats(),by={};qs.forEach(q=>{by[q.subject]??={done:0,c:0};let a=state.answers[q.id];if(a){by[q.subject].done++;if(a.correct)by[q.subject].c++}});$('content').innerHTML=pageHead('Desempenho','Acompanhe seus resultados por matéria e encontre pontos de atenção.')+`<div class="grid"><div class="stat"><small>Aproveitamento geral</small><strong>${s.rate}%</strong></div><div class="stat"><small>Resolvidas</small><strong>${s.done}</strong></div><div class="stat"><small>Acertos</small><strong>${s.c}</strong></div><div class="stat"><small>Erros</small><strong>${s.wrong}</strong></div></div><div class="card" style="margin-top:16px"><div class="card-head"><h2>Detalhamento por matéria</h2></div>${Object.entries(by).map(([k,v])=>{let p=v.done?Math.round(v.c/v.done*100):0;return `<div class="subject-row"><div class="subject-meta"><b>${esc(k)}</b><span>${v.c} acertos · ${v.done-v.c} erros · ${p}%</span></div><div class="progress"><i style="width:${p}%"></i></div></div>`}).join('')}</div>`}
 function historyPage(){$('content').innerHTML=pageHead('Histórico','Tudo que você já respondeu neste dispositivo.',`<button class="btn secondary" onclick="exportData()">↥ Exportar backup</button>`)+`<div class="card"><div class="table-wrap">${state.history.length?`<table class="table"><tr><th>Questão</th><th>Matéria</th><th>Resultado</th><th>Data</th></tr>${state.history.slice(0,300).map(h=>{let q=qs.find(x=>x.id===h.id);return `<tr><td><b>#${h.id}</b> ${esc(q?.text||'Questão')}</td><td>${esc(q?.subject||'-')}</td><td>${h.correct?'<span class="badge green">Acerto</span>':'<span class="badge red">Erro</span>'}</td><td>${new Date(h.at).toLocaleString('pt-BR')}</td></tr>`}).join('')}</table>`:'<div class="empty"><b>Seu histórico está vazio</b>Resolva questões para começar a acompanhar sua evolução.</div>'}</div></div>`}
 function favorites(){let arr=qs.filter(q=>state.favorites.includes(q.id));$('content').innerHTML=pageHead('Favoritas','Questões que você salvou para revisar depois.')+`<div class="card">${arr.length?`<div class="table-wrap"><table class="table"><tr><th>Questão</th><th>Matéria</th><th>Status</th><th></th></tr>${arr.map(q=>{let a=state.answers[q.id];return `<tr><td><b>#${q.id}</b> ${esc(q.text)}</td><td>${esc(q.subject)}</td><td>${a?(a.correct?'<span class="badge green">Acertada</span>':'<span class="badge red">Errada</span>'):'<span class="badge gray">Não resolvida</span>'}</td><td><button class="btn secondary" onclick="openQuestion(${q.id})">Resolver</button></td></tr>`}).join('')}</table></div>`:'<div class="empty"><b>Nenhuma favorita</b>Use ☆ Favoritar no banco de questões para guardar questões.</div>'}</div>`}
 function openQuestion(id){let arr=filtered();let idx=arr.findIndex(q=>q.id===id);if(idx>=0)current=idx;else{filter={search:'',subject:'Todos',topic:'Todos',difficulty:'Todos',status:'Todos'};current=qs.findIndex(q=>q.id===id)}navigate('questions')}
 function admin(){
- $('content').innerHTML=pageHead('Administração','Gerencie o banco local e faça backups do seu progresso.')+
- `<div class="grid"><div class="stat"><small>Questões</small><strong>${qs.length}</strong></div><div class="stat"><small>Matérias</small><strong>${new Set(qs.map(q=>q.subject)).size}</strong></div><div class="stat"><small>Favoritas</small><strong>${state.favorites.length}</strong></div><div class="stat"><small>Respostas</small><strong>${state.history.length}</strong></div></div>
- <div class="sim-grid" style="margin-top:16px"><section class="card"><div class="card-head"><h2>Adicionar questão</h2></div><div class="form-stack">
- <label>Matéria<input class="field" id="as"></label><label>Assunto<input class="field" id="at"></label><label>Subassunto<input class="field" id="au"></label><label>Tipo<select class="field" id="ay"><option value="mc">Múltipla escolha</option><option value="tf">Certo/Errado</option></select></label><label>Dificuldade<select class="field" id="ad"><option>Fácil</option><option>Médio</option><option>Difícil</option></select></label><label>Enunciado<textarea class="field" id="ax" rows="4"></textarea></label><label>Alternativa A<input class="field" id="aa"></label><label>Alternativa B<input class="field" id="ab"></label><label>Alternativa C<input class="field" id="ac"></label><label>Alternativa D<input class="field" id="ae"></label><label>Gabarito<select class="field" id="ag"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select></label><label>Comentário<textarea class="field" id="ex" rows="3"></textarea></label><button class="btn primary" onclick="addQuestion()">Salvar questão</button></div></section>
- <section class="card"><div class="card-head"><h2>Backup e manutenção</h2></div><p style="color:var(--muted);font-size:13px;line-height:1.6">Os dados desta versão ficam salvos no navegador. Exporte um backup antes de trocar de dispositivo ou publicar uma nova versão.</p><div class="head-actions" style="flex-wrap:wrap"><button class="btn secondary" onclick="exportData()">↥ Exportar backup</button><button class="btn secondary" onclick="$('importFile').click()">↧ Restaurar backup</button><input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)"></div><hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><button class="btn danger" onclick="resetData()">Apagar dados locais</button></section></div>`;
+ $('content').innerHTML=pageHead('Inserir questões','Cadastre questões manualmente no banco local.')+
+ `<div class="manual-question-layout">
+   <section class="card manual-question-form">
+    <div class="card-head"><div><h2>Nova questão</h2><p style="margin:5px 0 0;color:var(--muted);font-size:12px">A questão será salva imediatamente no banco deste navegador.</p></div><span class="badge gray">${state.customQuestions.length} adicionadas</span></div>
+    <div class="form-grid">
+      <label>Matéria*<input class="field" id="as" placeholder="Ex.: Direito Constitucional"></label>
+      <label>Assunto*<input class="field" id="at" placeholder="Ex.: Direitos Fundamentais"></label>
+      <label>Subassunto<input class="field" id="au" placeholder="Ex.: Direitos e Garantias"></label>
+      <label>Dificuldade<select class="field" id="ad"><option>Fácil</option><option selected>Médio</option><option>Difícil</option></select></label>
+      <label>Tipo<select class="field" id="ay" onchange="updateManualQuestionType()"><option value="mc">Múltipla escolha</option><option value="tf">Certo/Errado</option></select></label>
+    </div>
+    <label style="display:block;margin-top:12px">Enunciado*<textarea class="field" id="ax" rows="6" placeholder="Digite o enunciado completo da questão..."></textarea></label>
+    <div id="manualOptionsArea" style="margin-top:12px"></div>
+    <label style="display:block;margin-top:12px">Comentário / resolução<textarea class="field" id="ex" rows="5" placeholder="Explique o gabarito, fundamento legal, raciocínio etc."></textarea></label>
+    <div class="manual-form-actions">
+      <button class="btn secondary" onclick="clearManualQuestionForm()">Limpar</button>
+      <button class="btn primary" onclick="addQuestion()">＋ Salvar questão</button>
+    </div>
+    <div class="manual-tip"><b>💡 Dica</b><span>Depois de salvar, a questão já fica disponível em <b>Questões</b> e pode ser encontrada pelos filtros.</span></div>
+   </section>
+   <aside class="card manual-question-info">
+    <div class="card-head"><h2>Como cadastrar</h2></div>
+    <div class="info-list">
+      <div><small>1 · Classificação</small><b>Informe matéria, assunto e, se quiser, subassunto.</b></div>
+      <div><small>2 · Formato</small><b>Escolha múltipla escolha ou Certo/Errado.</b></div>
+      <div><small>3 · Gabarito</small><b>Selecione a alternativa correta antes de salvar.</b></div>
+      <div><small>4 · Resolução</small><b>Adicione um comentário para explicar o gabarito.</b></div>
+    </div>
+    <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+    <button class="btn secondary" style="width:100%" onclick="navigate('questions')">Ver banco de questões</button>
+   </aside>
+  </div>`;
+ updateManualQuestionType();
 }
-function addQuestion(){let s=$('as').value.trim(),t=$('at').value.trim(),u=$('au').value.trim(),x=$('ax').value.trim(),type=$('ay').value,d=$('ad').value,o=type==='tf'?['Certo','Errado']:[$('aa').value.trim(),$('ab').value.trim(),$('ac').value.trim(),$('ae').value.trim()].filter(Boolean);if(!s||!t||!x||o.length<2){toast('Preencha os campos obrigatórios.');return}let q={id:Date.now(),type,subject:s,topic:t,sub:u||'Geral',difficulty:d,text:x,options:o,answer:Math.min(+$('ag').value,o.length-1),explain:$('ex').value.trim()||'Sem comentário cadastrado.'};state.customQuestions.push(q);qs.push(q);save();toast('Questão adicionada ao banco.');admin()}
+function updateManualQuestionType(){
+ const type=$('ay')?.value, area=$('manualOptionsArea');
+ if(!area)return;
+ if(type==='tf'){
+   area.innerHTML=`<div class="manual-options-box"><div class="manual-options-title">Gabarito*</div><div class="tf-choice"><label><input type="radio" name="tfAnswer" value="0" checked> <span>Certo</span></label><label><input type="radio" name="tfAnswer" value="1"> <span>Errado</span></label></div></div>`;
+   return;
+ }
+ area.innerHTML=`<div class="manual-options-box"><div class="manual-options-title">Alternativas e gabarito*</div><div class="manual-option-grid">
+   ${['A','B','C','D'].map((l,i)=>`<label>Alternativa ${l}<input class="field manual-opt" id="manualOpt${i}" placeholder="Digite a alternativa ${l}"></label>`).join('')}
+  </div><div class="manual-answer-row"><label>Alternativa correta<select class="field" id="ag"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select></label></div></div>`;
+}
+function clearManualQuestionForm(){
+ ['as','at','au','ax','ex'].forEach(id=>{const el=$(id);if(el)el.value=''});
+ if($('ad'))$('ad').value='Médio';
+ if($('ay'))$('ay').value='mc';
+ updateManualQuestionType();
+}
+function addQuestion(){
+ const s=$('as').value.trim(),t=$('at').value.trim(),u=$('au').value.trim(),x=$('ax').value.trim(),type=$('ay').value,d=$('ad').value;
+ let o=[],answer=0;
+ if(type==='tf'){
+   o=['Certo','Errado'];
+   answer=Number(document.querySelector('input[name="tfAnswer"]:checked')?.value ?? 0);
+ }else{
+   o=[0,1,2,3].map(i=>$('manualOpt'+i)?.value.trim()||'');
+   if(o.some(v=>!v)){toast('Preencha as quatro alternativas.');return}
+   answer=Number($('ag').value);
+ }
+ if(!s||!t||!x){toast('Preencha matéria, assunto e enunciado.');return}
+ const q={id:Date.now(),type,subject:s,topic:t,sub:u||'Geral',difficulty:d,text:x,options:o,answer,explain:$('ex').value.trim()||'Sem comentário cadastrado.'};
+ state.customQuestions.push(q);qs.push(q);save();toast('Questão adicionada ao banco.');clearManualQuestionForm();admin();
+}
 function exportData(){let b=new Blob([JSON.stringify({version:'V10',state},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='questoes-v10-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!d.state)throw 0;Object.assign(state,d.state);state.customQuestions=state.customQuestions||[];state.notebooks=state.notebooks||[{name:'Revisão geral',ids:[]}];qs=[...seed,...state.customQuestions];save();toast('Backup restaurado.');navigate('dashboard')}catch(_){toast('Backup inválido.')}};r.readAsText(f)}
-function resetData(){if(confirm('Apagar progresso, favoritos, cadernos, simulados e questões adicionadas neste dispositivo?')){localStorage.removeItem('questoesV10');location.reload()}}
+function resetData(){if(confirm('Apagar todo o progresso, favoritos, histórico e questões adicionadas neste dispositivo?')){localStorage.removeItem('questoesV10');location.reload()}}
 navigate('dashboard');
 </script>
 
