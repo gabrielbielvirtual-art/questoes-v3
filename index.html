@@ -266,6 +266,8 @@ body{font-size:15px}
   .sidebar,.topbar,.head-actions,.filters-card,.side-panel,.q-actions,.toast{display:none!important}
   .main{margin:0}.page{padding:0}.card{box-shadow:none;border:0}
 }
+
+.topic-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:10px;border:1px solid var(--line);background:var(--surface-2);border-radius:6px;max-height:260px;overflow:auto}.topic-check{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid var(--line);background:#fff;border-radius:5px;cursor:pointer;font-size:13px;font-weight:500}.topic-check:hover{background:#f7fafc}.topic-check input{width:16px;height:16px;accent-color:var(--primary)}@media(max-width:760px){.topic-picker{grid-template-columns:1fr}}
 </style>
 
 <style id="v22-redesign">
@@ -434,11 +436,12 @@ body{background:#eeeeef!important;color:#33363a!important}
 .question-page-clean{width:100%;max-width:1500px;margin:0 auto;background:#f5f5f6;border:1px solid #e1e1e2;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .question-header-clean{min-height:78px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;background:#f7f7f8;border-bottom:1px solid #e2e2e3;box-sizing:border-box}
 .question-title-clean{display:flex;align-items:center;gap:12px;font-size:24px;min-width:0}.question-title-clean b{color:#3d91df}.question-title-clean strong{font-size:24px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.question-link{font-size:25px;color:#4a4d52}.question-nav-clean{display:flex;gap:12px;flex-shrink:0}.top-icon,.bottom-icon{width:64px;height:54px;border:1px solid #d1d2d4;background:#fafafa;color:#697078;border-radius:5px;font-size:29px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.03)}.top-icon:hover,.bottom-icon:hover{background:#fff}
-.question-card-clean{margin:0;background:#fff;padding:62px 42px 28px}.question-statement-clean{font-size:25px;line-height:1.75;color:#3e4145;font-weight:500;margin:0 0 58px;max-width:1450px}
+.question-card-clean{margin:0;background:#fff;padding:0 42px 28px}.question-statement-clean{font-size:25px;line-height:1.75;color:#3e4145;font-weight:500;margin:0 0 58px;max-width:1450px}
 .options-clean{display:flex;flex-direction:column;border:1px solid #dddfe1}.clean-option{position:relative;display:flex;align-items:center;gap:20px;width:100%;min-height:72px;padding:10px 18px;border:0;border-bottom:1px solid #d9dade;background:#f4f4f6;color:#383b40;text-align:left;cursor:pointer;font-size:21px;border-radius:0!important}.clean-option:last-child{border-bottom:0}.clean-option:hover:not(:disabled){background:#ececef}.clean-option .letter{width:45px;height:45px;border:1px solid #c6c8cb;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#fff;flex:0 0 45px;font-size:18px}.clean-option.selected .letter{background:#3f8fe7;color:#fff;border-color:#3f8fe7}.clean-option.selected{background:#f2dede}.clean-option.correct{background:#dff0d8}.clean-option.correct .letter{background:#fff}.clean-option.wrong{background:#f2dede}.answer-mark{margin-left:auto;font-size:24px}.answer-actions-clean{display:flex;gap:12px;margin-top:22px}.rounded{border-radius:18px!important;padding:12px 22px!important}
 .result-clean{margin-top:34px;display:flex;align-items:center;gap:10px;font-size:22px}.result-bad strong{color:#df5a50}.result-ok strong{color:#3caa6c}.result-clean a{color:#438fc8;text-decoration:underline}.resolution-clean{display:none;margin-top:14px;padding:16px;background:#f4f4f5;border-left:4px solid #5b9ee0;line-height:1.6;font-size:17px}.resolution-clean.show{display:block}.manual-comment{margin-top:32px!important;background:#f5f5f6!important;border-color:#d7d8da!important}.manual-comment textarea.comment-input{background:#fff!important;color:#333!important;border-color:#d1d2d4!important}.manual-comment-item{background:#fff!important;color:#333!important;border-color:#d7d8da!important}
 .question-bottom-clean{display:flex;gap:12px;padding:20px 42px 28px;background:#fff;border-top:1px solid #e0e0e1}.bottom-icon.active{color:#3f8fe7}.question-page-clean .side-panel,.question-page-clean .questions-filter-panel{display:none!important}
-@media(max-width:800px){.question-header-clean{padding:14px 16px;min-height:64px}.question-title-clean strong{font-size:17px}.question-title-clean{font-size:18px}.top-icon{width:45px;height:44px;font-size:22px}.question-card-clean{padding:32px 18px 20px}.question-statement-clean{font-size:19px;line-height:1.6;margin-bottom:30px}.clean-option{font-size:17px;min-height:60px}.question-bottom-clean{padding:14px 18px}.bottom-icon{width:48px;height:44px;font-size:23px}}
+ .question-source-clean{margin:0 -42px 28px;padding:12px 42px;background:#f7f7f8;border-top:1px solid #e2e2e3;border-bottom:1px solid #e2e2e3;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px;color:#666}.question-source-clean .source-label{font-weight:700;color:#444}.question-source-clean .source-item{display:inline-flex;align-items:center;gap:5px}.question-source-clean .source-item b{color:#333}.question-page-spacer{height:520px;background:#f5f5f6;border-top:1px solid #ececed}.question-source-clean.empty-source{color:#888}.question-source-clean.empty-source .source-label{color:#666}
+@media(max-width:800px){.question-header-clean{padding:14px 16px;min-height:64px}.question-title-clean strong{font-size:17px}.question-title-clean{font-size:18px}.top-icon{width:45px;height:44px;font-size:22px}.question-card-clean{padding:0 18px 20px}.question-source-clean{margin:0 -18px 22px;padding:10px 18px}.question-statement-clean{font-size:19px;line-height:1.6;margin-bottom:30px}.clean-option{font-size:17px;min-height:60px}.question-bottom-clean{padding:14px 18px}.bottom-icon{width:48px;height:44px;font-size:23px}}
 </style>
 
 <style id="v26-question-size">
@@ -465,7 +468,7 @@ body{background:#eeeeef!important;color:#33363a!important}
 
 <style id="v27-compact-comments">
 .question-statement-clean{font-size:14px!important;line-height:1.45!important;font-weight:450!important;padding:16px 20px!important}
-.question-card-clean{padding:0!important}
+.question-card-clean{padding:0 42px 28px!important}.question-source-clean{margin:0 -42px 22px!important;padding:10px 42px!important}.question-page-spacer{height:520px!important}
 .options-clean{margin:0 20px!important}
 .clean-option{min-height:40px!important;padding:8px 11px!important;gap:9px!important}
 .clean-option .letter{width:25px!important;height:25px!important;flex:0 0 25px!important;font-size:12px!important}
@@ -535,13 +538,33 @@ const seed=[
 {id:3,type:'mc',subject:'Português',topic:'Interpretação',sub:'Compreensão textual',difficulty:'Médio',text:'Em uma questão de interpretação, a resposta correta deve ser fundamentada principalmente:',options:['Em opinião pessoal','No texto apresentado','No senso comum','Na alternativa mais longa'],answer:1,explain:'A resposta deve ser construída a partir das informações e relações presentes no texto.'},
 {id:4,type:'mc',subject:'Raciocínio Lógico',topic:'Proposições',sub:'Lógica proposicional',difficulty:'Difícil',text:'Se uma proposição P é verdadeira e Q é falsa, então P ∧ Q é:',options:['Verdadeira','Falsa','Indeterminada','Uma tautologia'],answer:1,explain:'A conjunção só é verdadeira quando as duas proposições são verdadeiras.'},
 {id:5,type:'tf',subject:'Direito Administrativo',topic:'Atos Administrativos',sub:'Atributos',difficulty:'Fácil',text:'Todo ato administrativo possui presunção absoluta de legitimidade.',options:['Certo','Errado'],answer:1,explain:'Errado. A presunção de legitimidade é, em regra, relativa.'},
-{id:6,type:'mc',subject:'Informática',topic:'Segurança',sub:'Boas práticas',difficulty:'Fácil',text:'Qual prática reduz o risco de comprometimento de uma conta?',options:['Reutilizar a mesma senha','Ativar autenticação em dois fatores','Desativar atualizações','Compartilhar códigos de acesso'],answer:1,explain:'A autenticação em dois fatores acrescenta uma camada de proteção além da senha.'}
+{id:6,type:'mc',subject:'Informática',topic:'Segurança',sub:'Boas práticas',difficulty:'Fácil',text:'Qual prática reduz o risco de comprometimento de uma conta?',options:['Reutilizar a mesma senha','Ativar autenticação em dois fatores','Desativar atualizações','Compartilhar códigos de acesso'],answer:1,explain:'A autenticação em dois fatores acrescenta uma camada de proteção além da senha.'},
+{id:7,type:'tf',subject:'Direito Previdenciário',topic:'Talidomida',sub:'Pensão especial',difficulty:'Médio',text:'A pensão especial destinada às pessoas com deficiência física conhecida como Síndrome da Talidomida possui natureza mensal, vitalícia e intransferível.',options:['Certo','Errado'],answer:0,explain:'Certo. A Lei nº 7.070/1982 prevê pensão especial mensal, vitalícia e intransferível. A questão foi adaptada de temas cobrados pelo Cebraspe sobre benefícios de legislação especial.'},
+{id:8,type:'tf',subject:'Direito Previdenciário',topic:'Talidomida',sub:'Acumulação',difficulty:'Médio',text:'A pensão especial da Síndrome da Talidomida não prejudica o recebimento de benefícios de natureza previdenciária.',options:['Certo','Errado'],answer:0,explain:'Certo. A Lei nº 7.070/1982 estabelece que o benefício tem natureza indenizatória e não prejudica eventuais benefícios de natureza previdenciária.'},
+{id:9,type:'tf',subject:'Direito Previdenciário',topic:'Talidomida',sub:'Acumulação',difficulty:'Difícil',text:'A pensão especial da Síndrome da Talidomida pode ser acumulada, sem direito de opção, com qualquer rendimento ou indenização paga pela União.',options:['Certo','Errado'],answer:1,explain:'Errado. A lei estabelece regra de não acumulação com rendimento ou indenização paga pela União, ressalvada a indenização por dano moral prevista em lei específica e o direito de opção.'},
+{id:10,type:'tf',subject:'Direito Previdenciário',topic:'Seringueiros',sub:'Pensão mensal vitalícia',difficulty:'Médio',text:'A pensão especial dos seringueiros prevista no art. 54 do ADCT corresponde a dois salários mínimos vigentes no país.',options:['Certo','Errado'],answer:0,explain:'Certo. A Lei nº 7.986/1989 prevê pensão mensal vitalícia de dois salários mínimos para os seringueiros que preencham os requisitos legais.'},
+{id:11,type:'tf',subject:'Direito Previdenciário',topic:'Seringueiros',sub:'Acumulação',difficulty:'Difícil',text:'O beneficiário da pensão especial dos seringueiros está impedido, em qualquer hipótese, de receber outro benefício pago pelo RGPS ou por RPPS.',options:['Certo','Errado'],answer:1,explain:'Errado. A questão reproduz, em sentido adaptado, tema cobrado pelo Cebraspe. A legislação e a regulamentação devem ser observadas quanto às hipóteses de acumulação; não se pode afirmar uma vedação absoluta e genérica.'},
+{id:12,type:'tf',subject:'Direito Previdenciário',topic:'Ex-combatentes',sub:'Pensão especial',difficulty:'Médio',text:'A Lei nº 8.059/1990 disciplina a pensão especial devida a quem participou de operações bélicas durante a Segunda Guerra Mundial e aos respectivos dependentes.',options:['Certo','Errado'],answer:0,explain:'Certo. Esse é o objeto central da Lei nº 8.059/1990.'},
+{id:13,type:'tf',subject:'Direito Previdenciário',topic:'Ex-combatentes',sub:'Dependentes',difficulty:'Médio',text:'Para a Lei nº 8.059/1990, companheira é, entre outras hipóteses, aquela que tenha filho comum com o ex-combatente ou viva com ele em união estável pelo período mínimo previsto em lei.',options:['Certo','Errado'],answer:0,explain:'Certo. A lei define companheira para fins da pensão especial e estabelece as condições pertinentes.'},
+{id:14,type:'tf',subject:'Direito Previdenciário',topic:'Anistiados políticos',sub:'Reparação econômica',difficulty:'Médio',text:'A reparação econômica do anistiado político pode ocorrer em prestação única ou em prestação mensal, permanente e continuada, conforme as condições legais.',options:['Certo','Errado'],answer:0,explain:'Certo. A Lei nº 10.559/2002 prevê essas duas modalidades de reparação econômica.'},
+{id:15,type:'tf',subject:'Direito Previdenciário',topic:'Anistiados políticos',sub:'Acumulação',difficulty:'Difícil',text:'A reparação econômica em prestação única pode ser acumulada com a reparação econômica em prestação mensal, permanente e continuada.',options:['Certo','Errado'],answer:1,explain:'Errado. A Lei nº 10.559/2002 veda a acumulação entre essas duas modalidades, assegurando a opção conforme a disciplina legal.'},
+{id:16,type:'tf',subject:'Direito Previdenciário',topic:'Anistiados políticos',sub:'Prestação mensal',difficulty:'Médio',text:'A reparação econômica mensal, permanente e continuada é assegurada aos anistiados políticos que comprovem vínculos com a atividade laboral, ressalvada a opção pela prestação única.',options:['Certo','Errado'],answer:0,explain:'Certo. É o que dispõe o art. 5º da Lei nº 10.559/2002.'},
+{id:17,type:'tf',subject:'Direito Previdenciário',topic:'Hemodiálise de Caruaru',sub:'Pensão especial',difficulty:'Médio',text:'A pensão especial prevista na Lei nº 9.422/1996 é devida aos dependentes especificados das vítimas fatais de hepatite tóxica decorrente de contaminação em processo de hemodiálise no Instituto de Doenças Renais de Caruaru, no período legalmente delimitado.',options:['Certo','Errado'],answer:0,explain:'Certo. A Lei nº 9.422/1996 trata dessa pensão especial e delimita as vítimas e o período da contaminação.'},
+{id:18,type:'tf',subject:'Direito Previdenciário',topic:'Hemodiálise de Caruaru',sub:'Valor',difficulty:'Médio',text:'A pensão especial prevista na Lei nº 9.422/1996 possui valor correspondente a um salário mínimo vigente no país.',options:['Certo','Errado'],answer:0,explain:'Certo. O art. 1º da Lei nº 9.422/1996 estabelece esse valor.'},
+{id:19,type:'tf',subject:'Direito Previdenciário',topic:'Hanseníase',sub:'Isolamento compulsório',difficulty:'Médio',text:'A pensão especial das pessoas atingidas pela hanseníase alcança quem foi compulsoriamente submetido, até 31 de dezembro de 1986, a isolamento ou internação nas hipóteses previstas em lei.',options:['Certo','Errado'],answer:0,explain:'Certo. A Lei nº 11.520/2007, com alterações posteriores, contempla essas situações.'},
+{id:20,type:'tf',subject:'Direito Previdenciário',topic:'Hanseníase',sub:'Natureza',difficulty:'Difícil',text:'A pensão especial destinada às pessoas atingidas pela hanseníase, nas hipóteses da Lei nº 11.520/2007, é personalíssima e pode ser transferida aos dependentes e herdeiros após a morte do beneficiário.',options:['Certo','Errado'],answer:1,explain:'Errado. A lei estabelece que a pensão é personalíssima e não é transmissível a dependentes e herdeiros. A legislação de 2023 também ampliou o alcance do benefício a filhos em situações específicas, sem transformar a pensão original em benefício transmissível.'},
+{id:21,type:'tf',subject:'Direito Previdenciário',topic:'Zika vírus',sub:'Pensão especial',difficulty:'Médio',text:'A pensão especial da Lei nº 13.985/2020 é mensal, vitalícia, intransferível e tem valor de um salário mínimo.',options:['Certo','Errado'],answer:0,explain:'Certo. Essas características estão expressamente previstas no art. 1º, § 1º, da Lei nº 13.985/2020.'},
+{id:22,type:'tf',subject:'Direito Previdenciário',topic:'Zika vírus',sub:'Acumulação',difficulty:'Difícil',text:'A pensão especial destinada a crianças com Síndrome Congênita do Zika Vírus pode ser acumulada com o BPC e com indenizações pagas pela União pelos mesmos fatos.',options:['Certo','Errado'],answer:1,explain:'Errado. A Lei nº 13.985/2020 veda a acumulação com o BPC e com indenizações pagas pela União em razão de decisão judicial sobre os mesmos fatos.'},
+{id:23,type:'tf',subject:'Direito Previdenciário',topic:'Jogadores campeões',sub:'Auxílio especial mensal',difficulty:'Médio',text:'O auxílio especial mensal previsto na Lei nº 12.663/2012 é destinado aos jogadores titulares ou reservas das seleções brasileiras campeãs das Copas do Mundo de 1958, 1962 e 1970 que estejam nas condições previstas na lei.',options:['Certo','Errado'],answer:0,explain:'Certo. A Lei nº 12.663/2012 instituiu o auxílio especial mensal para jogadores dessas seleções que preencham os requisitos legais.'},
+{id:24,type:'tf',subject:'Direito Previdenciário',topic:'Jogadores campeões',sub:'Dependentes',difficulty:'Difícil',text:'Em caso de falecimento do jogador beneficiário do auxílio especial mensal, o benefício é automaticamente transmitido a todos os seus parentes, independentemente das condições estabelecidas na Lei nº 12.663/2012.',options:['Certo','Errado'],answer:1,explain:'Errado. A lei prevê especificamente esposa ou companheira e filhos menores de 21 anos ou inválidos, observadas as condições legais, e não uma transmissão automática a todos os parentes.'},
+{id:25,type:'tf',subject:'Direito Previdenciário',topic:'Jogadores campeões',sub:'Requerimento',difficulty:'Médio',text:'O pagamento do auxílio especial mensal aos jogadores das seleções campeãs retroage à data em que, atendidos os requisitos, tenha sido protocolado o requerimento no INSS.',options:['Certo','Errado'],answer:0,explain:'Certo. É o que dispõe o art. 45 da Lei nº 12.663/2012. Questão adaptada de cobrança do Cebraspe sobre esse benefício.'},
+{id:26,type:'tf',subject:'Direito Previdenciário',topic:'Legislação especial',sub:'Natureza dos benefícios',difficulty:'Difícil',text:'Os benefícios de legislação especial cobrados no âmbito previdenciário são todos benefícios do RGPS, sujeitos obrigatoriamente às mesmas regras de carência e custeio dos benefícios previdenciários comuns.',options:['Certo','Errado'],answer:1,explain:'Errado. Os benefícios de legislação especial possuem fundamentos legais específicos e, em vários casos, natureza indenizatória ou assistencial, não se confundindo automaticamente com benefícios comuns do RGPS.'}
 ];
 const old=JSON.parse(localStorage.getItem('questoesV10')||'null');
 const state=old||{answers:{},favorites:[],notebooks:[{name:'Revisão geral',ids:[]}],history:[],simulados:[],customQuestions:[]};
 state.customQuestions=state.customQuestions||[]; state.notebooks=state.notebooks||[{name:'Revisão geral',ids:[]}];
 let qs=[...seed,...state.customQuestions],current=0,sim=null;
-let filter={search:'',subject:'Todos',topic:'Todos',difficulty:'Todos',status:'Todos'};
+let filter={search:'',subject:'Todos',topic:[],difficulty:'Todos',status:'Todos'};
 let pendingChoice=null;
 const $=id=>document.getElementById(id);
 const esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -587,11 +610,11 @@ function dashboard(){
   </section>
  </div>`;
 }
-function filtered(){return qs.filter(q=>{
+function filtered(){const selectedTopics=Array.isArray(filter.topic)?filter.topic:(filter.topic==='Todos'||!filter.topic?[]:[filter.topic]);return qs.filter(q=>{
  let a=state.answers[q.id],t=(q.text+' '+q.subject+' '+q.topic+' '+q.sub).toLowerCase();
  return (!filter.search||t.includes(filter.search.toLowerCase())) &&
  (filter.subject==='Todos'||q.subject===filter.subject)&&
- (filter.topic==='Todos'||q.topic===filter.topic)&&
+ (!selectedTopics.length||selectedTopics.includes(q.topic))&&
  (filter.difficulty==='Todos'||q.difficulty===filter.difficulty)&&
  (filter.status==='Todos'||(filter.status==='Não resolvidas'&&!a)||(filter.status==='Acertadas'&&a?.correct)||(filter.status==='Erradas'&&a&&!a.correct)||(filter.status==='Favoritas'&&state.favorites.includes(q.id)));
 })}
@@ -660,6 +683,14 @@ function questions(){
    <div class="question-nav-clean"><button class="top-icon" title="Desempenho" onclick="$('performanceBtn')?.click()">◔</button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
   </div>
   <section class="question-card-clean">
+   <div class="question-source-clean ${q.bank||q.year||q.exam?'':'empty-source'}">
+    <span class="source-label">Fonte da questão</span>
+    ${q.bank?`<span class="source-item">Banca: <b>${esc(q.bank)}</b></span>`:''}
+    ${q.exam?`<span class="source-item">Prova: <b>${esc(q.exam)}</b></span>`:''}
+    ${q.year?`<span class="source-item">Ano: <b>${esc(q.year)}</b></span>`:''}
+    ${q.source?`<span class="source-item">Fonte: <b>${esc(q.source)}</b></span>`:''}
+    ${!(q.bank||q.year||q.exam||q.source)?'<span>Cadastre a banca, prova, ano e fonte desta questão.</span>':''}
+   </div>
    <div class="question-statement-clean">${esc(q.text)}</div>
    <div class="options-clean">${optsHtml}</div>
    ${!a?`<div class="answer-actions-clean"><button class="btn primary rounded" ${selected===null?'disabled':''} onclick="confirmAnswer(${q.id})">Responder</button><button class="btn secondary rounded" onclick="pendingChoice=null;questions()">Limpar seleção</button></div>`:''}
@@ -673,27 +704,38 @@ function questions(){
    <button class="bottom-icon ${fav?'active':''}" onclick="toggleFavorite(${q.id})" title="Favoritar">${fav?'★':'☆'}</button>
    <button id="manualCommentButton" class="bottom-icon comment-label-btn" onclick="toggleManualComments()" title="Comentário"><span>✎</span><span>Comentário</span></button>
   </div>
+  <div class="question-page-spacer" aria-hidden="true"></div>
  </div>`;
 }
 function selectAnswer(id,ch){if(state.answers[id])return;pendingChoice={id,choice:ch};questions()}
 function confirmAnswer(id){if(!pendingChoice||pendingChoice.id!==id)return;answer(id,pendingChoice.choice);pendingChoice=null}
 
-function clearFilters(){filter={search:'',subject:'Todos',topic:'Todos',difficulty:'Todos',status:'Todos'};current=0;questions()}
+function clearFilters(){filter={search:'',subject:'Todos',topic:[],difficulty:'Todos',status:'Todos'};current=0;questions()}
 function answer(id,ch){let q=qs.find(x=>x.id===id),correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);save();toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions()}
 function toggleFavorite(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];save();questions()}
 function nextQ(){current++;questions()}function prevQ(){current=Math.max(0,current-1);questions()}
 function filtersPage(){
   const subjects=[...new Set(qs.map(q=>q.subject).filter(Boolean))].sort();
+  const selectedTopics=Array.isArray(filter.topic)?filter.topic:(filter.topic==='Todos'||!filter.topic?[]:[filter.topic]);
   const topics=[...new Set(qs.filter(q=>filter.subject==='Todos'||q.subject===filter.subject).map(q=>q.topic).filter(Boolean))].sort();
   const difficulties=['Fácil','Médio','Difícil'];
   const statuses=['Todos','Não resolvidas','Acertadas','Erradas','Favoritas'];
   $('content').innerHTML=pageHead('Filtros','Ferramenta exclusiva para localizar questões por critérios.')+`
     <div class="card" style="max-width:1050px;margin:0 auto">
-      <div class="card-head"><div><h2>Filtrar banco de questões</h2><p style="margin:5px 0 0;color:var(--muted);font-size:12px">Os filtros ficam separados da tela de resolução para deixar a experiência mais limpa.</p></div><span class="badge gray">${filtered().length} encontradas</span></div>
+      <div class="card-head"><div><h2>Filtrar banco de questões</h2><p style="margin:5px 0 0;color:var(--muted);font-size:12px">Agora você pode selecionar vários assuntos da mesma matéria.</p></div><span class="badge gray">${filtered().length} encontradas</span></div>
       <div class="form-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
         <label>Busca<input class="field" id="filterSearchPage" value="${esc(filter.search)}" placeholder="Palavra, trecho ou termo..."></label>
         <label>Matéria<select class="field" id="filterSubjectPage"><option>Todos</option>${subjects.map(x=>`<option ${x===filter.subject?'selected':''}>${esc(x)}</option>`).join('')}</select></label>
-        <label>Assunto<select class="field" id="filterTopicPage"><option>Todos</option>${topics.map(x=>`<option ${x===filter.topic?'selected':''}>${esc(x)}</option>`).join('')}</select></label>
+        <div style="grid-column:1/-1">
+          <label style="display:block;font-weight:700;font-size:13px;margin-bottom:7px">Assuntos <span id="topicCount" style="color:var(--muted);font-weight:500">${selectedTopics.length?`(${selectedTopics.length} selecionado${selectedTopics.length===1?'':'s'})`:'(todos)'}</span></label>
+          <div id="topicPicker" class="topic-picker">
+            ${topics.length?topics.map(x=>`<label class="topic-check"><input type="checkbox" value="${esc(x)}" ${selectedTopics.includes(x)?'checked':''}><span>${esc(x)}</span></label>`).join(''):'<span style="color:var(--muted);font-size:13px">Selecione uma matéria para listar os assuntos.</span>'}
+          </div>
+          <div style="display:flex;gap:7px;margin-top:8px;flex-wrap:wrap">
+            <button type="button" class="btn secondary" onclick="selectAllTopics()">Selecionar todos</button>
+            <button type="button" class="btn secondary" onclick="clearTopicSelection()">Limpar assuntos</button>
+          </div>
+        </div>
         <label>Dificuldade<select class="field" id="filterDifficultyPage">${difficulties.map(x=>`<option ${x===filter.difficulty?'selected':''}>${x}</option>`).join('')}</select></label>
         <label>Status<select class="field" id="filterStatusPage">${statuses.map(x=>`<option ${x===filter.status?'selected':''}>${x}</option>`).join('')}</select></label>
       </div>
@@ -703,18 +745,24 @@ function filtersPage(){
       </div>
     </div>
     <div class="card" style="max-width:1050px;margin:14px auto 0"><div class="card-head"><h2>Resumo dos critérios</h2></div><div style="display:flex;gap:7px;flex-wrap:wrap">
-      <span class="badge gray">Matéria: ${esc(filter.subject)}</span><span class="badge gray">Assunto: ${esc(filter.topic)}</span><span class="badge gray">Dificuldade: ${esc(filter.difficulty)}</span><span class="badge gray">Status: ${esc(filter.status)}</span>${filter.search?`<span class="badge">Busca: ${esc(filter.search)}</span>`:''}
+      <span class="badge gray">Matéria: ${esc(filter.subject)}</span><span class="badge gray">Assuntos: ${selectedTopics.length?selectedTopics.map(esc).join(', '):'Todos'}</span><span class="badge gray">Dificuldade: ${esc(filter.difficulty)}</span><span class="badge gray">Status: ${esc(filter.status)}</span>${filter.search?`<span class="badge">Busca: ${esc(filter.search)}</span>`:''}
     </div></div>`;
+  document.querySelectorAll('#topicPicker input[type="checkbox"]').forEach(cb=>cb.addEventListener('change',updateTopicCount));
   const subject=$('filterSubjectPage');
   subject?.addEventListener('change',()=>{
-    const ts=[...new Set(qs.filter(q=>subject.value==='Todos'||q.subject===subject.value).map(q=>q.topic).filter(Boolean))].sort();
-    $('filterTopicPage').innerHTML='<option>Todos</option>'+ts.map(x=>`<option>${esc(x)}</option>`).join('');
+    filter.subject=subject.value;
+    filter.topic=[];
+    filtersPage();
   });
 }
+function getSelectedTopics(){return [...document.querySelectorAll('#topicPicker input[type="checkbox"]:checked')].map(x=>x.value)}
+function updateTopicCount(){const n=getSelectedTopics().length;const el=$('topicCount');if(el)el.textContent=n?`(${n} selecionado${n===1?'':'s'})`:'(todos)'}
+function selectAllTopics(){document.querySelectorAll('#topicPicker input[type="checkbox"]').forEach(x=>x.checked=true);updateTopicCount()}
+function clearTopicSelection(){document.querySelectorAll('#topicPicker input[type="checkbox"]').forEach(x=>x.checked=false);updateTopicCount()}
 function applyFiltersPage(){
   filter.search=$('filterSearchPage')?.value.trim()||'';
   filter.subject=$('filterSubjectPage')?.value||'Todos';
-  filter.topic=$('filterTopicPage')?.value||'Todos';
+  filter.topic=getSelectedTopics();
   filter.difficulty=$('filterDifficultyPage')?.value||'Todos';
   filter.status=$('filterStatusPage')?.value||'Todos';
   current=0;toast('Filtros aplicados.');navigate('questions');
@@ -953,3 +1001,6 @@ document.getElementById('shareBtn')?.addEventListener('click',async()=>{
 
 </body>
 </html>
+<style id="question-source-responsive-final">
+@media(max-width:800px){.question-card-clean{padding:0 18px 20px!important}.question-source-clean{margin:0 -18px 22px!important;padding:10px 18px!important}.question-page-spacer{height:380px!important}}
+</style>
