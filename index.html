@@ -505,6 +505,7 @@ body{background:#eeeeef!important;color:#33363a!important}
   <nav class="nav">
     <button data-page="dashboard" class="active"><span class="icon">⌂</span><span>Início</span></button>
     <button data-page="questions"><span class="icon">☷</span><span>Questões</span></button>
+    <button data-page="filters"><span class="icon">⚙</span><span>Filtros</span></button>
         <button data-page="performance"><span class="icon">◔</span><span>Estatísticas</span></button>
     <button data-page="history"><span class="icon">◷</span><span>Histórico</span></button>
     <button data-page="favorites"><span class="icon">☆</span><span>Favoritas</span></button>
@@ -521,7 +522,7 @@ body{background:#eeeeef!important;color:#33363a!important}
   <header class="topbar">
     <button class="mobile-menu" id="mobileMenu">☰</button>
     <div class="search"><span>⌕</span><input id="globalSearch" placeholder="Buscar questões, matérias ou assuntos..."></div>
-    <div class="top-actions"><button class="icon-btn" id="quickQuestion" title="Questão aleatória">＋</button><div class="user-pill"><div class="avatar">A</div><span>Aluno · V22</span></div></div>
+    <div class="top-actions"><button class="icon-btn" id="quickQuestion" title="Questão aleatória">＋</button><button class="icon-btn" id="soundControl" title="Desativar sons" aria-label="Desativar sons">🔊</button><div class="user-pill"><div class="avatar">A</div><span>Aluno · V22</span></div></div>
   </header>
   <div class="page" id="content"></div>
 </main>
@@ -548,7 +549,7 @@ function save(){localStorage.setItem('questoesV10',JSON.stringify(state))}
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
 function stats(){let a=Object.values(state.answers),c=a.filter(x=>x.correct).length;return{done:a.length,c,wrong:a.length-c,rate:a.length?Math.round(c/a.length*100):0}}
 function opts(arr,val='Todos'){return '<option>Todos</option>'+[...new Set(arr)].filter(Boolean).sort().map(x=>`<option ${x===val?'selected':''}>${esc(x)}</option>`).join('')}
-function navigate(p){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));({dashboard:dashboard,questions:questions,performance:performance,history:historyPage,favorites:favorites,admin:admin}[p]||dashboard)();$('sidebar').classList.remove('open');$('overlay').classList.remove('show');window.scrollTo({top:0,behavior:'smooth'})}
+function navigate(p){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));({dashboard:dashboard,questions:questions,filters:filtersPage,performance:performance,history:historyPage,favorites:favorites,admin:admin}[p]||dashboard)();$('sidebar').classList.remove('open');$('overlay').classList.remove('show');window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>navigate(b.dataset.page));
 $('mobileMenu').onclick=()=>{$('sidebar').classList.add('open');$('overlay').classList.add('show')};$('overlay').onclick=()=>{$('sidebar').classList.remove('open');$('overlay').classList.remove('show')};
 $('quickQuestion').onclick=()=>{current=Math.floor(Math.random()*qs.length);navigate('questions')};
@@ -681,6 +682,44 @@ function clearFilters(){filter={search:'',subject:'Todos',topic:'Todos',difficul
 function answer(id,ch){let q=qs.find(x=>x.id===id),correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);save();toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions()}
 function toggleFavorite(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];save();questions()}
 function nextQ(){current++;questions()}function prevQ(){current=Math.max(0,current-1);questions()}
+function filtersPage(){
+  const subjects=[...new Set(qs.map(q=>q.subject).filter(Boolean))].sort();
+  const topics=[...new Set(qs.filter(q=>filter.subject==='Todos'||q.subject===filter.subject).map(q=>q.topic).filter(Boolean))].sort();
+  const difficulties=['Fácil','Médio','Difícil'];
+  const statuses=['Todos','Não resolvidas','Acertadas','Erradas','Favoritas'];
+  $('content').innerHTML=pageHead('Filtros','Ferramenta exclusiva para localizar questões por critérios.')+`
+    <div class="card" style="max-width:1050px;margin:0 auto">
+      <div class="card-head"><div><h2>Filtrar banco de questões</h2><p style="margin:5px 0 0;color:var(--muted);font-size:12px">Os filtros ficam separados da tela de resolução para deixar a experiência mais limpa.</p></div><span class="badge gray">${filtered().length} encontradas</span></div>
+      <div class="form-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+        <label>Busca<input class="field" id="filterSearchPage" value="${esc(filter.search)}" placeholder="Palavra, trecho ou termo..."></label>
+        <label>Matéria<select class="field" id="filterSubjectPage"><option>Todos</option>${subjects.map(x=>`<option ${x===filter.subject?'selected':''}>${esc(x)}</option>`).join('')}</select></label>
+        <label>Assunto<select class="field" id="filterTopicPage"><option>Todos</option>${topics.map(x=>`<option ${x===filter.topic?'selected':''}>${esc(x)}</option>`).join('')}</select></label>
+        <label>Dificuldade<select class="field" id="filterDifficultyPage">${difficulties.map(x=>`<option ${x===filter.difficulty?'selected':''}>${x}</option>`).join('')}</select></label>
+        <label>Status<select class="field" id="filterStatusPage">${statuses.map(x=>`<option ${x===filter.status?'selected':''}>${x}</option>`).join('')}</select></label>
+      </div>
+      <div class="manual-form-actions" style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:15px;border-top:1px solid var(--line)">
+        <button class="btn secondary" onclick="clearFilters();navigate('filters')">Limpar filtros</button>
+        <button class="btn primary" onclick="applyFiltersPage()">✓ Aplicar filtros</button>
+      </div>
+    </div>
+    <div class="card" style="max-width:1050px;margin:14px auto 0"><div class="card-head"><h2>Resumo dos critérios</h2></div><div style="display:flex;gap:7px;flex-wrap:wrap">
+      <span class="badge gray">Matéria: ${esc(filter.subject)}</span><span class="badge gray">Assunto: ${esc(filter.topic)}</span><span class="badge gray">Dificuldade: ${esc(filter.difficulty)}</span><span class="badge gray">Status: ${esc(filter.status)}</span>${filter.search?`<span class="badge">Busca: ${esc(filter.search)}</span>`:''}
+    </div></div>`;
+  const subject=$('filterSubjectPage');
+  subject?.addEventListener('change',()=>{
+    const ts=[...new Set(qs.filter(q=>subject.value==='Todos'||q.subject===subject.value).map(q=>q.topic).filter(Boolean))].sort();
+    $('filterTopicPage').innerHTML='<option>Todos</option>'+ts.map(x=>`<option>${esc(x)}</option>`).join('');
+  });
+}
+function applyFiltersPage(){
+  filter.search=$('filterSearchPage')?.value.trim()||'';
+  filter.subject=$('filterSubjectPage')?.value||'Todos';
+  filter.topic=$('filterTopicPage')?.value||'Todos';
+  filter.difficulty=$('filterDifficultyPage')?.value||'Todos';
+  filter.status=$('filterStatusPage')?.value||'Todos';
+  current=0;toast('Filtros aplicados.');navigate('questions');
+}
+
 function performance(){let s=stats(),by={};qs.forEach(q=>{by[q.subject]??={done:0,c:0};let a=state.answers[q.id];if(a){by[q.subject].done++;if(a.correct)by[q.subject].c++}});$('content').innerHTML=pageHead('Desempenho','Acompanhe seus resultados por matéria e encontre pontos de atenção.')+`<div class="grid"><div class="stat"><small>Aproveitamento geral</small><strong>${s.rate}%</strong></div><div class="stat"><small>Resolvidas</small><strong>${s.done}</strong></div><div class="stat"><small>Acertos</small><strong>${s.c}</strong></div><div class="stat"><small>Erros</small><strong>${s.wrong}</strong></div></div><div class="card" style="margin-top:16px"><div class="card-head"><h2>Detalhamento por matéria</h2></div>${Object.entries(by).map(([k,v])=>{let p=v.done?Math.round(v.c/v.done*100):0;return `<div class="subject-row"><div class="subject-meta"><b>${esc(k)}</b><span>${v.c} acertos · ${v.done-v.c} erros · ${p}%</span></div><div class="progress"><i style="width:${p}%"></i></div></div>`}).join('')}</div>`}
 function historyPage(){$('content').innerHTML=pageHead('Histórico','Tudo que você já respondeu neste dispositivo.',`<button class="btn secondary" onclick="exportData()">↥ Exportar backup</button>`)+`<div class="card"><div class="table-wrap">${state.history.length?`<table class="table"><tr><th>Questão</th><th>Matéria</th><th>Resultado</th><th>Data</th></tr>${state.history.slice(0,300).map(h=>{let q=qs.find(x=>x.id===h.id);return `<tr><td><b>#${h.id}</b> ${esc(q?.text||'Questão')}</td><td>${esc(q?.subject||'-')}</td><td>${h.correct?'<span class="badge green">Acerto</span>':'<span class="badge red">Erro</span>'}</td><td>${new Date(h.at).toLocaleString('pt-BR')}</td></tr>`}).join('')}</table>`:'<div class="empty"><b>Seu histórico está vazio</b>Resolva questões para começar a acompanhar sua evolução.</div>'}</div></div>`}
 function favorites(){let arr=qs.filter(q=>state.favorites.includes(q.id));$('content').innerHTML=pageHead('Favoritas','Questões que você salvou para revisar depois.')+`<div class="card">${arr.length?`<div class="table-wrap"><table class="table"><tr><th>Questão</th><th>Matéria</th><th>Status</th><th></th></tr>${arr.map(q=>{let a=state.answers[q.id];return `<tr><td><b>#${q.id}</b> ${esc(q.text)}</td><td>${esc(q.subject)}</td><td>${a?(a.correct?'<span class="badge green">Acertada</span>':'<span class="badge red">Errada</span>'):'<span class="badge gray">Não resolvida</span>'}</td><td><button class="btn secondary" onclick="openQuestion(${q.id})">Resolver</button></td></tr>`}).join('')}</table></div>`:'<div class="empty"><b>Nenhuma favorita</b>Use ☆ Favoritar no banco de questões para guardar questões.</div>'}</div>`}
@@ -854,7 +893,7 @@ document.getElementById('shareBtn')?.addEventListener('click',async()=>{
 <script id="clean-button-sounds">
 (function(){
   let audioCtx = null;
-  let soundEnabled = true;
+  let soundEnabled = localStorage.getItem('questoesSound') !== 'off';
   let lastSound = 0;
 
   function ensureAudio(){
@@ -888,12 +927,16 @@ document.getElementById('shareBtn')?.addEventListener('click',async()=>{
     }catch(e){}
   }
 
+  const soundControl = document.getElementById('soundControl');
+  if(soundControl){ soundControl.textContent = soundEnabled ? '🔊' : '🔇'; soundControl.title = soundEnabled ? 'Desativar sons' : 'Ativar sons'; }
+
   document.addEventListener('pointerdown', function(e){
     const control = e.target.closest('button, [role="button"], input[type="button"], input[type="submit"], .v22-option');
     if(!control || control.disabled || control.getAttribute('aria-disabled') === 'true') return;
 
     if(control.id === 'soundControl'){
       soundEnabled = !soundEnabled;
+      localStorage.setItem('questoesSound', soundEnabled ? 'on' : 'off');
       control.textContent = soundEnabled ? '🔊' : '🔇';
       control.title = soundEnabled ? 'Desativar sons' : 'Ativar sons';
       control.setAttribute('aria-label', control.title);
