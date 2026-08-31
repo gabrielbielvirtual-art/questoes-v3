@@ -500,15 +500,228 @@ body{background:#eeeeef!important;color:#33363a!important}
 .manual-question-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start}.manual-question-form{max-width:100%}.manual-question-form .card-head{align-items:flex-start}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.form-grid label,.manual-question-form>label,.manual-option-grid label,.manual-answer-row label{display:grid;gap:5px;font-size:12px;font-weight:750;color:#5f646b}.manual-options-box{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface-2)}.manual-options-title{font-size:12px;font-weight:800;margin-bottom:10px}.manual-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.manual-answer-row{margin-top:10px;max-width:220px}.tf-choice{display:flex;gap:10px}.tf-choice label{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 14px;font-size:13px;font-weight:700;cursor:pointer}.manual-form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}.manual-tip{display:flex;gap:8px;margin-top:12px;padding:11px 13px;border-radius:10px;background:#f3f8ff;border:1px solid #d8e6fb;color:#56616f;font-size:11px;line-height:1.5}.manual-tip b{color:var(--text)}.manual-question-info{position:sticky;top:140px}.manual-question-info .info-list{gap:0}.manual-question-info .info-list div{padding:12px 0}.manual-question-info .info-list small{font-size:10px}.manual-question-info .info-list b{font-size:12px;line-height:1.45}@media(max-width:900px){.manual-question-layout{grid-template-columns:1fr}.manual-question-info{position:static}}@media(max-width:600px){.form-grid,.manual-option-grid{grid-template-columns:1fr}.manual-form-actions{justify-content:stretch}.manual-form-actions .btn{flex:1}}
 </style>
 
+
+<style id="v29-filter-redesign">
+/* Filtro redesenhado inspirado no layout de referência, sem alterar o restante da plataforma. */
+.filter-page-clean{background:#f2f3f5;color:#64676d;min-height:calc(100vh - 110px);margin:-30px;padding:0 0 28px;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.filter-breadcrumb{height:62px;display:flex;align-items:center;gap:8px;padding:0 28px;font-size:18px;color:#74777d}.filter-breadcrumb b{font-size:28px;font-weight:400;color:#666b72}.filter-breadcrumb strong{font-weight:500;color:#5e6269}
+.filter-typebar{height:58px;background:#cfe6ff;border-bottom:1px solid #b9d8f4;display:flex;align-items:center;gap:28px;padding:0 32px;color:#555b63;font-size:15px}.filter-typebar label{display:flex;align-items:center;gap:8px;cursor:pointer}.filter-typebar input{width:18px;height:18px;accent-color:#168fe1}.filter-typebar .muted-option{color:#6d7178}
+.filter-workspace{display:grid;grid-template-columns:190px minmax(420px,1fr) minmax(300px,.72fr);gap:20px;padding:28px 28px 24px;max-width:1500px;margin:0 auto}
+.filter-side-menu{background:#fff;border:1px solid #e0e2e5;box-shadow:0 1px 3px rgba(20,30,45,.04);min-height:580px}.filter-side-item{width:100%;border:0;border-left:4px solid transparent;background:#fff;color:#72767c;display:flex;align-items:center;gap:11px;text-align:left;padding:16px 13px;font-size:14px}.filter-side-item:hover{background:#f7f8fa}.filter-side-item.active{background:#eef7ff;border-left-color:#238fd0;color:#4e5965;font-weight:750}.filter-side-icon{width:22px;text-align:center;color:#a5a9af;font-size:19px}.filter-side-item.active .filter-side-icon{color:#238fd0}.filter-side-note{margin:22px 14px 0;padding-top:18px;border-top:1px solid #eceef0;font-size:11px;line-height:1.55;color:#9a9ea4}
+.filter-main-panel,.filter-active-panel{background:#fff;border:1px solid #dce0e4;box-shadow:0 1px 4px rgba(20,30,45,.035);min-height:580px}.filter-panel-head{background:#dff0ff;border-bottom:1px solid #c5dff5}.filter-panel-tabs{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:#64707d}.filter-panel-tabs b{font-size:14px;font-weight:650}.filter-panel-tabs button{border:0;background:transparent;color:#4698c7;font-size:13px}.filter-search-box{display:none;padding:0 12px 11px;position:relative}.filter-search-box.show{display:block}.filter-search-box span{position:absolute;left:24px;top:9px;color:#8ca0b0}.filter-search-box input{width:100%;height:38px;border:1px solid #a8cae5;background:#fff;border-radius:3px;padding:0 12px 0 34px;color:#4c5158}
+.filter-tree{height:480px;overflow:auto;padding:8px 0}.tree-row{width:100%;min-height:38px;border:0;background:transparent;display:flex;align-items:center;gap:8px;text-align:left;padding:7px 13px;color:#646a71;font-size:14px}.tree-row:hover{background:#f7f9fb}.tree-root{font-weight:700;color:#4e5964;border-bottom:1px solid #eef0f2}.tree-group>.tree-row.selected,.tree-group.open>.tree-row{background:#e6f3ff;color:#4c5965}.tree-arrow{width:12px;color:#78848e;font-size:12px}.tree-icon{width:19px;color:#f4c44f;font-size:16px;line-height:1}.tree-root .tree-icon,.tree-group>.tree-row .tree-icon{color:#4a9bc8}.tree-count{margin-left:auto;font-size:10px;color:#a0a5ab}.tree-children{display:none;border-left:1px dotted #b9bdc2;margin-left:24px}.tree-group.open .tree-children{display:block}.tree-child{padding-left:14px;font-size:13px}.tree-child input{width:15px;height:15px;accent-color:#3f9bca;margin:0}.tree-child:has(input:checked){background:#f2f9fe;color:#3e8eb7;font-weight:650}
+.filter-panel-footer{height:48px;border-top:1px solid #e8eaed;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:11px;color:#92979d}.text-action{border:0;background:transparent;color:#4d9ac7;font-size:11px}
+.filter-active-panel{display:flex;flex-direction:column}.active-head{height:52px;background:#f3f4f6;border-bottom:1px solid #dfe2e5;display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:#60656c}.active-head b{font-size:14px}.active-head button{border:0;background:transparent;color:#4899c6;font-size:12px}.active-list{flex:1;overflow:auto;padding:8px 12px}.active-filter{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 4px;border-bottom:1px solid #edf0f2}.active-filter small{display:block;color:#9a9fa5;font-size:10px;margin-bottom:2px}.active-filter span{display:block;color:#555b62;font-size:12px}.remove-filter{border:0;background:transparent;color:#a4a8ad;font-size:20px;line-height:1}.remove-filter:hover{color:#d15f65}.active-empty{text-align:center;padding:90px 24px;color:#969ba1}.active-empty-icon{font-size:45px;color:#c2c6ca;margin-bottom:14px}.active-empty b{display:block;color:#62676d;font-size:14px;margin-bottom:6px}.active-empty span{display:block;font-size:12px;line-height:1.5}.found-box{border-top:1px solid #e2e5e8;background:#f1f2f4;padding:16px}.found-box strong{font-size:22px;color:#343940;margin-right:6px}.found-box span{font-size:13px;color:#62666c}
+.choice-filter-panel{padding:16px 14px;flex:1}.choice-filter-help{font-size:12px;color:#8b9198;margin-bottom:12px}.choice-filter-list{display:flex;flex-direction:column;gap:7px}.choice-filter-option{width:100%;display:flex;align-items:center;justify-content:space-between;text-align:left;border:1px solid #dfe3e7;background:#fff;color:#555b62;border-radius:4px;padding:12px 13px;font-size:13px;cursor:pointer}.choice-filter-option:hover{background:#f7fbff;border-color:#b9d7ed}.choice-filter-option.selected{background:#e6f3ff;border-color:#86bde2;color:#1769a2;font-weight:700}.choice-filter-option b{font-size:15px;color:#238fd0}.choice-filter-option span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.other-active-filters{padding:10px 12px;border-top:1px solid #e5e8eb}.other-active-title{font-size:11px;font-weight:700;color:#8a9097;margin-bottom:7px}.compact-filter{display:flex;align-items:center;gap:7px;padding:7px 4px;border-bottom:1px solid #edf0f2}.compact-filter small{color:#999ea5;font-size:10px;min-width:70px}.compact-filter span{flex:1;color:#555b62;font-size:12px}.compact-filter .remove-filter{font-size:17px}
+
+.filter-bottom-actions{border-top:1px solid #dfe2e5;background:#fff;min-height:72px;display:flex;align-items:center;justify-content:space-between;padding:14px 28px}.filter-bottom-actions>div{display:flex;gap:8px}.filter-bottom-actions .btn{border-radius:4px;padding:10px 16px}.filter-bottom-actions .btn.primary{background:#5eaed7}.filter-bottom-actions .btn.primary:hover{background:#4899c5}
+@media(max-width:1050px){.filter-workspace{grid-template-columns:175px minmax(0,1fr)}.filter-active-panel{grid-column:2}.filter-main-panel{grid-column:2}.filter-side-menu{grid-row:1 / span 2}.filter-active-panel{min-height:300px}.active-list{max-height:260px}}
+@media(max-width:760px){.filter-page-clean{margin:-12px -10px 0}.filter-breadcrumb{padding:0 14px;height:52px;font-size:16px}.filter-typebar{padding:0 14px;gap:13px;overflow:auto;white-space:nowrap}.filter-workspace{display:flex;flex-direction:column;padding:14px 10px}.filter-side-menu{min-height:0;display:flex;overflow:auto}.filter-side-item{min-width:150px;border-left:0;border-bottom:3px solid transparent;justify-content:center;padding:12px 9px}.filter-side-item.active{border-left:0;border-bottom-color:#238fd0}.filter-side-note{display:none}.filter-main-panel,.filter-active-panel{min-height:0}.filter-tree{height:380px}.filter-bottom-actions{padding:12px 10px;gap:8px}.filter-bottom-actions>div{width:100%}.filter-bottom-actions .btn{flex:1}.filter-bottom-actions>button{display:none}}
+
+/* ===== V30 · assuntos selecionados ao lado da árvore ===== */
+.filter-workspace{grid-template-columns:190px minmax(500px,1.35fr) minmax(330px,.72fr);align-items:stretch}
+.filter-main-panel,.filter-active-panel{min-height:620px}
+.filter-active-panel{overflow:hidden}
+.active-head{background:#f3f4f6;height:56px;padding:0 16px}
+.active-head b{font-size:15px;color:#252a31}
+.active-head button{font-size:12px}
+.selected-topics-list{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.selected-topic-card{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:46px;padding:10px 12px;border-radius:8px;background:#eaf5ff;color:#1554a4;border:1px solid #d6eaff;font-size:13px;line-height:1.35}
+.selected-topic-card span{font-weight:650;min-width:0}
+.selected-topic-card .remove-filter{width:24px;height:24px;display:grid;place-items:center;flex:none;border-radius:6px;color:#2470bd;font-size:19px}
+.selected-topic-card .remove-filter:hover{background:#d9ecff;color:#0d5cae}
+.other-active-filters{border-top:1px solid #e6e9ed;padding:12px 14px;background:#fbfcfd}
+.other-active-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.45px;color:#7a8088;margin-bottom:7px}
+.compact-filter{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid #edf0f2;font-size:11px}
+.compact-filter:last-child{border-bottom:0}
+.compact-filter small{color:#9298a0;min-width:64px}.compact-filter span{color:#4f565e;flex:1;font-weight:650}
+.compact-filter .remove-filter{font-size:17px}
+.filter-tree{height:520px}
+.tree-child{padding-left:20px}
+.tree-child:has(input:checked){background:#eaf5ff;color:#1554a4;font-weight:700;border-radius:6px;margin:1px 7px 1px 0}
+.tree-child input{accent-color:#287fd0}
+@media(max-width:1100px){.filter-workspace{grid-template-columns:175px minmax(0,1fr)}.filter-active-panel{grid-column:2}.filter-main-panel{grid-column:2}.filter-side-menu{grid-row:1 / span 2}}
+@media(max-width:760px){.filter-workspace{display:flex;flex-direction:column}.filter-main-panel,.filter-active-panel{min-height:0}.filter-tree{height:380px}.selected-topics-list{max-height:280px}}
+</style>
+
+<style id="compact-filter-final">
+/* Filtro compacto: tudo cabe na área visível; apenas as listas internas rolam. */
+.filter-page-clean{min-height:calc(100vh - 76px)!important;height:calc(100vh - 76px)!important;overflow:hidden!important;padding-bottom:0!important}
+.filter-breadcrumb{height:42px!important;padding:0 20px!important;font-size:15px!important}
+.filter-breadcrumb b{font-size:22px!important}
+.filter-typebar{height:42px!important;padding:0 20px!important;gap:22px!important;font-size:12px!important}
+.filter-typebar input{width:15px!important;height:15px!important}
+.filter-workspace{grid-template-columns:175px minmax(360px,1.15fr) minmax(280px,.72fr)!important;gap:12px!important;padding:14px 20px 12px!important;height:414px!important;max-width:1500px!important}
+.filter-side-menu,.filter-main-panel,.filter-active-panel{min-height:0!important;height:388px!important}
+.filter-side-item{padding:10px 10px!important;font-size:12px!important;gap:8px!important}
+.filter-side-icon{width:18px!important;font-size:16px!important}
+.filter-side-note{margin:14px 10px 0!important;padding-top:12px!important;font-size:10px!important}
+.filter-panel-tabs{height:40px!important;padding:0 12px!important}
+.filter-panel-tabs b{font-size:12px!important}
+.filter-panel-tabs button{font-size:11px!important}
+.filter-search-box{padding:0 10px 7px!important}
+.filter-search-box input{height:32px!important;font-size:12px!important}
+.filter-tree{height:315px!important;padding:4px 0!important}
+.tree-row{min-height:29px!important;padding:4px 10px!important;font-size:12px!important;gap:6px!important}
+.tree-child{padding-left:10px!important;font-size:11px!important}
+.tree-child input{width:13px!important;height:13px!important}
+.tree-icon{width:15px!important;font-size:13px!important}
+.tree-arrow{width:10px!important;font-size:10px!important}
+.tree-count{font-size:9px!important}
+.filter-panel-footer{height:33px!important;padding:0 10px!important;font-size:10px!important}
+.text-action{font-size:10px!important}
+.active-head{height:40px!important;padding:0 12px!important}
+.active-head b{font-size:12px!important}
+.active-head button{font-size:10px!important}
+.active-list{padding:5px 9px!important}
+.active-filter{padding:7px 3px!important}
+.active-filter small{font-size:9px!important}
+.active-filter span{font-size:11px!important}
+.selected-topic-card{padding:7px 8px!important;margin-bottom:5px!important}
+.remove-filter{font-size:17px!important}
+.active-empty{padding:55px 15px!important}
+.active-empty-icon{font-size:32px!important;margin-bottom:8px!important}
+.active-empty b{font-size:12px!important}
+.active-empty span{font-size:10px!important}
+.other-active-filters{padding:6px 9px!important}
+.other-active-title{font-size:9px!important;margin-bottom:4px!important}
+.compact-filter{padding:4px 3px!important}
+.compact-filter small{font-size:9px!important;min-width:58px!important}
+.compact-filter span{font-size:10px!important}
+.compact-filter .remove-filter{font-size:15px!important}
+.found-box{padding:9px 12px!important}
+.found-box strong{font-size:18px!important}
+.found-box span{font-size:11px!important}
+.filter-bottom-actions{min-height:52px!important;height:52px!important;padding:8px 20px!important}
+.filter-bottom-actions .btn{padding:7px 12px!important;font-size:11px!important}
+@media(max-width:1050px){.filter-workspace{height:auto!important;grid-template-columns:165px minmax(0,1fr)!important}.filter-active-panel{grid-column:2!important;height:300px!important}.filter-main-panel{height:388px!important}}
+@media(max-width:760px){.filter-page-clean{height:auto!important;min-height:calc(100vh - 62px)!important;overflow:auto!important}.filter-workspace{grid-template-columns:1fr!important;height:auto!important}.filter-side-menu,.filter-main-panel,.filter-active-panel{height:auto!important;min-height:300px!important}.filter-active-panel{grid-column:auto!important}.filter-tree{height:260px!important}}
+</style>
+
+<style>
+.active-section-title{font-size:11px;font-weight:700;color:#7d858d;text-transform:uppercase;letter-spacing:.02em;padding:8px 4px 6px}.compact-empty{padding:24px 10px!important}.choice-inline-box{margin:10px 0 0;padding:10px;border:1px solid #dfe5ea;border-radius:5px;background:#fafcfe}.choice-inline-title{display:flex;align-items:center;gap:6px;color:#5d6872;font-size:12px;margin-bottom:8px}.choice-inline-title span{color:#238fd0}.choice-inline-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.choice-filter-option{padding:8px 9px!important;font-size:11px!important}.selected-topic-card{display:flex;align-items:center;gap:6px;padding:7px 8px!important;margin-bottom:5px!important}.selected-topic-card span{font-size:11px!important;line-height:1.25}.other-active-filters{padding:7px 0!important}.compact-filter{padding:5px 4px!important}.found-box{padding:10px!important}.found-box strong{font-size:18px!important}
+</style>
+<style id="filter-final-reference">
+/* Filtro inspirado diretamente no layout de referência: compacto e sem rolagem da página */
+.filter-page-clean{margin:-30px;min-height:calc(100vh - 72px);background:#f3f4f6;color:#646970;overflow:hidden}
+.filter-breadcrumb{height:54px;padding:0 28px;font-size:18px}
+.filter-typebar{height:54px;padding:0 30px;gap:30px;font-size:15px}
+.filter-workspace{grid-template-columns:190px minmax(0,1.45fr) minmax(330px,.95fr);gap:18px;padding:18px 28px 16px;max-width:none;height:calc(100vh - 234px);min-height:500px}
+.filter-side-menu,.filter-main-panel,.filter-active-panel{min-height:0;height:100%;border-color:#b8d8ef;border-radius:2px}
+.filter-side-menu{overflow:hidden;background:#fff}
+.filter-side-title{height:45px;padding:12px 14px;font-weight:750;font-size:15px;color:#4d5965;background:#dff0ff;border-bottom:1px solid #c5dff5}
+.filter-side-item{padding:10px 13px;height:37px;font-size:14px;border-left:4px solid transparent}
+.filter-side-item.active{background:#dff0ff;border-left-color:#278fc9;color:#44505c}
+.filter-side-item.disabled-item{color:#b1b4b8;cursor:default}
+.filter-main-panel,.filter-active-panel{overflow:hidden}
+.filter-panel-head{flex:none}
+.filter-panel-tabs{height:50px;padding:0 14px}
+.filter-tree{height:calc(100% - 98px);min-height:0;padding:5px 0;overflow:auto}
+.tree-row{min-height:34px;height:34px;padding:5px 10px;font-size:13px;gap:7px}
+.tree-child{padding-left:18px;font-size:12.5px}
+.tree-icon{width:18px;font-size:14px}
+.tree-child input{width:14px;height:14px}
+.filter-panel-footer{height:48px;flex:none}
+.active-head{height:50px;flex:none;padding:0 14px;background:#f0f1f3}
+.active-head b{font-size:14px;color:#555b62}
+.active-chip-list{padding:10px;display:flex;align-content:flex-start;align-items:flex-start;flex-wrap:wrap;gap:8px;overflow:auto}
+.active-chip{display:inline-flex;align-items:center;gap:7px;max-width:100%;background:#e5f2ff;border:1px solid #cfe6fa;border-radius:18px;padding:6px 9px 6px 12px;color:#1557a4;font-size:12px;line-height:1.2}
+.active-chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+.chip-x{border:0;background:transparent;color:#1d6bb1;width:18px;height:18px;padding:0;border-radius:50%;font-size:17px;line-height:16px;display:grid;place-items:center}
+.chip-x:hover{background:#cfe7fb}
+.active-empty{width:100%;min-height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:25px;color:#8d9299}
+.active-empty b{color:#666c73;font-size:14px;margin-bottom:6px}
+.active-empty span{font-size:12px;line-height:1.45}
+.found-box{height:78px;flex:none;padding:12px 14px;background:#f0f1f3;border-top:1px solid #dfe3e7;position:relative}
+.found-box strong{font-size:21px}.found-box span{font-size:12px}
+.found-actions{position:absolute;right:14px;bottom:11px;display:flex;gap:14px}.found-actions .text-action{font-size:11px}
+.filter-bottom-actions{height:68px;min-height:68px;padding:10px 28px}
+.filter-bottom-actions .btn{padding:9px 14px}
+.choice-main-panel{padding:14px!important}.choice-main-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.choice-main-option{padding:10px;font-size:12px}
+@media(max-width:1050px){.filter-workspace{grid-template-columns:170px minmax(0,1fr) 290px;gap:10px;padding-left:16px;padding-right:16px}.filter-side-item{font-size:12px}.active-chip span{max-width:180px}}
+@media(max-width:760px){.filter-page-clean{margin:-12px -10px 0;overflow:auto}.filter-workspace{height:auto;display:flex;flex-direction:column;padding:12px 10px}.filter-side-menu,.filter-main-panel,.filter-active-panel{height:auto;min-height:0}.filter-side-menu{display:flex;flex-wrap:wrap}.filter-side-title{width:100%}.filter-side-item{flex:1 1 140px}.filter-tree{height:360px}.active-chip-list{min-height:130px}.filter-bottom-actions{height:auto}.found-actions{position:static;margin-top:8px}}
+</style>
+
+<style id="filter-exact-reference-options">
+.options-panel-body{padding:16px;display:flex;flex-direction:column;gap:16px;overflow:auto;height:calc(100% - 50px);box-sizing:border-box}
+.options-section{border:1px solid #dbe5ed;border-radius:5px;background:#fff;overflow:hidden}
+.options-section-title{display:flex;align-items:center;gap:8px;padding:11px 12px;background:#eef7ff;border-bottom:1px solid #d7e8f6;color:#1557a4}
+.options-section-title>span{font-size:15px;color:#238fd0}
+.options-section-title b{font-size:13px}
+.options-section-title small{margin-left:auto;color:#8b959e;font-size:10px}
+.options-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:10px}
+.options-choice-grid .choice-main-option{min-height:36px}
+.filter-active-panel .active-chip-list{align-content:flex-start}
+@media(max-width:760px){.options-choice-grid{grid-template-columns:1fr}.options-section-title{flex-wrap:wrap}.options-section-title small{width:100%;margin-left:23px}}
+</style>
+
+<style id="filter-ipad-reference">
+/* Ajuste de referência para iPad/desktop compacto: proporções do screenshot enviado. */
+body.filter-mode{overflow:hidden;background:#f1f2f4}
+body.filter-mode .topbar{display:none!important}
+body.filter-mode .sidebar{width:60px!important;padding:8px 0!important;background:#fff!important;color:#aeb1b6!important;border-right:1px solid #e2e3e5!important;box-shadow:0 1px 4px rgba(0,0,0,.05)!important}
+body.filter-mode .logo{height:60px;padding:0!important;justify-content:center}
+body.filter-mode .logo-mark{width:38px;height:38px;border-radius:5px;background:#f6f6f7;color:#b5b7bb;box-shadow:none}
+body.filter-mode .logo>div:last-child{display:none!important}
+body.filter-mode .nav{gap:0!important}
+body.filter-mode .nav button{height:58px!important;width:60px!important;padding:0!important;border-radius:0!important;justify-content:center!important;gap:0!important;color:#b1b4b9!important;font-size:0!important;position:relative}
+body.filter-mode .nav button .icon{width:auto!important;font-size:22px!important;line-height:1}
+body.filter-mode .nav button span:last-child{display:none!important;font-size:0!important;width:0!important;overflow:hidden!important}
+body.filter-mode .nav button.active{background:#f4f4f5!important;color:#33373b!important;box-shadow:none!important;border-left:4px solid #278fd0!important}
+body.filter-mode .nav-section,body.filter-mode .side-bottom{display:none!important}
+body.filter-mode .main{margin-left:60px!important;min-height:100vh!important}
+body.filter-mode #content{padding:0!important}
+body.filter-mode .filter-page-clean{margin:0!important;width:100%!important;min-height:100vh!important;height:100vh!important}
+
+@media (min-width:900px) and (max-width:1100px){
+  body.filter-mode .filter-breadcrumb{height:36px!important;padding:0 14px!important;font-size:13px!important}
+  body.filter-mode .filter-breadcrumb b{font-size:19px!important}
+  body.filter-mode .filter-typebar{height:40px!important;padding:0 16px!important;gap:20px!important;font-size:12px!important}
+  body.filter-mode .filter-typebar input{width:14px!important;height:14px!important}
+  body.filter-mode .filter-workspace{display:grid!important;grid-template-columns:190px minmax(0,1fr) minmax(280px,.86fr)!important;gap:12px!important;padding:12px 14px 10px!important;height:calc(100vh - 134px)!important;min-height:0!important}
+  body.filter-mode .filter-side-menu,body.filter-mode .filter-main-panel,body.filter-mode .filter-active-panel{height:100%!important;min-height:0!important}
+  body.filter-mode .filter-side-title{height:39px!important;padding:10px 12px!important;font-size:13px!important}
+  body.filter-mode .filter-side-item{height:34px!important;padding:8px 10px!important;font-size:12px!important}
+  body.filter-mode .filter-panel-tabs{height:39px!important;padding:0 11px!important}
+  body.filter-mode .filter-panel-tabs b{font-size:12px!important}
+  body.filter-mode .filter-panel-tabs button{font-size:10px!important}
+  body.filter-mode .filter-tree{height:calc(100% - 82px)!important;padding:3px 0!important}
+  body.filter-mode .tree-row{height:27px!important;min-height:27px!important;padding:3px 8px!important;font-size:11px!important;gap:5px!important}
+  body.filter-mode .tree-child{padding-left:15px!important;font-size:10.5px!important}
+  body.filter-mode .tree-icon{width:15px!important;font-size:12px!important}
+  body.filter-mode .tree-child input{width:12px!important;height:12px!important}
+  body.filter-mode .filter-panel-footer{height:32px!important;padding:0 8px!important;font-size:9px!important}
+  body.filter-mode .active-head{height:39px!important;padding:0 11px!important}
+  body.filter-mode .active-head b{font-size:11px!important}
+  body.filter-mode .active-head button{font-size:9px!important}
+  body.filter-mode .active-chip-list{padding:8px!important;gap:5px!important;align-content:flex-start!important}
+  body.filter-mode .active-chip{padding:5px 7px 5px 9px!important;border-radius:14px!important;font-size:10px!important;gap:4px!important}
+  body.filter-mode .active-chip span{max-width:145px!important}
+  body.filter-mode .chip-x{width:15px!important;height:15px!important;font-size:14px!important}
+  body.filter-mode .active-empty{padding:30px 10px!important}
+  body.filter-mode .active-empty b{font-size:11px!important}
+  body.filter-mode .active-empty span{font-size:9px!important}
+  body.filter-mode .found-box{height:61px!important;padding:8px 10px!important}
+  body.filter-mode .found-box strong{font-size:16px!important}
+  body.filter-mode .found-box span{font-size:9px!important}
+  body.filter-mode .found-actions{right:10px!important;bottom:7px!important;gap:8px!important}
+  body.filter-mode .found-actions .text-action{font-size:9px!important}
+  body.filter-mode .filter-bottom-actions{display:flex!important;position:fixed!important;left:60px!important;right:0!important;bottom:0!important;height:58px!important;min-height:58px!important;z-index:100!important;background:#fff!important;border-top:1px solid #dfe3e7!important;padding:8px 14px!important;box-sizing:border-box!important;}
+  body.filter-mode .filter-bottom-actions>div{display:flex!important;gap:8px!important;margin-left:auto!important;}
+  body.filter-mode .filter-bottom-actions .btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;height:38px!important;padding:7px 14px!important;font-size:11px!important;}
+  body.filter-mode .filter-bottom-actions .btn.primary{display:inline-flex!important;background:#5eaed7!important;color:#fff!important;}
+  body.filter-mode .filter-bottom-actions .btn.secondary{display:inline-flex!important;}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
 <aside class="sidebar" id="sidebar">
   <div class="logo"><div class="logo-mark">Q</div><div>Questões <span style="color:#6aa7ff">V20</span><small>Plataforma de estudos</small></div></div>
   <nav class="nav">
-    <button data-page="dashboard" class="active"><span class="icon">⌂</span><span>Início</span></button>
+    <button data-page="filters" class="active"><span class="icon">⚙</span><span>Filtros</span></button>
     <button data-page="questions"><span class="icon">☷</span><span>Questões</span></button>
-    <button data-page="filters"><span class="icon">⚙</span><span>Filtros</span></button>
         <button data-page="performance"><span class="icon">◔</span><span>Estatísticas</span></button>
     <button data-page="history"><span class="icon">◷</span><span>Histórico</span></button>
     <button data-page="favorites"><span class="icon">☆</span><span>Favoritas</span></button>
@@ -572,7 +785,7 @@ function save(){localStorage.setItem('questoesV10',JSON.stringify(state))}
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
 function stats(){let a=Object.values(state.answers),c=a.filter(x=>x.correct).length;return{done:a.length,c,wrong:a.length-c,rate:a.length?Math.round(c/a.length*100):0}}
 function opts(arr,val='Todos'){return '<option>Todos</option>'+[...new Set(arr)].filter(Boolean).sort().map(x=>`<option ${x===val?'selected':''}>${esc(x)}</option>`).join('')}
-function navigate(p){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));({dashboard:dashboard,questions:questions,filters:filtersPage,performance:performance,history:historyPage,favorites:favorites,admin:admin}[p]||dashboard)();$('sidebar').classList.remove('open');$('overlay').classList.remove('show');window.scrollTo({top:0,behavior:'smooth'})}
+function navigate(p){document.body.classList.toggle('filter-mode',p==='filters');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));({dashboard:dashboard,questions:questions,filters:filtersPage,performance:performance,history:historyPage,favorites:favorites,admin:admin}[p]||dashboard)();$('sidebar').classList.remove('open');$('overlay').classList.remove('show');window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>navigate(b.dataset.page));
 $('mobileMenu').onclick=()=>{$('sidebar').classList.add('open');$('overlay').classList.add('show')};$('overlay').onclick=()=>{$('sidebar').classList.remove('open');$('overlay').classList.remove('show')};
 $('quickQuestion').onclick=()=>{current=Math.floor(Math.random()*qs.length);navigate('questions')};
@@ -714,60 +927,157 @@ function clearFilters(){filter={search:'',subject:'Todos',topic:[],difficulty:'T
 function answer(id,ch){let q=qs.find(x=>x.id===id),correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);save();toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions()}
 function toggleFavorite(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];save();questions()}
 function nextQ(){current++;questions()}function prevQ(){current=Math.max(0,current-1);questions()}
+function filterActiveItems(){
+  const selectedTopics=Array.isArray(filter.topic)?filter.topic:(filter.topic==='Todos'||!filter.topic?[]:[filter.topic]);
+  const items=[];
+  if(filter.subject!=='Todos') items.push({key:'Matéria',value:filter.subject,type:'subject'});
+  selectedTopics.forEach((value,i)=>items.push({key:'Assunto',value,type:'topic',index:i}));
+  if(filter.search) items.push({key:'Busca',value:filter.search,type:'search'});
+  if(filter.difficulty!=='Todos') items.push({key:'Dificuldade',value:filter.difficulty,type:'difficulty'});
+  if(filter.status!=='Todos') items.push({key:'Status',value:filter.status,type:'status'});
+  return items;
+}
+function renderActiveFilters(){
+  const items=filterActiveItems();
+  const box=$('activeFilterChips'); if(!box)return;
+  box.innerHTML=items.length?items.map((item,i)=>`<div class="active-chip" title="${esc(item.key)}: ${esc(item.value)}"><span>${esc(item.value)}</span><button type="button" class="chip-x" data-chip-index="${i}" aria-label="Remover ${esc(item.value)}">×</button></div>`).join(''):`<div class="active-empty"><b>Selecione os filtros ao lado</b><span>Os filtros escolhidos aparecerão aqui.</span></div>`;
+  box.querySelectorAll('[data-chip-index]').forEach(btn=>btn.addEventListener('click',()=>{
+    const item=items[Number(btn.dataset.chipIndex)]; if(!item)return;
+    if(item.type==='topic') filter.topic=filterActiveItems().filter(x=>x.type==='topic').filter(x=>x.value!==item.value).map(x=>x.value);
+    else if(item.type==='subject'){filter.subject='Todos';filter.topic=[]}
+    else if(item.type==='search')filter.search='';
+    else if(item.type==='difficulty')filter.difficulty='Todos';
+    else if(item.type==='status')filter.status='Todos';
+    filtersPage();
+  }));
+}
+function showFilterChoicePanel(type, options, currentValue){
+  const main=document.querySelector('.filter-main-panel');
+  if(!main)return;
+  const title=type==='difficulty'?'Dificuldade':'Status';
+  const icon=type==='difficulty'?'◈':'✓';
+  main.innerHTML=`
+    <div class="filter-panel-head">
+      <div class="filter-panel-tabs"><b>${icon} ${title}</b><button type="button" id="backToSubjects">Matérias e assuntos</button></div>
+    </div>
+    <div class="choice-main-panel">
+      <div class="choice-main-title">Selecione uma opção</div>
+      <div class="choice-main-options">
+        ${options.map(value=>`<button type="button" class="choice-main-option ${value===currentValue?'selected':''}" data-choice="${esc(value)}"><span>${esc(value)}</span>${value===currentValue?'<b>✓</b>':''}</button>`).join('')}
+      </div>
+    </div>`;
+  main.querySelector('#backToSubjects')?.addEventListener('click',()=>filtersPage());
+  main.querySelectorAll('[data-choice]').forEach(btn=>btn.addEventListener('click',()=>{
+    filter[type]=btn.dataset.choice; current=0; filtersPage();
+  }));
+}
+function showOptionsPanel(difficulties,statuses){
+  const main=document.querySelector('.filter-main-panel');
+  if(!main)return;
+  main.innerHTML=`
+    <div class="filter-panel-head">
+      <div class="filter-panel-tabs"><b>Opções</b><button type="button" id="backToSubjects">Matérias e assuntos</button></div>
+    </div>
+    <div class="options-panel-body">
+      <div class="options-section">
+        <div class="options-section-title"><span>◈</span><b>Dificuldade</b><small>Escolha o nível das questões</small></div>
+        <div class="options-choice-grid">
+          ${difficulties.map(value=>`<button type="button" class="choice-main-option ${value===filter.difficulty?'selected':''}" data-option-type="difficulty" data-choice="${esc(value)}"><span>${esc(value)}</span>${value===filter.difficulty?'<b>✓</b>':''}</button>`).join('')}
+        </div>
+      </div>
+      <div class="options-section">
+        <div class="options-section-title"><span>✓</span><b>Status</b><small>Escolha o estado das questões</small></div>
+        <div class="options-choice-grid">
+          ${statuses.map(value=>`<button type="button" class="choice-main-option ${value===filter.status?'selected':''}" data-option-type="status" data-choice="${esc(value)}"><span>${esc(value)}</span>${value===filter.status?'<b>✓</b>':''}</button>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  main.querySelector('#backToSubjects')?.addEventListener('click',()=>filtersPage());
+  main.querySelectorAll('[data-choice]').forEach(btn=>btn.addEventListener('click',()=>{
+    filter[btn.dataset.optionType]=btn.dataset.choice;
+    current=0;
+    filtersPage();
+  }));
+}
 function filtersPage(){
   const subjects=[...new Set(qs.map(q=>q.subject).filter(Boolean))].sort();
   const selectedTopics=Array.isArray(filter.topic)?filter.topic:(filter.topic==='Todos'||!filter.topic?[]:[filter.topic]);
-  const topics=[...new Set(qs.filter(q=>filter.subject==='Todos'||q.subject===filter.subject).map(q=>q.topic).filter(Boolean))].sort();
-  const difficulties=['Fácil','Médio','Difícil'];
+  const difficulties=['Todos','Fácil','Médio','Difícil'];
   const statuses=['Todos','Não resolvidas','Acertadas','Erradas','Favoritas'];
-  $('content').innerHTML=pageHead('Filtros','Ferramenta exclusiva para localizar questões por critérios.')+`
-    <div class="card" style="max-width:1050px;margin:0 auto">
-      <div class="card-head"><div><h2>Filtrar banco de questões</h2><p style="margin:5px 0 0;color:var(--muted);font-size:12px">Agora você pode selecionar vários assuntos da mesma matéria.</p></div><span class="badge gray">${filtered().length} encontradas</span></div>
-      <div class="form-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
-        <label>Busca<input class="field" id="filterSearchPage" value="${esc(filter.search)}" placeholder="Palavra, trecho ou termo..."></label>
-        <label>Matéria<select class="field" id="filterSubjectPage"><option>Todos</option>${subjects.map(x=>`<option ${x===filter.subject?'selected':''}>${esc(x)}</option>`).join('')}</select></label>
-        <div style="grid-column:1/-1">
-          <label style="display:block;font-weight:700;font-size:13px;margin-bottom:7px">Assuntos <span id="topicCount" style="color:var(--muted);font-weight:500">${selectedTopics.length?`(${selectedTopics.length} selecionado${selectedTopics.length===1?'':'s'})`:'(todos)'}</span></label>
-          <div id="topicPicker" class="topic-picker">
-            ${topics.length?topics.map(x=>`<label class="topic-check"><input type="checkbox" value="${esc(x)}" ${selectedTopics.includes(x)?'checked':''}><span>${esc(x)}</span></label>`).join(''):'<span style="color:var(--muted);font-size:13px">Selecione uma matéria para listar os assuntos.</span>'}
-          </div>
-          <div style="display:flex;gap:7px;margin-top:8px;flex-wrap:wrap">
-            <button type="button" class="btn secondary" onclick="selectAllTopics()">Selecionar todos</button>
-            <button type="button" class="btn secondary" onclick="clearTopicSelection()">Limpar assuntos</button>
-          </div>
-        </div>
-        <label>Dificuldade<select class="field" id="filterDifficultyPage">${difficulties.map(x=>`<option ${x===filter.difficulty?'selected':''}>${x}</option>`).join('')}</select></label>
-        <label>Status<select class="field" id="filterStatusPage">${statuses.map(x=>`<option ${x===filter.status?'selected':''}>${x}</option>`).join('')}</select></label>
+  const activeItems=filterActiveItems();
+  const topicCount=selectedTopics.length;
+  $('content').innerHTML=`
+    <div class="filter-page-clean">
+      <div class="filter-breadcrumb"><span>Estudo</span><b>›</b><strong>Filtrar questões</strong></div>
+      <div class="filter-typebar">
+        <label><input type="radio" name="filterType" checked> <b>Objetivas (todas)</b></label>
+        <label class="muted-option"><input type="radio" name="filterType" disabled> Objetivas (inéditas)</label>
+        <label class="muted-option"><input type="radio" name="filterType" disabled> Discursivas</label>
       </div>
-      <div class="manual-form-actions" style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:15px;border-top:1px solid var(--line)">
-        <button class="btn secondary" onclick="clearFilters();navigate('filters')">Limpar filtros</button>
-        <button class="btn primary" onclick="applyFiltersPage()">✓ Aplicar filtros</button>
+      <div class="filter-workspace">
+        <aside class="filter-side-menu">
+          <div class="filter-side-title">Filtros</div>
+          <button class="filter-side-item active" data-filter-section="subjects"><span>Matéria e assunto</span></button>
+          <button class="filter-side-item" data-filter-section="bank"><span>Banca</span></button>
+          <button class="filter-side-item" data-filter-section="organ"><span>Órgão e cargo</span></button>
+          <button class="filter-side-item" data-filter-section="year"><span>Ano</span></button>
+          <button class="filter-side-item" data-filter-section="area"><span>Área (Carreira)</span></button>
+          <button class="filter-side-item" data-filter-section="school"><span>Escolaridade</span></button>
+          <button class="filter-side-item" data-filter-section="formation"><span>Formação</span></button>
+          <button class="filter-side-item" data-filter-section="region"><span>Região</span></button>
+          <button class="filter-side-item" data-filter-section="favorites"><span>Favoritas</span></button>
+          <button class="filter-side-item" data-filter-section="search"><span>Enunciados</span></button>
+          <button class="filter-side-item" data-filter-section="options"><span>Opções</span></button>
+        </aside>
+        <section class="filter-main-panel">
+          <div class="filter-panel-head">
+            <div class="filter-panel-tabs"><b>Matérias e assuntos</b><button type="button" id="filterSearchToggle">Pesquisar por nome&nbsp; ↔</button></div>
+            <div class="filter-search-box" id="filterSearchBox"><span>⌕</span><input id="filterTreeSearch" value="${esc(filter.search)}" placeholder="Pesquisar por matéria ou assunto..."></div>
+          </div>
+          <div class="filter-tree" id="filterTree">
+            <button type="button" class="tree-row tree-root" data-value="Todos"><span class="tree-arrow">▾</span><span class="tree-icon">▣</span><span>Todo o conteúdo</span></button>
+            ${subjects.map(sub=>{
+              const isSelected=filter.subject===sub;
+              const subTopics=[...new Set(qs.filter(q=>q.subject===sub).map(q=>q.topic).filter(Boolean))].sort();
+              const open=isSelected||selectedTopics.some(t=>subTopics.includes(t));
+              return `<div class="tree-group ${open?'open':''}" data-subject="${esc(sub)}">
+                <button type="button" class="tree-row ${isSelected?'selected':''}" data-subject-select="${esc(sub)}"><span class="tree-arrow">${open?'▾':'▸'}</span><span class="tree-icon">▣</span><span>${esc(sub)}</span><span class="tree-count">${qs.filter(q=>q.subject===sub).length}</span></button>
+                <div class="tree-children">${subTopics.map(t=>`<label class="tree-row tree-child"><input type="checkbox" value="${esc(t)}" ${selectedTopics.includes(t)?'checked':''}><span class="tree-icon">▣</span><span>${esc(t)}</span></label>`).join('')}</div>
+              </div>`;
+            }).join('')}
+          </div>
+          <div class="filter-panel-footer"><span>${qs.length} questões no banco</span><button type="button" class="text-action" id="clearTreeTopics">Limpar assuntos</button></div>
+        </section>
+        <aside class="filter-active-panel">
+          <div class="active-head"><b>Filtros ativos: ${activeItems.length}</b><button type="button" id="clearAllActive">${activeItems.length?'Limpar tudo':''}</button></div>
+          <div class="active-list active-chip-list" id="activeFilterChips"></div>
+          <div class="found-box"><strong>${filtered().length}</strong><span>questões encontradas</span><div class="found-actions"><button type="button" class="text-action">▦ Calcular dificuldade</button><button type="button" class="text-action">✎ Editar quantidades</button></div></div>
+        </aside>
       </div>
-    </div>
-    <div class="card" style="max-width:1050px;margin:14px auto 0"><div class="card-head"><h2>Resumo dos critérios</h2></div><div style="display:flex;gap:7px;flex-wrap:wrap">
-      <span class="badge gray">Matéria: ${esc(filter.subject)}</span><span class="badge gray">Assuntos: ${selectedTopics.length?selectedTopics.map(esc).join(', '):'Todos'}</span><span class="badge gray">Dificuldade: ${esc(filter.difficulty)}</span><span class="badge gray">Status: ${esc(filter.status)}</span>${filter.search?`<span class="badge">Busca: ${esc(filter.search)}</span>`:''}
-    </div></div>`;
-  document.querySelectorAll('#topicPicker input[type="checkbox"]').forEach(cb=>cb.addEventListener('change',updateTopicCount));
-  const subject=$('filterSubjectPage');
-  subject?.addEventListener('change',()=>{
-    filter.subject=subject.value;
-    filter.topic=[];
-    filtersPage();
-  });
+      <div class="filter-bottom-actions">
+        <button class="btn secondary" id="restoreFilters">↻ Restaurar padrões</button>
+        <div><button class="btn secondary" onclick="navigate('questions')">Cancelar</button><button class="btn primary" id="applyFilterVisual">⌕ Aplicar filtros</button></div>
+      </div>
+    </div>`;
+  renderActiveFilters();
+  const treeSearch=$('filterTreeSearch'),searchBox=$('filterSearchBox');
+  $('filterSearchToggle')?.addEventListener('click',()=>{searchBox.classList.toggle('show');if(searchBox.classList.contains('show'))treeSearch?.focus()});
+  if(filter.search)searchBox.classList.add('show');
+  treeSearch?.addEventListener('input',e=>{const term=e.target.value.toLowerCase().trim();document.querySelectorAll('.tree-group').forEach(g=>g.style.display=(!term||g.dataset.subject.toLowerCase().includes(term)||g.textContent.toLowerCase().includes(term))?'block':'none');filter.search=e.target.value.trim();renderActiveFilters()});
+  $('filterTree')?.querySelector('.tree-root')?.addEventListener('click',()=>{filter.subject='Todos';filter.topic=[];filtersPage()});
+  document.querySelectorAll('[data-subject-select]').forEach(btn=>btn.addEventListener('click',()=>{filter.subject=btn.dataset.subjectSelect;filter.topic=[];filtersPage()}));
+  document.querySelectorAll('#filterTree input[type="checkbox"]').forEach(cb=>cb.addEventListener('change',()=>{filter.topic=[...document.querySelectorAll('#filterTree input[type="checkbox"]:checked')].map(x=>x.value);filtersPage()}));
+  $('clearTreeTopics')?.addEventListener('click',()=>{filter.topic=[];filtersPage()});
+  $('clearAllActive')?.addEventListener('click',()=>{clearFilters();filtersPage()});
+  $('restoreFilters')?.addEventListener('click',()=>{clearFilters();filtersPage()});
+  $('applyFilterVisual')?.addEventListener('click',()=>{current=0;toast('Filtros aplicados.');navigate('questions')});
+  document.querySelectorAll('[data-filter-section]').forEach(btn=>btn.addEventListener('click',()=>{
+    const section=btn.dataset.filterSection;
+    document.querySelectorAll('.filter-side-item').forEach(x=>x.classList.toggle('active',x===btn));
+    if(section==='search'){searchBox.classList.add('show');treeSearch?.focus();return}
+    if(section==='options'){showOptionsPanel(difficulties,statuses);return}
+  }));
 }
-function getSelectedTopics(){return [...document.querySelectorAll('#topicPicker input[type="checkbox"]:checked')].map(x=>x.value)}
-function updateTopicCount(){const n=getSelectedTopics().length;const el=$('topicCount');if(el)el.textContent=n?`(${n} selecionado${n===1?'':'s'})`:'(todos)'}
-function selectAllTopics(){document.querySelectorAll('#topicPicker input[type="checkbox"]').forEach(x=>x.checked=true);updateTopicCount()}
-function clearTopicSelection(){document.querySelectorAll('#topicPicker input[type="checkbox"]').forEach(x=>x.checked=false);updateTopicCount()}
-function applyFiltersPage(){
-  filter.search=$('filterSearchPage')?.value.trim()||'';
-  filter.subject=$('filterSubjectPage')?.value||'Todos';
-  filter.topic=getSelectedTopics();
-  filter.difficulty=$('filterDifficultyPage')?.value||'Todos';
-  filter.status=$('filterStatusPage')?.value||'Todos';
-  current=0;toast('Filtros aplicados.');navigate('questions');
-}
-
 function performance(){let s=stats(),by={};qs.forEach(q=>{by[q.subject]??={done:0,c:0};let a=state.answers[q.id];if(a){by[q.subject].done++;if(a.correct)by[q.subject].c++}});$('content').innerHTML=pageHead('Desempenho','Acompanhe seus resultados por matéria e encontre pontos de atenção.')+`<div class="grid"><div class="stat"><small>Aproveitamento geral</small><strong>${s.rate}%</strong></div><div class="stat"><small>Resolvidas</small><strong>${s.done}</strong></div><div class="stat"><small>Acertos</small><strong>${s.c}</strong></div><div class="stat"><small>Erros</small><strong>${s.wrong}</strong></div></div><div class="card" style="margin-top:16px"><div class="card-head"><h2>Detalhamento por matéria</h2></div>${Object.entries(by).map(([k,v])=>{let p=v.done?Math.round(v.c/v.done*100):0;return `<div class="subject-row"><div class="subject-meta"><b>${esc(k)}</b><span>${v.c} acertos · ${v.done-v.c} erros · ${p}%</span></div><div class="progress"><i style="width:${p}%"></i></div></div>`}).join('')}</div>`}
 function historyPage(){$('content').innerHTML=pageHead('Histórico','Tudo que você já respondeu neste dispositivo.',`<button class="btn secondary" onclick="exportData()">↥ Exportar backup</button>`)+`<div class="card"><div class="table-wrap">${state.history.length?`<table class="table"><tr><th>Questão</th><th>Matéria</th><th>Resultado</th><th>Data</th></tr>${state.history.slice(0,300).map(h=>{let q=qs.find(x=>x.id===h.id);return `<tr><td><b>#${h.id}</b> ${esc(q?.text||'Questão')}</td><td>${esc(q?.subject||'-')}</td><td>${h.correct?'<span class="badge green">Acerto</span>':'<span class="badge red">Erro</span>'}</td><td>${new Date(h.at).toLocaleString('pt-BR')}</td></tr>`}).join('')}</table>`:'<div class="empty"><b>Seu histórico está vazio</b>Resolva questões para começar a acompanhar sua evolução.</div>'}</div></div>`}
 function favorites(){let arr=qs.filter(q=>state.favorites.includes(q.id));$('content').innerHTML=pageHead('Favoritas','Questões que você salvou para revisar depois.')+`<div class="card">${arr.length?`<div class="table-wrap"><table class="table"><tr><th>Questão</th><th>Matéria</th><th>Status</th><th></th></tr>${arr.map(q=>{let a=state.answers[q.id];return `<tr><td><b>#${q.id}</b> ${esc(q.text)}</td><td>${esc(q.subject)}</td><td>${a?(a.correct?'<span class="badge green">Acertada</span>':'<span class="badge red">Errada</span>'):'<span class="badge gray">Não resolvida</span>'}</td><td><button class="btn secondary" onclick="openQuestion(${q.id})">Resolver</button></td></tr>`}).join('')}</table></div>`:'<div class="empty"><b>Nenhuma favorita</b>Use ☆ Favoritar no banco de questões para guardar questões.</div>'}</div>`}
@@ -999,8 +1309,84 @@ document.getElementById('shareBtn')?.addEventListener('click',async()=>{
 })();
 </script>
 
+<style id="filter-selected-chips">
+.filter-active-panel{overflow:hidden!important}
+.selected-topics-list{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-content:flex-start!important;gap:6px!important;max-height:250px!important;overflow:auto!important}
+.active-section-title{width:100%!important;flex-basis:100%!important}
+.selected-topic-card{min-height:30px!important;width:auto!important;display:inline-flex!important;padding:6px 8px!important;margin:0!important;border-radius:6px!important}
+.other-active-filters{width:100%!important;display:flex!important;flex-wrap:wrap!important;gap:6px!important;border-top:1px solid #e6e9ed!important}
+.other-active-title{width:100%!important}
+.compact-filter{display:inline-flex!important;align-items:center!important;gap:5px!important;width:auto!important;border:1px solid #d6eaff!important;background:#eaf5ff!important;border-radius:6px!important;padding:6px 8px!important;color:#1554a4!important}
+.compact-filter small{font-size:10px!important;font-weight:700!important;color:#6d7890!important}
+.compact-filter span{font-size:11px!important;font-weight:650!important}
+.found-box{margin-top:auto!important}
+.choice-main-panel{padding:16px!important}
+.choice-main-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px}
+.choice-main-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.choice-main-option{border:1px solid var(--line);background:#fff;border-radius:7px;padding:11px 12px;text-align:left;font-size:12px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.choice-main-option:hover{border-color:#8fc9ef;background:#f5fbff}
+.choice-main-option.selected{border-color:#238fd0;background:#eaf5ff;color:#1554a4;font-weight:700}
+@media(max-width:760px){.selected-topics-list{max-height:220px!important}.choice-main-options{grid-template-columns:1fr}}
+</style>
+<style id="filter-nav-keep-normal-size">
+/* No modo Filtros, a faixa de abas permanece com o mesmo tamanho e formato da navegação normal. */
+body.filter-mode .sidebar{
+  position:sticky!important;top:0!important;inset:auto!important;width:100%!important;height:auto!important;
+  padding:0 7vw!important;background:#fff!important;color:var(--text)!important;
+  border-right:0!important;border-bottom:1px solid #d9dadd!important;
+  display:grid!important;grid-template-columns:180px minmax(0,1fr) auto!important;align-items:stretch!important;gap:20px!important;
+  box-shadow:0 1px 5px rgba(0,0,0,.03)!important;
+}
+body.filter-mode .logo{height:70px!important;padding:0 12px!important;justify-content:flex-start!important}
+body.filter-mode .logo-mark{width:34px!important;height:34px!important;border-radius:50%!important;background:#fff!important;border:2px solid #3ca7d0!important;color:#2d9bcb!important}
+body.filter-mode .logo>div:last-child{display:block!important}
+body.filter-mode .nav{display:flex!important;align-items:stretch!important;gap:2px!important;overflow:visible!important;padding:0!important}
+body.filter-mode .nav button{
+  position:relative!important;width:auto!important;height:70px!important;min-height:70px!important;
+  padding:0 14px!important;margin:0!important;border-radius:0!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;
+  background:transparent!important;color:#74777d!important;font-size:15px!important;font-weight:650!important;
+}
+body.filter-mode .nav button .icon{width:auto!important;height:auto!important;font-size:18px!important;line-height:1!important;display:inline-flex!important}
+body.filter-mode .nav button span:last-child{display:inline!important;width:auto!important;overflow:visible!important;font-size:15px!important}
+body.filter-mode .nav button:hover{background:#f7f8fa!important;color:#2d8db7!important}
+body.filter-mode .nav button.active{background:#fff!important;color:#2d8db7!important;border-left:0!important;box-shadow:none!important}
+body.filter-mode .nav button.active:after{left:12px!important;right:12px!important;bottom:0!important;height:3px!important}
+body.filter-mode .header-tools{display:flex!important}
+body.filter-mode .main{margin-left:0!important;min-height:calc(100vh - 70px)!important}
+body.filter-mode .topbar{display:none!important}
+body.filter-mode .filter-page-clean{width:100%!important;min-height:calc(100vh - 70px)!important;height:calc(100vh - 70px)!important}
+@media(max-width:1100px){
+  body.filter-mode .sidebar{padding:0 20px!important;grid-template-columns:150px minmax(0,1fr)!important;gap:10px!important}
+  body.filter-mode .header-tools{display:none!important}
+  body.filter-mode .nav button{height:70px!important;min-height:70px!important;padding:0 9px!important}
+  body.filter-mode .nav button span:last-child{font-size:13px!important}
+}
+@media(max-width:760px){
+  body.filter-mode .sidebar{display:block!important;padding:0!important}
+  body.filter-mode .logo{height:58px!important;padding:0 15px!important}
+  body.filter-mode .nav{overflow-x:auto!important;border-top:1px solid #eee!important;padding:0 8px!important}
+  body.filter-mode .nav button{height:48px!important;min-height:48px!important;padding:0 11px!important}
+  body.filter-mode .nav button.active:after{left:7px!important;right:7px!important}
+  body.filter-mode .main{margin-left:0!important}
+  body.filter-mode .filter-page-clean{min-height:calc(100vh - 106px)!important;height:auto!important}
+}
+</style>
 </body>
 </html>
 <style id="question-source-responsive-final">
 @media(max-width:800px){.question-card-clean{padding:0 18px 20px!important}.question-source-clean{margin:0 -18px 22px!important;padding:10px 18px!important}.question-page-spacer{height:380px!important}}
+</style><style id="ipad-three-columns-final">
+/* Mantém Matérias e assuntos e Filtros ativos lado a lado em telas de tablet/iPad. */
+@media (min-width:761px){
+  .filter-workspace{
+    display:grid!important;
+    grid-template-columns:175px minmax(0,1.15fr) minmax(280px,.72fr)!important;
+    gap:12px!important;
+    align-items:stretch!important;
+  }
+  .filter-side-menu{grid-column:auto!important;grid-row:auto!important;}
+  .filter-main-panel{grid-column:auto!important;grid-row:auto!important;}
+  .filter-active-panel{grid-column:auto!important;grid-row:auto!important;}
+}
 </style>
