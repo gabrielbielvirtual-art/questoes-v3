@@ -924,7 +924,6 @@ let current=0,sim=null;
 let sessionQuestionNumber=1;
 let sessionQuestionIds=[];
 let questionQueue=[],questionQueueKey='',lastAnsweredId=null;
-let showLastAnswerForId=null;
 let filter={search:'',subject:'Todos',topic:[],difficulty:'Todos',status:'Todos'};
 let pendingChoice=null;
 const $=id=>document.getElementById(id);
@@ -1053,7 +1052,6 @@ function toggleManualComments(){
  if(b)b.classList.toggle('comment-active',p.classList.contains('open'));
 }
 function lastAnswerHtml(qid){
-  if(String(showLastAnswerForId)!==String(qid)) return '';
   const a=state.answers[qid];
   if(!a) return '<span class="question-meta-muted">Última resposta: ainda não respondida</span>';
   const q=qs.find(x=>String(x.id)===String(qid));
@@ -1115,14 +1113,18 @@ function questions(keepId=null){
  // Mantém a questão atualmente exibida mesmo quando um filtro faz com que ela
  // deixe de pertencer ao conjunto filtrado após ser respondida. Isso evita
  // qualquer avanço automático: a questão só muda quando o usuário navega.
- const preserveId=keepId || lastAnsweredId || questionQueue[current];
- const preserveInQueue=preserveId && questionQueue.includes(preserveId);
- if(preserveInQueue && !arr.some(q=>q.id===preserveId)){
-   // Não recria/embaralha a fila: preserva exatamente a posição atual.
- } else {
+ // Durante uma sessão ativa, a fila não é reconstruída. Isso garante que
+ // a contagem avance 1, 2, 3... mesmo quando a resposta altera algum filtro
+ // de status (por exemplo, "Não resolvidas"). A fila só é recriada ao aplicar
+ // uma nova filtragem, que chama resetQuestionSession/startQuestionSession.
+ if(!sessionQuestionIds.length){
    makeQuestionQueue(arr);
+   sessionQuestionIds=questionQueue.slice();
+ } else {
+   questionQueue=sessionQuestionIds.slice();
+   questionQueueKey=questionQueue.join(',');
  }
- if(current>=questionQueue.length) current=0;
+ if(current>=questionQueue.length) current=Math.max(0,questionQueue.length-1);
  let q=qs.find(x=>x.id===questionQueue[current])||null;
  if(!q){$('content').innerHTML=pageHead('Questões','Nenhuma questão encontrada.',`<div class="questions-toolbar"><button class="btn" onclick="toggleQuestionFilters()">⚙ Filtros</button></div>`)+`<div class="card empty"><b>Nenhuma questão encontrada</b><br>Tente remover algum filtro ou termo de busca.</div>`;return}
  updateQuestionPerformanceIndicator();
@@ -1175,17 +1177,17 @@ function toggleGabarito(id){
   save(); lastAnsweredId=id; pendingChoice=null; updateQuestionPerformanceIndicator();
   toast('Gabarito alterado manualmente.'); questions();
 }
-function answer(id,ch){let q=qs.find(x=>x.id===id);if(q?.annulled){toast('Questão anulada: não entra no cálculo.');return;}let correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);showLastAnswerForId=id;save();updateQuestionPerformanceIndicator();lastAnsweredId=id;pendingChoice=null;toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions(id)}
+function answer(id,ch){let q=qs.find(x=>x.id===id);if(q?.annulled){toast('Questão anulada: não entra no cálculo.');return;}let correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);save();updateQuestionPerformanceIndicator();lastAnsweredId=id;pendingChoice=null;toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions(id)}
 function toggleFavorite(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];save();questions()}
 function nextQ(){
-  lastAnsweredId=null; pendingChoice=null; showLastAnswerForId=null;
+  lastAnsweredId=null; pendingChoice=null;
   const total=Math.max(1,sessionQuestionIds.length||questionQueue.length);
   const next=Math.min(current+1,total-1);
   if(next!==current) current=next;
   questions();
 }
 function prevQ(){
-  lastAnsweredId=null; pendingChoice=null; showLastAnswerForId=null;
+  lastAnsweredId=null; pendingChoice=null;
   const prev=Math.max(0,current-1);
   if(prev!==current) current=prev;
   questions();
@@ -1263,7 +1265,6 @@ function showOptionsPanel(difficulties,statuses){
   }));
 }
 function resetQuestionSession(){
-  showLastAnswerForId=null;
   current=0;
   sessionQuestionNumber=1;
   lastAnsweredId=null;
@@ -1274,8 +1275,10 @@ function resetQuestionSession(){
 }
 function startQuestionSession(){
   const arr=filtered();
-  questionQueue=arr.map(q=>q.id);
-  questionQueueKey=arr.map(q=>q.id).join(',');
+  // A sessão é criada uma única vez após o filtro. A fila fica congelada
+  // durante toda a sessão, para que responder uma questão não reinicie a contagem.
+  questionQueue=[]; questionQueueKey='';
+  makeQuestionQueue(arr);
   sessionQuestionIds=questionQueue.slice();
   current=0;
   sessionQuestionNumber=1;
