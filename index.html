@@ -309,6 +309,9 @@ body{background:var(--bg);color:var(--text)}.page{max-width:1500px}.page-head{ma
 </style>
 
 
+<style id="manual-answer-and-session-ui">
+.gabarito-edit-btn{margin-left:10px;border:1px solid #d8dde2;background:#fff;color:#5d6872;border-radius:5px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer}.gabarito-edit-btn:hover{background:#f4f7f9;border-color:#c8d0d7}.session-position{font-size:12px;color:#7a838b;font-weight:700;margin-right:10px;white-space:nowrap}.session-position b{color:#34404a}.manual-gabarito-note{font-size:11px;color:#7b838a;margin-top:7px}
+</style>
 <style id="v24-performance-layout">
 .top-actions{display:flex;gap:8px;align-items:center}
 .performance-trigger{width:auto;min-width:68px;height:38px;padding:0 9px;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:800;color:#5f6871}.performance-trigger:hover{background:#f2f5f7}.performance-mini-icon{font-size:17px;line-height:1}.performance-trigger #questionPerformanceRate{font-size:12px;color:#3b9c70}
@@ -907,8 +910,9 @@ const seed=[
 {"id":2320,"type":"tf","subject":"Direito Previdenciário","topic":"Acordos internacionais","sub":"Organismos de ligação e gestão","difficulty":"Médio","text":"O gerenciamento e o acompanhamento das negociações de ac privativamente ao Ministério da Relações Exteriores (MRE).","options":["Certo","Errado"],"answer":1,"explain":"ERRADO. A competência não é privativa do Ministério das Relações Exteriores; a gestão previdenciária internacional envolve os órgãos competentes da Previdência. Fundamento: Constituição Federal e acordos internacionais de Previdência Social.","annulled":false,"source":"INSS 2026 — Curso de Formação (4ª Turma)","examItem":120,"year":2026,"bank":"CEBRASPE","exam":"Técnico do Seguro Social — Curso de Formação (4ª Turma)"}];
 const old=JSON.parse(localStorage.getItem('questoesV10')||'null');
 const state=old||{answers:{},favorites:[],notebooks:[{name:'Revisão geral',ids:[]}],history:[],simulados:[],customQuestions:[]};
-state.customQuestions=state.customQuestions||[]; state.notebooks=state.notebooks||[{name:'Revisão geral',ids:[]}];
-let qs=[...seed,...state.customQuestions],current=0,sim=null;
+state.customQuestions=state.customQuestions||[]; state.notebooks=state.notebooks||[{name:'Revisão geral',ids:[]}]; state.gabaritoOverrides=state.gabaritoOverrides||{};
+let qs=[...seed,...state.customQuestions]; qs.forEach(q=>{if(Object.prototype.hasOwnProperty.call(state.gabaritoOverrides,q.id)) q.answer=state.gabaritoOverrides[q.id]});
+let current=0,sim=null;
 let questionQueue=[],questionQueueKey='',lastAnsweredId=null;
 let filter={search:'',subject:'Todos',topic:[],difficulty:'Todos',status:'Todos'};
 let pendingChoice=null;
@@ -1059,12 +1063,12 @@ function questions(){
  let q=qs.find(x=>x.id===questionQueue[current])||null;
  if(!q){$('content').innerHTML=pageHead('Questões','Nenhuma questão encontrada.',`<div class="questions-toolbar"><button class="btn" onclick="toggleQuestionFilters()">⚙ Filtros</button></div>`)+`<div class="card empty"><b>Nenhuma questão encontrada</b><br>Tente remover algum filtro ou termo de busca.</div>`;return}
  updateQuestionPerformanceIndicator();
- let a=state.answers[q.id],fav=state.favorites.includes(q.id),hasResult=lastAnsweredId===q.id,editing=!!(pendingChoice&&pendingChoice.id===q.id),showResult=hasResult&&!editing,selected=editing?pendingChoice.choice:(hasResult?a?.choice:null);
+ let a=state.answers[q.id],fav=state.favorites.includes(q.id),hasResult=lastAnsweredId===q.id,editing=!!(pendingChoice&&pendingChoice.id===q.id),showResult=hasResult&&!editing,selected=editing?pendingChoice.choice:(hasResult?a?.choice:null),sessionPosition=current+1,sessionTotal=questionQueue.length;
  let optsHtml=q.options.map((o,i)=>{let isSel=selected===i,locked=!!q.annulled;return `<button class="option clean-option ${isSel?'selected':''} ${showResult&&i===q.answer?'correct':''} ${showResult&&isSel&&!a?.correct?'wrong':''}" ${locked?'disabled':''} onclick="selectAnswer(${q.id},${i})"><span class="letter">${q.type==='tf'?(i===0?'C':'E'):String.fromCharCode(65+i)}</span><span class="option-text">${esc(o)}</span>${showResult&&i===q.answer?'<span class="answer-mark">✓</span>':''}</button>`}).join('');
  $('content').innerHTML=`
  <div class="question-page-clean">
   <div class="question-header-clean">
-   <div class="question-title-clean"><span class="question-link">↗</span><b>Questão ${q.examItem||q.id}</b><strong>${esc(q.subject)} - ${esc(q.topic)}${q.sub&&q.sub!=='Geral'?' - '+esc(q.sub):''}</strong></div>
+   <div class="question-title-clean"><span class="question-link">↗</span><span class="session-position">${sessionPosition} de ${sessionTotal}</span><strong>${esc(q.subject)} - ${esc(q.topic)}${q.sub&&q.sub!=='Geral'?' - '+esc(q.sub):''}</strong></div>
    <div class="question-nav-clean"><button id="performanceBtn" class="top-icon performance-trigger" title="Índice de acerto" aria-label="Índice de acerto" onclick="this.focus()"><span class="performance-mini-icon">◔</span><span id="questionPerformanceRate">0%</span></button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
   </div>
   <section class="question-card-clean">
@@ -1077,10 +1081,11 @@ function questions(){
     ${q.source?`<span class="source-item">Fonte: <b>${esc(q.source)}</b></span>`:''}
     ${!(q.bank||q.year||q.exam||q.source)?'<span>Cadastre a banca, prova, ano e fonte desta questão.</span>':''}
    </div>
+   ${!q.annulled?`<div style="display:flex;justify-content:flex-end;margin:-4px 0 10px"><button class="gabarito-edit-btn" onclick="toggleGabarito(${q.id})" title="Trocar o gabarito desta questão">✎ Alterar gabarito</button></div>`:''}
    <div class="question-statement-clean">${esc(q.text)}</div>
    <div class="options-clean">${optsHtml}</div>
    ${!q.annulled&&(!a||pendingChoice)?`<div class="answer-actions-clean"><button class="btn primary rounded" ${selected===null?'disabled':''} onclick="confirmAnswer(${q.id})">Responder</button><button class="btn secondary rounded" onclick="pendingChoice=null;questions()">Limpar seleção</button></div>`:''}
-   ${q.annulled?`<div class="result-clean"><strong>Questão anulada</strong><span>Gabarito oficial: <b>ANULADA</b></span>${q.explain?`<a href="#" onclick="event.preventDefault();this.nextElementSibling.classList.toggle('show')">Ver resolução</a><div class="resolution-clean">${esc(q.explain)}</div>`:''}</div>`:(showResult&&a?`<div class="result-clean ${a.correct?'result-ok':'result-bad'}"><strong>${a.correct?'✓':'✕'} ${a.correct?'Você acertou!':'Você errou!'}</strong><span>Gabarito: <b>${q.type==='tf'?(q.answer===0?'Certo':'Errado'):String.fromCharCode(65+q.answer)}</b></span>${q.explain?`<a href="#" onclick="event.preventDefault();this.nextElementSibling.classList.toggle('show')">Ver resolução</a><div class="resolution-clean">${esc(q.explain)}</div>`:''}</div>`:'')}
+   ${q.annulled?`<div class="result-clean"><strong>Questão anulada</strong><span>Gabarito oficial: <b>ANULADA</b></span>${q.explain?`<a href="#" onclick="event.preventDefault();this.nextElementSibling.classList.toggle('show')">Ver resolução</a><div class="resolution-clean">${esc(q.explain)}</div>`:''}</div>`:(showResult&&a?`<div class="result-clean ${a.correct?'result-ok':'result-bad'}"><strong>${a.correct?'✓':'✕'} ${a.correct?'Você acertou!':'Você errou!'}</strong><span>Gabarito: <b>${q.type==='tf'?(q.answer===0?'Certo':'Errado'):String.fromCharCode(65+q.answer)}</b><button class="gabarito-edit-btn" onclick="toggleGabarito(${q.id})" title="Trocar o gabarito desta questão">✎ Alterar gabarito</button></span>${q.explain?`<a href="#" onclick="event.preventDefault();this.nextElementSibling.classList.toggle('show')">Ver resolução</a><div class="resolution-clean">${esc(q.explain)}</div>`:''}<div class="manual-gabarito-note">Você pode corrigir manualmente o gabarito se discordar do oficial.</div></div>`:'')}
    ${manualCommentsHtml(q.id)}
   </section>
   <div class="question-bottom-clean">
@@ -1097,6 +1102,15 @@ function selectAnswer(id,ch){if(qs.find(x=>x.id===id)?.annulled)return;pendingCh
 function confirmAnswer(id){if(!pendingChoice||pendingChoice.id!==id)return;answer(id,pendingChoice.choice);pendingChoice=null}
 
 function clearFilters(){filter={search:'',subject:'Todos',topic:[],difficulty:'Todos',status:'Todos'};current=0;questionQueue=[];questionQueueKey='';lastAnsweredId=null;questions()}
+function toggleGabarito(id){
+  const q=qs.find(x=>x.id===id); if(!q||q.annulled)return;
+  const novo=q.type==='tf'?(q.answer===0?1:0):(q.answer+1)%q.options.length;
+  q.answer=novo; state.gabaritoOverrides[id]=novo;
+  if(state.answers[id]) state.answers[id].correct=state.answers[id].choice===novo;
+  (state.history||[]).forEach(h=>{if(h.id===id) h.correct=h.choice===novo});
+  save(); lastAnsweredId=id; pendingChoice=null; updateQuestionPerformanceIndicator();
+  toast('Gabarito alterado manualmente.'); questions();
+}
 function answer(id,ch){let q=qs.find(x=>x.id===id);if(q?.annulled){toast('Questão anulada: não entra no cálculo.');return;}let correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);save();updateQuestionPerformanceIndicator();lastAnsweredId=id;toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions()}
 function toggleFavorite(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];save();questions()}
 function nextQ(){lastAnsweredId=null;pendingChoice=null;current=Math.min(current+1,Math.max(0,questionQueue.length-1));questions()}function prevQ(){lastAnsweredId=null;pendingChoice=null;current=Math.max(0,current-1);questions()}
