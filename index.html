@@ -926,6 +926,23 @@ function stats(){
   const c=a.filter(x=>x.correct).length;
   return{done:a.length,c,wrong:a.length-c,rate:a.length?Math.round(c/a.length*100):0}
 }
+function questionProgress(){
+  const selectedTopics=Array.isArray(filter.topic)?filter.topic:(filter.topic==='Todos'||!filter.topic?[]:[filter.topic]);
+  const base=qs.filter(q=>{
+    if(q.annulled)return false;
+    const a=state.answers[q.id];
+    const t=(q.text+' '+q.subject+' '+q.topic+' '+q.sub).toLowerCase();
+    const topicMatch=!selectedTopics.length||selectedTopics.includes(q.topic)||selectedTopics.includes(q.sub);
+    return (!filter.search||t.includes(filter.search.toLowerCase())) &&
+      (filter.subject==='Todos'||q.subject===filter.subject) &&
+      topicMatch &&
+      (filter.difficulty==='Todos'||q.difficulty===filter.difficulty);
+  });
+  const total=base.length;
+  const ids=new Set(base.map(q=>String(q.id)));
+  const resolved=Object.keys(state.answers||{}).filter(id=>ids.has(String(id))).length;
+  return {resolved,total};
+}
 function updateQuestionPerformanceIndicator(){
   const el=$('questionPerformanceRate');
   if(!el)return;
@@ -1056,14 +1073,23 @@ function makeQuestionQueue(arr){
   }
   questionQueue=out.map(q=>q.id); questionQueueKey=key; current=0;
 }
-function questions(){
+function questions(keepId=null){
  let arr=filtered();
- makeQuestionQueue(arr);
+ // Mantém a questão atualmente exibida mesmo quando um filtro faz com que ela
+ // deixe de pertencer ao conjunto filtrado após ser respondida. Isso evita
+ // qualquer avanço automático: a questão só muda quando o usuário navega.
+ const preserveId=keepId || lastAnsweredId || questionQueue[current];
+ const preserveInQueue=preserveId && questionQueue.includes(preserveId);
+ if(preserveInQueue && !arr.some(q=>q.id===preserveId)){
+   // Não recria/embaralha a fila: preserva exatamente a posição atual.
+ } else {
+   makeQuestionQueue(arr);
+ }
  if(current>=questionQueue.length) current=0;
  let q=qs.find(x=>x.id===questionQueue[current])||null;
  if(!q){$('content').innerHTML=pageHead('Questões','Nenhuma questão encontrada.',`<div class="questions-toolbar"><button class="btn" onclick="toggleQuestionFilters()">⚙ Filtros</button></div>`)+`<div class="card empty"><b>Nenhuma questão encontrada</b><br>Tente remover algum filtro ou termo de busca.</div>`;return}
  updateQuestionPerformanceIndicator();
- let a=state.answers[q.id],fav=state.favorites.includes(q.id),hasResult=lastAnsweredId===q.id,editing=!!(pendingChoice&&pendingChoice.id===q.id),showResult=hasResult&&!editing,selected=editing?pendingChoice.choice:(hasResult?a?.choice:null),sessionPosition=current+1,sessionTotal=questionQueue.length;
+ let a=state.answers[q.id],fav=state.favorites.includes(q.id),hasResult=lastAnsweredId===q.id,editing=!!(pendingChoice&&pendingChoice.id===q.id),showResult=hasResult&&!editing,selected=editing?pendingChoice.choice:(hasResult?a?.choice:null); const progress=questionProgress(),sessionPosition=progress.resolved,sessionTotal=progress.total;
  let optsHtml=q.options.map((o,i)=>{let isSel=selected===i,locked=!!q.annulled;return `<button class="option clean-option ${isSel?'selected':''} ${showResult&&i===q.answer?'correct':''} ${showResult&&isSel&&!a?.correct?'wrong':''}" ${locked?'disabled':''} onclick="selectAnswer(${q.id},${i})"><span class="letter">${q.type==='tf'?(i===0?'C':'E'):String.fromCharCode(65+i)}</span><span class="option-text">${esc(o)}</span>${showResult&&i===q.answer?'<span class="answer-mark">✓</span>':''}</button>`}).join('');
  $('content').innerHTML=`
  <div class="question-page-clean">
@@ -1111,7 +1137,7 @@ function toggleGabarito(id){
   save(); lastAnsweredId=id; pendingChoice=null; updateQuestionPerformanceIndicator();
   toast('Gabarito alterado manualmente.'); questions();
 }
-function answer(id,ch){let q=qs.find(x=>x.id===id);if(q?.annulled){toast('Questão anulada: não entra no cálculo.');return;}let correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);save();updateQuestionPerformanceIndicator();lastAnsweredId=id;toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions()}
+function answer(id,ch){let q=qs.find(x=>x.id===id);if(q?.annulled){toast('Questão anulada: não entra no cálculo.');return;}let correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);save();updateQuestionPerformanceIndicator();lastAnsweredId=id;pendingChoice=null;toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions(id)}
 function toggleFavorite(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];save();questions()}
 function nextQ(){lastAnsweredId=null;pendingChoice=null;current=Math.min(current+1,Math.max(0,questionQueue.length-1));questions()}function prevQ(){lastAnsweredId=null;pendingChoice=null;current=Math.max(0,current-1);questions()}
 function filterActiveItems(){
