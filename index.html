@@ -729,6 +729,13 @@ body.filter-mode .filter-page-clean{margin:0!important;width:100%!important;min-
 .result-clean.result-ok strong{color:#328a50}.result-clean.result-bad strong{color:#c64e55}
 </style>
 
+
+<style id="question-meta-actions-v27">
+.question-meta-strip{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:-8px 0 20px;padding:10px 12px;background:#f7f7f8;border:1px solid #e1e1e2;border-radius:6px;color:#666;font-size:12px}
+.question-meta-strip b{color:#333}.question-meta-spacer{flex:1}.question-meta-muted{color:#999}
+.comment-count-badge{min-width:18px;height:18px;padding:0 5px;border-radius:10px;background:#eef4fb;color:#3f8fe7;font-size:11px;display:inline-flex;align-items:center;justify-content:center}
+.remove-question-bottom{color:#b44a4a!important}
+</style>
 </head>
 <body>
 <div class="app">
@@ -910,9 +917,12 @@ const seed=[
 {"id":2320,"type":"tf","subject":"Direito Previdenciário","topic":"Acordos internacionais","sub":"Organismos de ligação e gestão","difficulty":"Médio","text":"O gerenciamento e o acompanhamento das negociações de ac privativamente ao Ministério da Relações Exteriores (MRE).","options":["Certo","Errado"],"answer":1,"explain":"ERRADO. A competência não é privativa do Ministério das Relações Exteriores; a gestão previdenciária internacional envolve os órgãos competentes da Previdência. Fundamento: Constituição Federal e acordos internacionais de Previdência Social.","annulled":false,"source":"INSS 2026 — Curso de Formação (4ª Turma)","examItem":120,"year":2026,"bank":"CEBRASPE","exam":"Técnico do Seguro Social — Curso de Formação (4ª Turma)"}];
 const old=JSON.parse(localStorage.getItem('questoesV10')||'null');
 const state=old||{answers:{},favorites:[],notebooks:[{name:'Revisão geral',ids:[]}],history:[],simulados:[],customQuestions:[]};
-state.customQuestions=state.customQuestions||[]; state.notebooks=state.notebooks||[{name:'Revisão geral',ids:[]}]; state.gabaritoOverrides=state.gabaritoOverrides||{};
-let qs=[...seed,...state.customQuestions]; qs.forEach(q=>{if(Object.prototype.hasOwnProperty.call(state.gabaritoOverrides,q.id)) q.answer=state.gabaritoOverrides[q.id]});
+state.customQuestions=state.customQuestions||[]; state.notebooks=state.notebooks||[{name:'Revisão geral',ids:[]}]; state.gabaritoOverrides=state.gabaritoOverrides||{}; state.removedQuestionIds=state.removedQuestionIds||[];
+let qs=[...seed,...state.customQuestions].filter(q=>!state.removedQuestionIds.some(id=>String(id)===String(q.id))); qs.forEach(q=>{if(Object.prototype.hasOwnProperty.call(state.gabaritoOverrides,q.id)) q.answer=state.gabaritoOverrides[q.id]});
 let current=0,sim=null;
+// Contador global da sessão: não depende do filtro selecionado.
+let sessionQuestionNumber=1;
+let sessionQuestionIds=[];
 let questionQueue=[],questionQueueKey='',lastAnsweredId=null;
 let filter={search:'',subject:'Todos',topic:[],difficulty:'Todos',status:'Todos'};
 let pendingChoice=null;
@@ -920,9 +930,12 @@ const $=id=>document.getElementById(id);
 const esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function save(){localStorage.setItem('questoesV10',JSON.stringify(state))}
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
-function stats(){
-  const validIds=new Set(qs.filter(q=>!q.annulled).map(q=>q.id));
-  const a=Object.entries(state.answers||{}).filter(([id])=>validIds.has(Number(id))||validIds.has(id)).map(([,v])=>v).filter(Boolean);
+function stats(scope=null){
+  const base=Array.isArray(scope)?scope:qs;
+  const validIds=new Set(base.filter(q=>!q.annulled).map(q=>String(q.id)));
+  const latest={};
+  Object.entries(state.answers||{}).forEach(([id,v])=>{if(v&&validIds.has(String(id))) latest[String(id)]=v});
+  const a=Object.values(latest);
   const c=a.filter(x=>x.correct).length;
   return{done:a.length,c,wrong:a.length-c,rate:a.length?Math.round(c/a.length*100):0}
 }
@@ -946,7 +959,7 @@ function questionProgress(){
 function updateQuestionPerformanceIndicator(){
   const el=$('questionPerformanceRate');
   if(!el)return;
-  const s=stats();
+  const s=stats(filtered());
   el.textContent=s.rate+'%';
   el.title=`Índice de acerto: ${s.rate}% · ${s.c} acerto${s.c===1?'':'s'} · ${s.wrong} erro${s.wrong===1?'':'s'}`;
 }
@@ -1038,6 +1051,27 @@ function toggleManualComments(){
  p.classList.toggle('open');
  if(b)b.classList.toggle('comment-active',p.classList.contains('open'));
 }
+function lastAnswerHtml(qid){
+  const a=state.answers[qid];
+  if(!a) return '<span class="question-meta-muted">Última resposta: ainda não respondida</span>';
+  const q=qs.find(x=>String(x.id)===String(qid));
+  const label=q?.type==='tf'?(a.choice===0?'Certo':'Errado'):(q?.options?.[a.choice]||String.fromCharCode(65+(a.choice??0)));
+  const when=a.at?new Date(a.at).toLocaleString('pt-BR'):'data não registrada';
+  return `<span>Última resposta: <b>${esc(label)}</b> · ${esc(when)}</span>`;
+}
+function removeQuestion(id){
+  const q=qs.find(x=>String(x.id)===String(id)); if(!q)return;
+  if(!confirm('Remover esta questão do banco? Esta ação pode ser desfeita apenas restaurando um backup.'))return;
+  state.removedQuestionIds=state.removedQuestionIds||[];
+  if(!state.removedQuestionIds.some(x=>String(x)===String(id))) state.removedQuestionIds.push(id);
+  delete state.answers[id];
+  state.favorites=state.favorites.filter(x=>String(x)!==String(id));
+  state.notebooks=(state.notebooks||[]).map(n=>({...n,ids:(n.ids||[]).filter(x=>String(x)!==String(id))}));
+  qs=qs.filter(x=>String(x.id)!==String(id));
+  questionQueue=[]; questionQueueKey=''; lastAnsweredId=null; pendingChoice=null; current=Math.min(current,Math.max(0,qs.length-1));
+  save(); toast('Questão removida do banco.'); questions();
+}
+
 function manualCommentsHtml(qid){
   const cs=getComments(qid);
   return `<section id="manualCommentPanel" class="manual-comment">
@@ -1075,21 +1109,26 @@ function makeQuestionQueue(arr){
 }
 function questions(keepId=null){
  let arr=filtered();
+ if(!sessionQuestionIds.length && arr.length){ startQuestionSession(); arr=filtered(); }
  // Mantém a questão atualmente exibida mesmo quando um filtro faz com que ela
  // deixe de pertencer ao conjunto filtrado após ser respondida. Isso evita
  // qualquer avanço automático: a questão só muda quando o usuário navega.
- const preserveId=keepId || lastAnsweredId || questionQueue[current];
- const preserveInQueue=preserveId && questionQueue.includes(preserveId);
- if(preserveInQueue && !arr.some(q=>q.id===preserveId)){
-   // Não recria/embaralha a fila: preserva exatamente a posição atual.
- } else {
+ // Durante uma sessão ativa, a fila não é reconstruída. Isso garante que
+ // a contagem avance 1, 2, 3... mesmo quando a resposta altera algum filtro
+ // de status (por exemplo, "Não resolvidas"). A fila só é recriada ao aplicar
+ // uma nova filtragem, que chama resetQuestionSession/startQuestionSession.
+ if(!sessionQuestionIds.length){
    makeQuestionQueue(arr);
+   sessionQuestionIds=questionQueue.slice();
+ } else {
+   questionQueue=sessionQuestionIds.slice();
+   questionQueueKey=questionQueue.join(',');
  }
- if(current>=questionQueue.length) current=0;
+ if(current>=questionQueue.length) current=Math.max(0,questionQueue.length-1);
  let q=qs.find(x=>x.id===questionQueue[current])||null;
  if(!q){$('content').innerHTML=pageHead('Questões','Nenhuma questão encontrada.',`<div class="questions-toolbar"><button class="btn" onclick="toggleQuestionFilters()">⚙ Filtros</button></div>`)+`<div class="card empty"><b>Nenhuma questão encontrada</b><br>Tente remover algum filtro ou termo de busca.</div>`;return}
  updateQuestionPerformanceIndicator();
- let a=state.answers[q.id],fav=state.favorites.includes(q.id),hasResult=lastAnsweredId===q.id,editing=!!(pendingChoice&&pendingChoice.id===q.id),showResult=hasResult&&!editing,selected=editing?pendingChoice.choice:(hasResult?a?.choice:null); const progress=questionProgress(),sessionPosition=progress.resolved,sessionTotal=progress.total;
+ let a=state.answers[q.id],fav=state.favorites.includes(q.id),hasResult=lastAnsweredId===q.id,editing=!!(pendingChoice&&pendingChoice.id===q.id),showResult=hasResult&&!editing,selected=editing?pendingChoice.choice:(hasResult?a?.choice:null); const sessionTotal=Math.max(1,sessionQuestionIds.length||questionQueue.length), sessionPosition=Math.min(Math.max(1,current+1),sessionTotal);
  let optsHtml=q.options.map((o,i)=>{let isSel=selected===i,locked=!!q.annulled;return `<button class="option clean-option ${isSel?'selected':''} ${showResult&&i===q.answer?'correct':''} ${showResult&&isSel&&!a?.correct?'wrong':''}" ${locked?'disabled':''} onclick="selectAnswer(${q.id},${i})"><span class="letter">${q.type==='tf'?(i===0?'C':'E'):String.fromCharCode(65+i)}</span><span class="option-text">${esc(o)}</span>${showResult&&i===q.answer?'<span class="answer-mark">✓</span>':''}</button>`}).join('');
  $('content').innerHTML=`
  <div class="question-page-clean">
@@ -1107,7 +1146,7 @@ function questions(keepId=null){
     ${q.source?`<span class="source-item">Fonte: <b>${esc(q.source)}</b></span>`:''}
     ${!(q.bank||q.year||q.exam||q.source)?'<span>Cadastre a banca, prova, ano e fonte desta questão.</span>':''}
    </div>
-   ${!q.annulled?`<div style="display:flex;justify-content:flex-end;margin:-4px 0 10px"><button class="gabarito-edit-btn" onclick="toggleGabarito(${q.id})" title="Trocar o gabarito desta questão">✎ Alterar gabarito</button></div>`:''}
+   <div class="question-meta-strip"><span>💬 <b>${getComments(q.id).length}</b> comentário${getComments(q.id).length===1?'':'s'}</span>${lastAnswerHtml(q.id)}<span class="question-meta-spacer"></span>${!q.annulled?`<button class="gabarito-edit-btn" onclick="toggleGabarito(${q.id})" title="Trocar o gabarito desta questão">✎ Alterar gabarito</button>`:''}</div>
    <div class="question-statement-clean">${esc(q.text)}</div>
    <div class="options-clean">${optsHtml}</div>
    ${!q.annulled&&(!a||pendingChoice)?`<div class="answer-actions-clean"><button class="btn primary rounded" ${selected===null?'disabled':''} onclick="confirmAnswer(${q.id})">Responder</button><button class="btn secondary rounded" onclick="pendingChoice=null;questions()">Limpar seleção</button></div>`:''}
@@ -1119,7 +1158,8 @@ function questions(keepId=null){
    <button class="bottom-icon" onclick="nextQ()" title="Próxima">→</button>
    <button class="bottom-icon" onclick="pendingChoice=null;questions()" title="Limpar">↻</button>
    <button class="bottom-icon ${fav?'active':''}" onclick="toggleFavorite(${q.id})" title="Favoritar">${fav?'★':'☆'}</button>
-   <button id="manualCommentButton" class="bottom-icon comment-label-btn" onclick="toggleManualComments()" title="Comentário"><span>✎</span><span>Comentário</span></button>
+   <button id="manualCommentButton" class="bottom-icon comment-label-btn" onclick="toggleManualComments()" title="Comentário"><span>✎</span><span>Comentário</span><b class="comment-count-badge">${getComments(q.id).length}</b></button>
+   <button class="bottom-icon remove-question-bottom" onclick="removeQuestion(${q.id})" title="Remover esta questão">🗑</button>
   </div>
   <div class="question-page-spacer" aria-hidden="true"></div>
  </div>`;
@@ -1127,7 +1167,7 @@ function questions(keepId=null){
 function selectAnswer(id,ch){if(qs.find(x=>x.id===id)?.annulled)return;pendingChoice={id,choice:ch};questions()}
 function confirmAnswer(id){if(!pendingChoice||pendingChoice.id!==id)return;answer(id,pendingChoice.choice);pendingChoice=null}
 
-function clearFilters(){filter={search:'',subject:'Todos',topic:[],difficulty:'Todos',status:'Todos'};current=0;questionQueue=[];questionQueueKey='';lastAnsweredId=null;questions()}
+function clearFilters(){filter={search:'',subject:'Todos',topic:[],difficulty:'Todos',status:'Todos'};current=0;sessionQuestionNumber=1;sessionQuestionIds=[];questionQueue=[];questionQueueKey='';lastAnsweredId=null;questions()}
 function toggleGabarito(id){
   const q=qs.find(x=>x.id===id); if(!q||q.annulled)return;
   const novo=q.type==='tf'?(q.answer===0?1:0):(q.answer+1)%q.options.length;
@@ -1139,7 +1179,19 @@ function toggleGabarito(id){
 }
 function answer(id,ch){let q=qs.find(x=>x.id===id);if(q?.annulled){toast('Questão anulada: não entra no cálculo.');return;}let correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);save();updateQuestionPerformanceIndicator();lastAnsweredId=id;pendingChoice=null;toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions(id)}
 function toggleFavorite(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];save();questions()}
-function nextQ(){lastAnsweredId=null;pendingChoice=null;current=Math.min(current+1,Math.max(0,questionQueue.length-1));questions()}function prevQ(){lastAnsweredId=null;pendingChoice=null;current=Math.max(0,current-1);questions()}
+function nextQ(){
+  lastAnsweredId=null; pendingChoice=null;
+  const total=Math.max(1,sessionQuestionIds.length||questionQueue.length);
+  const next=Math.min(current+1,total-1);
+  if(next!==current) current=next;
+  questions();
+}
+function prevQ(){
+  lastAnsweredId=null; pendingChoice=null;
+  const prev=Math.max(0,current-1);
+  if(prev!==current) current=prev;
+  questions();
+}
 function filterActiveItems(){
   const selectedTopics=Array.isArray(filter.topic)?filter.topic:(filter.topic==='Todos'||!filter.topic?[]:[filter.topic]);
   const items=[];
@@ -1212,6 +1264,28 @@ function showOptionsPanel(difficulties,statuses){
     filtersPage();
   }));
 }
+function resetQuestionSession(){
+  current=0;
+  sessionQuestionNumber=1;
+  lastAnsweredId=null;
+  pendingChoice=null;
+  questionQueue=[];
+  questionQueueKey='';
+  sessionQuestionIds=[];
+}
+function startQuestionSession(){
+  const arr=filtered();
+  // A sessão é criada uma única vez após o filtro. A fila fica congelada
+  // durante toda a sessão, para que responder uma questão não reinicie a contagem.
+  questionQueue=[]; questionQueueKey='';
+  makeQuestionQueue(arr);
+  sessionQuestionIds=questionQueue.slice();
+  current=0;
+  sessionQuestionNumber=1;
+  lastAnsweredId=null;
+  pendingChoice=null;
+}
+
 function filtersPage(){
   const subjects=[...new Set(qs.map(q=>q.subject).filter(Boolean))].sort();
   const selectedTopics=Array.isArray(filter.topic)?filter.topic:(filter.topic==='Todos'||!filter.topic?[]:[filter.topic]);
@@ -1299,8 +1373,8 @@ function filtersPage(){
   const treeSearch=$('filterTreeSearch'),searchBox=$('filterSearchBox');
   $('filterSearchToggle')?.addEventListener('click',()=>{searchBox.classList.toggle('show');if(searchBox.classList.contains('show'))treeSearch?.focus()});
   if(filter.search)searchBox.classList.add('show');
-  treeSearch?.addEventListener('input',e=>{const term=e.target.value.toLowerCase().trim();document.querySelectorAll('.tree-group').forEach(g=>g.style.display=(!term||g.dataset.subject.toLowerCase().includes(term)||g.textContent.toLowerCase().includes(term))?'block':'none');filter.search=e.target.value.trim();questionQueue=[];questionQueueKey='';current=0;lastAnsweredId=null;renderActiveFilters()});
-  $('filterTree')?.querySelector('.tree-root')?.addEventListener('click',()=>{filter.subject='Todos';filter.topic=[];questionQueue=[];questionQueueKey='';current=0;lastAnsweredId=null;filtersPage()});
+  treeSearch?.addEventListener('input',e=>{const term=e.target.value.toLowerCase().trim();document.querySelectorAll('.tree-group').forEach(g=>g.style.display=(!term||g.dataset.subject.toLowerCase().includes(term)||g.textContent.toLowerCase().includes(term))?'block':'none');filter.search=e.target.value.trim();resetQuestionSession();renderActiveFilters()});
+  $('filterTree')?.querySelector('.tree-root')?.addEventListener('click',()=>{filter.subject='Todos';filter.topic=[];resetQuestionSession();filtersPage()});
   document.querySelectorAll('[data-subject-select]').forEach(btn=>btn.addEventListener('click',()=>{
     const subject=btn.dataset.subjectSelect;
     filter.subject=subject;
@@ -1318,8 +1392,7 @@ function filtersPage(){
     e.preventDefault(); e.stopPropagation();
     filter.subject=btn.dataset.subjectComplete;
     filter.topic=[];
-    questionQueue=[]; questionQueueKey=''; lastAnsweredId=null;
-    current=0;
+    resetQuestionSession();
     navigate('questions');
   }));
   document.querySelectorAll('.tree-topic-parent').forEach(btn=>btn.addEventListener('click',e=>{
@@ -1342,14 +1415,14 @@ function filtersPage(){
       const specialChildren=[...new Set([...group.querySelectorAll('.tree-child input')].map(x=>x.value))];
       filter.topic=specialChildren;
     }
-    questionQueue=[]; questionQueueKey=''; current=0; lastAnsweredId=null;
+    resetQuestionSession();
     navigate('questions');
   }));
   document.querySelectorAll('#filterTree input[type="checkbox"]').forEach(cb=>cb.addEventListener('change',()=>{filter.topic=[...document.querySelectorAll('#filterTree input[type="checkbox"]:checked')].map(x=>x.value);questionQueue=[];questionQueueKey='';current=0;lastAnsweredId=null;filtersPage()}));
-  $('clearTreeTopics')?.addEventListener('click',()=>{filter.topic=[];questionQueue=[];questionQueueKey='';current=0;lastAnsweredId=null;filtersPage()});
+  $('clearTreeTopics')?.addEventListener('click',()=>{filter.topic=[];resetQuestionSession();filtersPage()});
   $('clearAllActive')?.addEventListener('click',()=>{clearFilters();filtersPage()});
   $('restoreFilters')?.addEventListener('click',()=>{clearFilters();filtersPage()});
-  $('applyFilterVisual')?.addEventListener('click',()=>{current=0;questionQueue=[];questionQueueKey='';lastAnsweredId=null;toast('Filtros aplicados.');navigate('questions')});
+  $('applyFilterVisual')?.addEventListener('click',()=>{resetQuestionSession();startQuestionSession();toast('Filtros aplicados.');navigate('questions')});
   document.querySelectorAll('[data-filter-section]').forEach(btn=>btn.addEventListener('click',()=>{
     const section=btn.dataset.filterSection;
     document.querySelectorAll('.filter-side-item').forEach(x=>x.classList.toggle('active',x===btn));
