@@ -1449,7 +1449,7 @@ function admin(){
    <section class="card manual-question-form">
     <div class="card-head"><div><h2>Nova questão</h2><p style="margin:5px 0 0;color:var(--muted);font-size:12px">A questão será salva imediatamente no banco deste navegador.</p></div><span class="badge gray">${state.customQuestions.length} adicionadas</span></div>
     <div class="form-grid">
-      <label>Matéria*<input class="field" id="as" placeholder="Ex.: Direito Constitucional"></label>
+      <label>Matéria*<select class="field" id="as"><option value="">Selecione a matéria...</option></select></label>
       <label>Assunto*<input class="field" id="at" placeholder="Ex.: Direitos Fundamentais"></label>
       <label>Subassunto<input class="field" id="au" placeholder="Ex.: Direitos e Garantias"></label>
       <label>Dificuldade<select class="field" id="ad"><option>Fácil</option><option selected>Médio</option><option>Difícil</option></select></label>
@@ -1476,6 +1476,11 @@ function admin(){
     <button class="btn secondary" style="width:100%" onclick="navigate('questions')">Ver banco de questões</button>
    </aside>
   </div>`;
+ const subjectSelect=$('as');
+ if(subjectSelect){
+   const subjects=[...new Set(qs.map(q=>String(q.subject||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+   subjectSelect.innerHTML='<option value="">Selecione a matéria...</option>'+subjects.map(sub=>`<option value="${esc(sub)}">${esc(sub)}</option>`).join('');
+ }
  updateManualQuestionType();
 }
 function updateManualQuestionType(){
@@ -1496,7 +1501,10 @@ function clearManualQuestionForm(){
  updateManualQuestionType();
 }
 function addQuestion(){
- const s=$('as').value.trim(),t=$('at').value.trim(),u=$('au').value.trim(),x=$('ax').value.trim(),type=$('ay').value,d=$('ad').value;
+ const rawSubject=$('as').value.trim(),t=$('at').value.trim(),u=$('au').value.trim(),x=$('ax').value.trim(),type=$('ay').value,d=$('ad').value;
+ const normalizeSubject=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim().toLowerCase();
+ const existingSubject=qs.find(q=>normalizeSubject(q.subject)===normalizeSubject(rawSubject));
+ const s=existingSubject ? existingSubject.subject : rawSubject;
  let o=[],answer=0;
  if(type==='tf'){
    o=['Certo','Errado'];
@@ -1506,7 +1514,8 @@ function addQuestion(){
    if(o.some(v=>!v)){toast('Preencha as quatro alternativas.');return}
    answer=Number($('ag').value);
  }
- if(!s||!t||!x){toast('Preencha matéria, assunto e enunciado.');return}
+ if(!s||!t||!x){toast('Selecione uma matéria, preencha o assunto e o enunciado.');return}
+ if(!existingSubject){toast('Selecione uma matéria já existente no banco.');return}
  const q={id:Date.now(),type,subject:s,topic:t,sub:u||'Geral',difficulty:d,text:x,options:o,answer,explain:$('ex').value.trim()||'Sem comentário cadastrado.'};
  state.customQuestions.push(q);qs.push(q);save();toast('Questão adicionada ao banco.');clearManualQuestionForm();admin();
 }
