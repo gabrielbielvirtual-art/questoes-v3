@@ -818,11 +818,11 @@ body{color:#172033!important}
 .resolution-clean,.comment-text,.manual-comment-item{color:#273447!important;font-weight:550!important}
 .performance-trigger{width:auto!important;min-width:128px!important;padding:0 12px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;font-size:13px!important;font-weight:800!important;color:#172033!important;background:#fff!important}
 .performance-trigger:hover{background:#f5f8fc!important}
-.performance-mini-icon{width:34px!important;height:34px!important;min-width:34px!important;border-radius:50%!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;position:relative!important;background:conic-gradient(#1f9d68 calc(var(--accuracy-rate, 0) * 1%), #e5484d 0)!important;box-shadow:inset 0 0 0 1px rgba(17,24,39,.08),0 1px 3px rgba(15,23,42,.12)!important;color:transparent!important}
-.performance-mini-icon::after{content:"";width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(17,24,39,.06);position:absolute}
-.performance-mini-icon::before{content:"";width:7px;height:7px;border-radius:50%;background:#172033;position:absolute;z-index:2;opacity:.75}
+.performance-mini-icon{width:18px!important;height:18px!important;min-width:18px!important;border-radius:50%!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;position:relative!important;background:conic-gradient(#1f9d68 calc(var(--accuracy-rate, 0) * 1%), #e5484d 0)!important;box-shadow:inset 0 0 0 1px rgba(17,24,39,.08),0 1px 3px rgba(15,23,42,.12)!important;color:transparent!important}
+.performance-mini-icon::after{content:"";width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(17,24,39,.06);position:absolute}
+.performance-mini-icon::before{content:"";width:4px;height:4px;border-radius:50%;background:#172033;position:absolute;z-index:2;opacity:.75}
 #questionPerformanceRate{font-size:14px!important;font-weight:850!important;color:#172033!important;min-width:38px;text-align:left}
-@media(max-width:800px){.performance-trigger{min-width:78px!important;padding:0 8px!important;gap:5px!important}.performance-mini-icon{width:30px!important;height:30px!important;min-width:30px!important}.performance-mini-icon::after{width:18px;height:18px}.performance-mini-icon::before{width:6px;height:6px}#questionPerformanceRate{font-size:12px!important;min-width:32px}}
+@media(max-width:800px){.performance-trigger{min-width:70px!important;padding:0 7px!important;gap:4px!important}.performance-mini-icon{width:18px!important;height:18px!important;min-width:18px!important}.performance-mini-icon::after{width:11px;height:11px}.performance-mini-icon::before{width:4px;height:4px}#questionPerformanceRate{font-size:12px!important;min-width:30px}}
 </style>
 
 </head>
@@ -1008,6 +1008,8 @@ const old=JSON.parse(localStorage.getItem('questoesV10')||'null');
 const state=old||{answers:{},favorites:[],notebooks:[{name:'Revisão geral',ids:[]}],history:[],simulados:[],customQuestions:[]};
 state.customQuestions=state.customQuestions||[]; state.notebooks=state.notebooks||[{name:'Revisão geral',ids:[]}]; state.gabaritoOverrides=state.gabaritoOverrides||{}; state.removedQuestionIds=state.removedQuestionIds||[];
 let qs=[...seed,...state.customQuestions].filter(q=>!state.removedQuestionIds.some(id=>String(id)===String(q.id))); qs.forEach(q=>{if(Object.prototype.hasOwnProperty.call(state.gabaritoOverrides,q.id)) q.answer=state.gabaritoOverrides[q.id]});
+// Padronização dos assuntos: variantes antigas do BPC/LOAS ficam em um único assunto.
+qs.forEach(q=>{ if(['BPC','BPC/LOAS','LOAS/BPC','BPCLOAS','BPCLOF'].includes(String(q.topic||'').trim().toUpperCase())) q.topic='BPC/LOAS'; });
 let current=0,sim=null;
 // Contador global da sessão: não depende do filtro selecionado.
 let sessionQuestionNumber=1;
@@ -1036,7 +1038,7 @@ function questionProgress(){
     if(q.annulled)return false;
     const a=state.answers[q.id];
     const t=(q.text+' '+q.subject+' '+q.topic+' '+q.sub).toLowerCase();
-    const topicMatch=!selectedTopics.length||selectedTopics.includes(q.topic)||selectedTopics.includes(q.sub);
+    const topicMatch=!selectedTopics.length||selectedTopics.includes(q.topic);
     return (!filter.search||t.includes(filter.search.toLowerCase())) &&
       (filter.subject==='Todos'||q.subject===filter.subject) &&
       topicMatch &&
@@ -1049,9 +1051,13 @@ function questionProgress(){
 }
 function sessionPerformanceStats(){
   const ids=new Set((sessionAnsweredIds||[]).map(String));
-  const latest=Object.entries(state.answers||{}).filter(([id,v])=>ids.has(String(id)) && v).map(([,v])=>v);
+  const activeIds=new Set((sessionQuestionIds||[]).map(String));
+  const latest=Object.entries(state.answers||{})
+    .filter(([id,v])=>ids.has(String(id)) && activeIds.has(String(id)) && v)
+    .map(([,v])=>v);
   const c=latest.filter(x=>x.correct).length;
-  return {done:latest.length,c,wrong:latest.length-c,rate:latest.length?Math.round(c/latest.length*100):0};
+  const done=latest.length;
+  return {done,c,wrong:done-c,rate:done?Math.round(c/done*100):0};
 }
 function updateQuestionPerformanceIndicator(){
   const el=$('questionPerformanceRate');
@@ -1108,7 +1114,7 @@ function filtered(){const selectedTopics=Array.isArray(filter.topic)?filter.topi
  let a=state.answers[q.id],t=(q.text+' '+q.subject+' '+q.topic+' '+q.sub).toLowerCase();
  // O filtro visual apresenta o subassunto nas folhas da árvore. Por isso,
  // a seleção precisa aceitar tanto o assunto central (topic) quanto a folha (sub).
- const topicMatch=!selectedTopics.length||selectedTopics.includes(q.topic)||selectedTopics.includes(q.sub);
+ const topicMatch=!selectedTopics.length||selectedTopics.includes(q.topic);
  return (!filter.search||t.includes(filter.search.toLowerCase())) &&
  (filter.subject==='Todos'||q.subject===filter.subject)&&
  topicMatch &&
@@ -1212,28 +1218,30 @@ function makeQuestionQueue(arr){
 }
 function questions(keepId=null){
  let arr=filtered();
- if(!sessionQuestionIds.length && arr.length){ startQuestionSession(); arr=filtered(); }
- // Mantém a questão atualmente exibida mesmo quando um filtro faz com que ela
- // deixe de pertencer ao conjunto filtrado após ser respondida. Isso evita
- // qualquer avanço automático: a questão só muda quando o usuário navega.
- const preserveId=keepId || lastAnsweredId || questionQueue[current];
- const preserveInQueue=preserveId && questionQueue.includes(preserveId);
- if(preserveInQueue && !arr.some(q=>q.id===preserveId)){
-   // Não recria/embaralha a fila: preserva exatamente a posição atual.
+ // A fila da sessão é FIXA até que o usuário altere o filtro.
+ // Isso é essencial para o filtro "Não resolvidas": depois que uma questão
+ // é respondida ela deixa de ser "não resolvida" no filtro, mas continua
+ // pertencendo à sessão atual e ao total original (ex.: 1 de 10, 2 de 10...).
+ if(!sessionQuestionIds.length && arr.length){
+   startQuestionSession();
+   arr=filtered();
+ }
+ if(sessionQuestionIds.length){
+   questionQueue=sessionQuestionIds.slice();
+   questionQueueKey=sessionQuestionIds.map(String).join(',');
  } else {
    makeQuestionQueue(arr);
  }
- if(current>=questionQueue.length) current=0;
+ if(current>=questionQueue.length) current=Math.max(0,questionQueue.length-1);
  let q=qs.find(x=>x.id===questionQueue[current])||null;
  if(!q){$('content').innerHTML=pageHead('Questões','Nenhuma questão encontrada.',`<div class="questions-toolbar"><button class="btn" onclick="toggleQuestionFilters()">⚙ Filtros</button></div>`)+`<div class="card empty"><b>Nenhuma questão encontrada</b><br>Tente remover algum filtro ou termo de busca.</div>`;return}
- updateQuestionPerformanceIndicator();
- let a=state.answers[q.id],fav=state.favorites.includes(q.id),hasResult=lastAnsweredId===q.id,editing=!!(pendingChoice&&pendingChoice.id===q.id),showResult=hasResult&&!editing,selected=editing?pendingChoice.choice:(hasResult?a?.choice:null); const sessionTotal=Math.max(1,sessionQuestionIds.length||questionQueue.length), sessionPosition=Math.min(Math.max(1,current+1),sessionTotal);
+ let a=state.answers[q.id],fav=state.favorites.includes(q.id),hasResult=lastAnsweredId===q.id,editing=!!(pendingChoice&&pendingChoice.id===q.id),showResult=hasResult&&!editing,selected=editing?pendingChoice.choice:(hasResult?a?.choice:null); const sessionTotal=questionQueue.length; const sessionResolvedIds=new Set((sessionAnsweredIds||[]).map(id=>String(id))); const sessionResolvedCount=questionQueue.filter(id=>sessionResolvedIds.has(String(id))).length; const sessionPosition=sessionResolvedCount;
  let optsHtml=q.options.map((o,i)=>{let isSel=selected===i,locked=!!q.annulled;return `<button class="option clean-option ${isSel?'selected':''} ${showResult&&i===q.answer?'correct':''} ${showResult&&isSel&&!a?.correct?'wrong':''}" ${locked?'disabled':''} onclick="selectAnswer(${q.id},${i})"><span class="letter">${q.type==='tf'?(i===0?'C':'E'):String.fromCharCode(65+i)}</span><span class="option-text">${esc(o)}</span>${showResult&&i===q.answer?'<span class="answer-mark">✓</span>':''}</button>`}).join('');
  $('content').innerHTML=`
  <div class="question-page-clean">
   <div class="question-header-clean">
    <div class="question-title-clean"><span class="question-link">↗</span><span class="session-position">${sessionPosition} de ${sessionTotal}</span><strong>${esc(q.subject)} - ${esc(q.topic)}${q.sub&&q.sub!=='Geral'?' - '+esc(q.sub):''}</strong></div>
-   <div class="question-nav-clean"><button id="performanceBtn" class="top-icon performance-trigger" title="Índice de acerto do filtro atual" aria-label="Índice de acerto do filtro atual" onclick="this.focus()"><span class="performance-mini-icon" id="performancePie" aria-hidden="true"></span><span id="questionPerformanceRate">0%</span></button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
+   <div class="question-nav-clean"><button id="performanceBtn" class="top-icon performance-trigger" title="Índice de acerto do filtro atual" aria-label="Índice de acerto do filtro atual" onclick="this.focus()"><span class="performance-mini-icon" id="performancePie" aria-hidden="true"></span><span id="questionPerformanceRate">${sessionPerformanceStats().rate}%</span></button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
   </div>
   <section class="question-card-clean">
    <div class="question-source-clean ${q.bank||q.year||q.exam?'':'empty-source'}">
@@ -1263,11 +1271,16 @@ function questions(keepId=null){
   </div>
   <div class="question-page-spacer" aria-hidden="true"></div>
  </div>`;
+ updateQuestionPerformanceIndicator();
 }
 function selectAnswer(id,ch){if(qs.find(x=>x.id===id)?.annulled)return;pendingChoice={id,choice:ch};questions()}
 function confirmAnswer(id){if(!pendingChoice||pendingChoice.id!==id)return;answer(id,pendingChoice.choice);pendingChoice=null}
 
-function clearFilters(){filter={search:'',subject:'Todos',topic:[],difficulty:'Todos',status:'Todos'};current=0;sessionQuestionNumber=1;sessionQuestionIds=[];sessionAnsweredIds=[];questionQueue=[];questionQueueKey='';lastAnsweredId=null;questions()}
+function clearFilters(){
+  filter={search:'',subject:'Todos',topic:[],difficulty:'Todos',status:'Todos'};
+  restartQuestionSession();
+  questions();
+}
 function toggleGabarito(id){
   const q=qs.find(x=>x.id===id); if(!q||q.annulled)return;
   const novo=q.type==='tf'?(q.answer===0?1:0):(q.answer+1)%q.options.length;
@@ -1277,7 +1290,7 @@ function toggleGabarito(id){
   save(); lastAnsweredId=id; pendingChoice=null; updateQuestionPerformanceIndicator();
   toast('Gabarito alterado manualmente.'); questions();
 }
-function answer(id,ch){let q=qs.find(x=>x.id===id);if(q?.annulled){toast('Questão anulada: não entra no cálculo.');return;}let correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};if(!(sessionAnsweredIds||[]).some(x=>String(x)===String(id))) sessionAnsweredIds.push(id);state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);showLastAnswerForId=id;save();updateQuestionPerformanceIndicator();lastAnsweredId=id;pendingChoice=null;toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions(id)}
+function answer(id,ch){let q=qs.find(x=>x.id===id);if(q?.annulled){toast('Questão anulada: não entra no cálculo.');return;}let correct=ch===q.answer;state.answers[id]={choice:ch,correct,at:new Date().toISOString()};if(!(sessionAnsweredIds||[]).some(x=>String(x)===String(id))) sessionAnsweredIds.push(id);state.history.unshift({id,choice:ch,correct,at:new Date().toISOString()});state.history=state.history.slice(0,2000);showLastAnswerForId=id;save();updateQuestionPerformanceIndicator();lastAnsweredId=id;pendingChoice=null;toast(correct?'Resposta correta!':'Resposta incorreta. Revise o comentário.');questions(id);updateQuestionPerformanceIndicator()}
 function toggleFavorite(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];save();questions()}
 function nextQ(){
   lastAnsweredId=null; pendingChoice=null; showLastAnswerForId=null;
@@ -1313,6 +1326,7 @@ function renderActiveFilters(){
     else if(item.type==='search')filter.search='';
     else if(item.type==='difficulty')filter.difficulty='Todos';
     else if(item.type==='status')filter.status='Todos';
+    resetQuestionSession();
     filtersPage();
   }));
 }
@@ -1333,7 +1347,7 @@ function showFilterChoicePanel(type, options, currentValue){
     </div>`;
   main.querySelector('#backToSubjects')?.addEventListener('click',()=>filtersPage());
   main.querySelectorAll('[data-choice]').forEach(btn=>btn.addEventListener('click',()=>{
-    filter[type]=btn.dataset.choice; current=0; filtersPage();
+    filter[type]=btn.dataset.choice; restartQuestionSession(); current=0; filtersPage();
   }));
 }
 function showOptionsPanel(difficulties,statuses){
@@ -1360,6 +1374,7 @@ function showOptionsPanel(difficulties,statuses){
   main.querySelector('#backToSubjects')?.addEventListener('click',()=>filtersPage());
   main.querySelectorAll('[data-choice]').forEach(btn=>btn.addEventListener('click',()=>{
     filter[btn.dataset.optionType]=btn.dataset.choice;
+    restartQuestionSession();
     current=0;
     filtersPage();
   }));
@@ -1374,6 +1389,11 @@ function resetQuestionSession(){
   questionQueueKey='';
   sessionQuestionIds=[];
   sessionAnsweredIds=[];
+}
+function restartQuestionSession(){
+  // Toda mudança efetiva de filtro inicia uma nova sessão de questões.
+  // A fila e a contagem de acertos/erros ficam independentes da sessão anterior.
+  resetQuestionSession();
 }
 function startQuestionSession(){
   const arr=filtered();
@@ -1427,35 +1447,15 @@ function filtersPage(){
             ${subjects.map(sub=>{
               const isSelected=filter.subject===sub;
               const allRows=qs.filter(q=>q.subject===sub);
-              const centralTopics=[...new Set(allRows.map(q=>q.topic).filter(Boolean))].sort();
-              // Alguns itens antigos usam temas específicos como "Seringueiros", "Zika vírus" etc.
-              // Eles pertencem ao tema central "Legislação especial", e não devem ficar no mesmo nível de BPC/RGPS/RPPS.
-              const specialChildren=['Talidomida','Seringueiros','Ex-combatentes','Anistiados políticos','Hemodiálise de Caruaru','Hanseníase','Zika vírus','Jogadores campeões'];
-              const groups=[];
-              centralTopics.forEach(t=>{
-                if(specialChildren.includes(t)) return;
-                groups.push({name:t, children:[...new Set(allRows.filter(q=>q.topic===t).map(q=>q.sub).filter(Boolean))].sort(), directTopic:t});
-              });
-              const special=centralTopics.filter(t=>specialChildren.includes(t));
-              if(special.length){
-                groups.push({name:'Legislação especial',children:special.sort(),directTopic:null});
-              }
-              const open=isSelected||groups.some(g=>g.children.some(c=>selectedTopics.includes(c))||selectedTopics.includes(g.directTopic));
+              const topics=[...new Set(allRows.map(q=>q.topic).filter(Boolean))].sort();
+              const open=isSelected||topics.some(t=>selectedTopics.includes(t));
               return `<div class="tree-group ${open?'open':''}" data-subject="${esc(sub)}">
                 <div class="tree-row ${isSelected?'selected':''}" data-subject-select="${esc(sub)}"><span class="tree-arrow">${open?'▾':'▸'}</span><span class="tree-icon tree-folder" aria-hidden="true"></span><span class="tree-subject-name">${esc(sub)}</span><span class="tree-count">${allRows.length}</span><button type="button" class="tree-complete subject-complete" data-subject-complete="${esc(sub)}">Matéria completa</button></div>
                 <div class="tree-children">
-                    <div class="tree-central-children">${groups.map(g=>{
-                      const gOpen=isSelected||selectedTopics.includes(g.directTopic)||g.children.some(c=>selectedTopics.includes(c));
-                      const gCount=g.directTopic ? allRows.filter(q=>q.topic===g.directTopic).length : allRows.filter(q=>g.children.includes(q.topic)).length;
-                      const leaves=g.directTopic ? g.children : g.children.map(c=>c);
-                      return `<div class="tree-central-item">
-                        <div class="tree-row tree-topic-parent ${gOpen?'open':''}"><span class="tree-arrow">${gOpen?'▾':'▸'}</span><span class="tree-icon tree-folder" aria-hidden="true"></span><span>${esc(g.name)}</span><span class="tree-count">${gCount}</span><button type="button" class="tree-complete" data-topic-complete="${esc(g.directTopic||'')}">Completo</button></div>
-                        <div class="tree-subchildren">${leaves.map(t=>`<label class="tree-row tree-child"><input type="checkbox" value="${esc(t)}" ${selectedTopics.includes(t)?'checked':''}><span class="tree-icon tree-topic-arrow" aria-hidden="true">➜</span><span>${esc(t)}</span></label>`).join('')}</div>
-                      </div>`;
-                    }).join('')}</div>
+                  <div class="tree-central-children">${topics.map(t=>`<label class="tree-row tree-child"><input type="checkbox" value="${esc(t)}" ${selectedTopics.includes(t)?'checked':''}><span class="tree-icon tree-topic-arrow" aria-hidden="true">➜</span><span>${esc(t)}</span><span class="tree-count">${allRows.filter(q=>q.topic===t).length}</span></label>`).join('')}</div>
                 </div>
               </div>`;
-            }).join('')}
+            }).join('')}}
           </div>
           <div class="filter-panel-footer"><span>${qs.length} questões no banco</span><button type="button" class="text-action" id="clearTreeTopics">Limpar assuntos</button></div>
         </section>
@@ -1474,12 +1474,13 @@ function filtersPage(){
   const treeSearch=$('filterTreeSearch'),searchBox=$('filterSearchBox');
   $('filterSearchToggle')?.addEventListener('click',()=>{searchBox.classList.toggle('show');if(searchBox.classList.contains('show'))treeSearch?.focus()});
   if(filter.search)searchBox.classList.add('show');
-  treeSearch?.addEventListener('input',e=>{const term=e.target.value.toLowerCase().trim();document.querySelectorAll('.tree-group').forEach(g=>g.style.display=(!term||g.dataset.subject.toLowerCase().includes(term)||g.textContent.toLowerCase().includes(term))?'block':'none');filter.search=e.target.value.trim();resetQuestionSession();renderActiveFilters()});
-  $('filterTree')?.querySelector('.tree-root')?.addEventListener('click',()=>{filter.subject='Todos';filter.topic=[];resetQuestionSession();filtersPage()});
+  treeSearch?.addEventListener('input',e=>{const term=e.target.value.toLowerCase().trim();document.querySelectorAll('.tree-group').forEach(g=>g.style.display=(!term||g.dataset.subject.toLowerCase().includes(term)||g.textContent.toLowerCase().includes(term))?'block':'none');filter.search=e.target.value.trim();restartQuestionSession();renderActiveFilters()});
+  $('filterTree')?.querySelector('.tree-root')?.addEventListener('click',()=>{filter.subject='Todos';filter.topic=[];restartQuestionSession();filtersPage()});
   document.querySelectorAll('[data-subject-select]').forEach(btn=>btn.addEventListener('click',()=>{
     const subject=btn.dataset.subjectSelect;
     filter.subject=subject;
     filter.topic=[];
+    restartQuestionSession();
     // Seleciona a matéria sem reconstruir a tela inteira: evita que o painel
     // seja recriado/"abra" uma aba indesejada ao clicar em uma matéria.
     document.querySelectorAll('[data-subject-select]').forEach(b=>b.classList.toggle('selected',b===btn));
@@ -1493,37 +1494,14 @@ function filtersPage(){
     e.preventDefault(); e.stopPropagation();
     filter.subject=btn.dataset.subjectComplete;
     filter.topic=[];
-    resetQuestionSession();
+    restartQuestionSession();
     navigate('questions');
   }));
-  document.querySelectorAll('.tree-topic-parent').forEach(btn=>btn.addEventListener('click',e=>{
-    if(e.target.closest('.tree-complete')) return;
-    e.preventDefault(); e.stopPropagation();
-    btn.classList.toggle('open');
-    const arrow=btn.querySelector('.tree-arrow');
-    if(arrow) arrow.textContent=btn.classList.contains('open')?'▾':'▸';
-  }));
-  document.querySelectorAll('[data-topic-complete]').forEach(btn=>btn.addEventListener('click',e=>{
-    e.preventDefault(); e.stopPropagation();
-    const group=btn.closest('.tree-group');
-    const subject=group?.dataset.subject||filter.subject;
-    const topic=btn.dataset.topicComplete||'';
-    filter.subject=subject;
-    if(topic){
-      filter.topic=[topic];
-    }else{
-      // Grupo especial: seleciona todos os tópicos que pertencem a ele.
-      const specialChildren=[...new Set([...group.querySelectorAll('.tree-child input')].map(x=>x.value))];
-      filter.topic=specialChildren;
-    }
-    resetQuestionSession();
-    navigate('questions');
-  }));
-  document.querySelectorAll('#filterTree input[type="checkbox"]').forEach(cb=>cb.addEventListener('change',()=>{filter.topic=[...document.querySelectorAll('#filterTree input[type="checkbox"]:checked')].map(x=>x.value);questionQueue=[];questionQueueKey='';current=0;lastAnsweredId=null;filtersPage()}));
-  $('clearTreeTopics')?.addEventListener('click',()=>{filter.topic=[];resetQuestionSession();filtersPage()});
-  $('clearAllActive')?.addEventListener('click',()=>{clearFilters();filtersPage()});
-  $('restoreFilters')?.addEventListener('click',()=>{clearFilters();filtersPage()});
-  $('applyFilterVisual')?.addEventListener('click',()=>{resetQuestionSession();startQuestionSession();toast('Filtros aplicados.');navigate('questions')});
+  document.querySelectorAll('#filterTree input[type="checkbox"]').forEach(cb=>cb.addEventListener('change',()=>{filter.topic=[...document.querySelectorAll('#filterTree input[type="checkbox"]:checked')].map(x=>x.value);restartQuestionSession();filtersPage()}));
+  $('clearTreeTopics')?.addEventListener('click',()=>{filter.topic=[];restartQuestionSession();filtersPage()});
+  $('clearAllActive')?.addEventListener('click',()=>{clearFilters();restartQuestionSession();filtersPage()});
+  $('restoreFilters')?.addEventListener('click',()=>{clearFilters();restartQuestionSession();filtersPage()});
+  $('applyFilterVisual')?.addEventListener('click',()=>{restartQuestionSession();startQuestionSession();toast('Filtros aplicados.');navigate('questions')});
   document.querySelectorAll('[data-filter-section]').forEach(btn=>btn.addEventListener('click',()=>{
     const section=btn.dataset.filterSection;
     document.querySelectorAll('.filter-side-item').forEach(x=>x.classList.toggle('active',x===btn));
@@ -1584,6 +1562,7 @@ function performance(){
       </table></div>
     </section>
   </div>`;
+ updateQuestionPerformanceIndicator();
 }
 function historyPage(){$('content').innerHTML=pageHead('Histórico','Tudo que você já respondeu neste dispositivo.',`<button class="btn secondary" onclick="exportData()">↥ Exportar backup</button>`)+`<div class="card"><div class="table-wrap">${state.history.length?`<table class="table"><tr><th>Questão</th><th>Matéria</th><th>Resultado</th><th>Data</th></tr>${state.history.slice(0,300).map(h=>{let q=qs.find(x=>x.id===h.id);return `<tr><td><b>#${h.id}</b> ${esc(q?.text||'Questão')}</td><td>${esc(q?.subject||'-')}</td><td>${h.correct?'<span class="badge green">Acerto</span>':'<span class="badge red">Erro</span>'}</td><td>${new Date(h.at).toLocaleString('pt-BR')}</td></tr>`}).join('')}</table>`:'<div class="empty"><b>Seu histórico está vazio</b>Resolva questões para começar a acompanhar sua evolução.</div>'}</div></div>`}
 function favorites(){let arr=qs.filter(q=>state.favorites.includes(q.id));$('content').innerHTML=pageHead('Favoritas','Questões que você salvou para revisar depois.')+`<div class="card">${arr.length?`<div class="table-wrap"><table class="table"><tr><th>Questão</th><th>Matéria</th><th>Status</th><th></th></tr>${arr.map(q=>{let a=state.answers[q.id];return `<tr><td><b>Questão ${q.examItem||q.id}</b> ${esc(q.text)}</td><td>${esc(q.subject)}</td><td>${a?(a.correct?'<span class="badge green">Acertada</span>':'<span class="badge red">Errada</span>'):'<span class="badge gray">Não resolvida</span>'}</td><td><button class="btn secondary" onclick="openQuestion(${q.id})">Resolver</button></td></tr>`}).join('')}</table></div>`:'<div class="empty"><b>Nenhuma favorita</b>Use ☆ Favoritar no banco de questões para guardar questões.</div>'}</div>`}
@@ -1813,6 +1792,31 @@ body.filter-mode .filter-page-clean{width:100%!important;min-height:calc(100vh -
   body.filter-mode .main{margin-left:0!important}
   body.filter-mode .filter-page-clean{min-height:calc(100vh - 106px)!important;height:auto!important}
 }
+</style>
+
+<style id="high-contrast-final">
+:root{--text:#111827!important;--muted:#4b5563!important;--bg:#f3f6fa!important;--panel:#ffffff!important;--panel2:#f8fafc!important;--line:#cbd5e1!important;--primary:#1769aa!important}
+html,body{background:#f3f6fa!important;color:#111827!important}
+body,.app,.main,.page,.content{color:#111827!important}
+.sidebar{color:#111827!important}
+.card,.stat,.question-card,.option-card,.notebook-card,.sim-card{color:#111827!important}
+.card *, .stat *, .question-card *, .option-card *, .notebook-card *, .sim-card *{color:inherit}
+.page-head h1,.page-head p,.card h2,.card h3,.question-title-clean strong,.question-statement,.question-text,.enunciado,.option-text,.option,.btn,.link-btn,.shortcut,.table th,.table td,.badge,.top-icon,#questionPerformanceRate{color:#111827!important;font-weight:700!important}
+.page-head p,.muted,.question-meta,.question-source,.question-source-strip,.question-number,.question-help,.trend,.stat small,.stat .trend{color:#374151!important;font-weight:600!important}
+.question-card .option{background:#fff!important;border-color:#94a3b8!important;color:#111827!important;font-weight:750!important}
+.question-card .option:hover{background:#f1f5f9!important;border-color:#1769aa!important;color:#0f172a!important}
+.question-card .option.selected{background:#e0efff!important;border-color:#1769aa!important;color:#0f172a!important}
+.performance-trigger{color:#111827!important;background:#fff!important;border-color:#94a3b8!important}
+.performance-trigger #questionPerformanceRate{color:#111827!important;font-weight:800!important}
+.performance-mini-icon{border:2px solid #334155!important}
+.filters-modal,.filters-modal *{color:#111827!important}
+.filters-modal{background:#fff!important;border-color:#cbd5e1!important}
+input,select,textarea{color:#111827!important;background:#fff!important;border-color:#94a3b8!important;font-weight:600!important}
+::placeholder{color:#64748b!important;opacity:1!important}
+.filter-page-clean{color:#111827!important}
+.filter-page-clean .filter-side-item,.filter-page-clean .tree-row,.filter-page-clean .filter-panel-tabs b,.filter-page-clean .filter-panel-tabs button,.filter-page-clean .active-head b,.filter-page-clean .active-filter span,.filter-page-clean .found-box span,.filter-page-clean .choice-filter-option{color:#1f2937!important;font-weight:700!important}
+.filter-page-clean .filter-side-note,.filter-page-clean .filter-panel-footer,.filter-page-clean .active-filter small{color:#4b5563!important;font-weight:600!important}
+.filter-page-clean .tree-count{color:#475569!important;font-weight:700!important}
 </style>
 </body>
 </html>
