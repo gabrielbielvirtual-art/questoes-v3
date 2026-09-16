@@ -820,6 +820,47 @@ body.filter-mode .filter-page-clean{margin:0!important;width:100%!important;min-
 .anki-rating b,.anki-rating span{color:#000!important;font-weight:800!important;}
 .flash-deck:hover .flash-deck-main b,.flash-deck:hover .flash-deck-main small,.flash-deck:hover .flash-deck-due,.flash-deck:hover .flash-deck-arrow{color:#000!important;}
 </style>
+
+<style id="fine-visual-and-performance-patch">
+/* Ajustes finos: apenas visual dos três atalhos e detalhamento do índice. */
+.cartoon-action{position:relative;overflow:visible!important;transition:transform .15s ease,box-shadow .15s ease,background .15s ease!important}
+.cartoon-action:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 14px rgba(40,55,75,.12)!important}
+.cartoon-icon{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;flex:0 0 30px}
+.cartoon-icon svg{width:30px;height:30px;display:block;filter:drop-shadow(0 1px 0 rgba(0,0,0,.08))}
+.performance-action{display:inline-flex!important;align-items:center;justify-content:center;gap:6px!important;background:#fff9f9!important;border-color:#efc8cc!important;color:#b94751!important}
+.performance-action .cartoon-icon{width:30px;height:30px}
+.performance-action #questionPerformanceRate{font-size:13px;font-weight:850;color:#b94751}
+.flashcard-cartoon{background:#fffaf0!important;border-color:#f0d89a!important}
+.flashcard-cartoon .cartoon-icon{width:31px;height:31px}
+.flashcard-cartoon.active{background:#eef8ff!important;border-color:#b8d9ee!important}
+.comment-cartoon{background:#f8f4ff!important;border-color:#d9cef2!important;color:#6750a2!important}
+.comment-cartoon .cartoon-icon{width:29px;height:29px}
+.comment-cartoon .comment-count-badge{margin-left:1px}
+
+.performance-details-card .card-head{gap:14px;align-items:center;flex-wrap:wrap}
+.performance-details-hint{font-size:11px;color:#8a929b;font-weight:600}
+.performance-subject,.performance-topic{border:1px solid #e1e5ea;border-radius:12px;background:#fff;margin-bottom:9px;overflow:hidden}
+.performance-subject>summary,.performance-topic>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 15px}
+.performance-subject>summary::-webkit-details-marker,.performance-topic>summary::-webkit-details-marker{display:none}
+.performance-subject>summary::after,.performance-topic>summary::after{content:'›';font-size:22px;color:#9aa2aa;transform:rotate(0deg);transition:transform .15s ease}
+.performance-subject[open]>summary::after,.performance-topic[open]>summary::after{transform:rotate(90deg)}
+.performance-subject-title,.performance-topic-title{display:flex;align-items:center;gap:8px;min-width:0;font-weight:800;color:#343a42}
+.performance-book-icon,.performance-folder{font-size:20px;line-height:1}
+.performance-subject-result,.performance-topic-result{font-size:11px;color:#737c86;white-space:nowrap}
+.performance-subject-result strong,.performance-topic-result strong,.performance-sub-result strong{color:#31966d}
+.performance-subject-body{padding:0 15px 12px}
+.performance-topic{margin:8px 0 0;border-radius:9px;background:#fbfcfd}
+.performance-topic>summary{padding:10px 12px}
+.performance-topic-title{font-size:12px}
+.performance-topic-result{font-size:10px}
+.performance-topic-body{padding:0 12px 10px}
+.performance-detail-bar{height:6px;background:#edf0f3;border-radius:99px;overflow:hidden;margin:0 0 7px}
+.performance-detail-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#49b987,#58bce0)}
+.performance-sub-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 3px;border-top:1px dashed #e2e6ea;font-size:11px}
+.performance-sub-row>div{display:flex;align-items:center;gap:7px;min-width:0}.performance-sub-row b{font-weight:700;color:#4c555e;overflow:hidden;text-overflow:ellipsis}.performance-sub-dot{width:7px;height:7px;border-radius:50%;background:#f0b84b;box-shadow:0 0 0 3px #fff5df;flex:none}
+.performance-sub-result{font-size:10px;color:#808991;white-space:nowrap}.performance-no-sub{padding:7px 2px;font-size:10px;color:#929aa2}
+@media(max-width:650px){.performance-subject>summary,.performance-topic>summary{align-items:flex-start}.performance-subject-result,.performance-topic-result{white-space:normal;text-align:right}.performance-sub-row{align-items:flex-start;flex-direction:column;gap:2px}.performance-sub-result{padding-left:14px}.cartoon-icon{width:27px;height:27px}.cartoon-icon svg{width:27px;height:27px}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1187,7 +1228,7 @@ function questions(keepId=null){
  <div class="question-page-clean">
   <div class="question-header-clean">
    <div class="question-title-clean"><span class="question-link">↗</span><span class="session-position">${sessionPosition} de ${sessionTotal}</span><strong>${esc(q.subject)} - ${esc(q.topic)}${q.sub&&q.sub!=='Geral'?' - '+esc(q.sub):''}</strong></div>
-   <div class="question-nav-clean"><button id="performanceBtn" class="top-icon performance-trigger" title="Índice de acerto" aria-label="Índice de acerto" onclick="this.focus()"><span class="performance-mini-icon">◔</span><span id="questionPerformanceRate">${sessionPerformanceStats().rate}%</span></button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
+   <div class="question-nav-clean"><button id="performanceBtn" class="top-icon performance-trigger cartoon-action performance-action" title="Índice de acerto" aria-label="Índice de acerto" onclick="this.focus()"><span class="cartoon-icon pie-cartoon" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#e8edf3"/><path d="M20 6a14 14 0 0 1 12.1 21L20 20Z" fill="#e45861"/><path d="M20 20V6a14 14 0 0 0 0 28 14 14 0 0 0 12.1-7L20 20Z" fill="#49b987"/><circle cx="20" cy="20" r="5.2" fill="#fff"/></svg></span><span id="questionPerformanceRate">${sessionPerformanceStats().rate}%</span></button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
   </div>
   <section class="question-card-clean">
    <div class="question-source-clean ${q.bank||q.year||q.exam?'':'empty-source'}">
@@ -1212,8 +1253,8 @@ function questions(keepId=null){
    <button class="bottom-icon" onclick="nextQ()" title="Próxima">→</button>
    <button class="bottom-icon mix-mode-bottom" onclick="cycleQuestionMixMode()" title="Modo de ordem: ${mixModeLabel()} — clique para alternar" aria-label="Alternar modo de questões">⤨</button>
    <button class="bottom-icon" onclick="pendingChoice=null;questions()" title="Limpar">↻</button>
-   <button class="bottom-icon flashcard-add-btn ${inFlashcard?'active':''}" onclick="addToFlashcards(${q.id})" title="${inFlashcard?'Já está nos flashcards':'Adicionar aos flashcards'}" ${(!a||a.correct)?'disabled':''}>▣</button>
-   <button id="manualCommentButton" class="bottom-icon comment-label-btn" onclick="toggleManualComments()" title="Comentário"><span>✎</span><span>Comentário</span><b class="comment-count-badge">${getComments(q.id).length}</b></button>
+   <button class="bottom-icon flashcard-add-btn cartoon-action flashcard-cartoon ${inFlashcard?'active':''}" onclick="addToFlashcards(${q.id})" title="${inFlashcard?'Já está nos flashcards':'Adicionar aos flashcards'}" ${(!a||a.correct)?'disabled':''}><span class="cartoon-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><rect x="8" y="10" width="22" height="22" rx="5" fill="#f4c95d" transform="rotate(-7 8 10)"/><rect x="11" y="7" width="22" height="22" rx="5" fill="#5aaee6" transform="rotate(6 11 7)"/><rect x="13" y="11" width="18" height="15" rx="3" fill="#fff"/><path d="M17 16h10M17 20h7" stroke="#6b7b8c" stroke-width="2" stroke-linecap="round"/></svg></span></button>
+   <button id="manualCommentButton" class="bottom-icon comment-label-btn cartoon-action comment-cartoon" onclick="toggleManualComments()" title="Comentário"><span class="cartoon-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M8 9.5A5.5 5.5 0 0 1 13.5 4h13A5.5 5.5 0 0 1 32 9.5v9A5.5 5.5 0 0 1 26.5 24H19l-7 7v-7h-1.5A5.5 5.5 0 0 1 5 18.5v-9A5.5 5.5 0 0 1 8 9.5Z" fill="#8e73d8"/><path d="M14 12h11M14 17h7" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="m26 24 3.7-3.7 4 4-3.7 3.7-5 1.1Z" fill="#f2b84b" stroke="#9b6d18" stroke-width="1"/></svg></span><span>Comentário</span><b class="comment-count-badge">${getComments(q.id).length}</b></button>
    <button class="bottom-icon remove-question-bottom" onclick="removeQuestion(${q.id})" title="Remover esta questão">🗑</button>
   </div>
   <div class="question-page-spacer" aria-hidden="true"></div>
@@ -1517,7 +1558,32 @@ function filtersPage(){
     if(section==='options'){showOptionsPanel(difficulties,statuses);return}
   }));
 }
-function performance(){let s=stats(),by={};qs.forEach(q=>{by[q.subject]??={done:0,c:0};let a=state.answers[q.id];if(a){by[q.subject].done++;if(a.correct)by[q.subject].c++}});$('content').innerHTML=pageHead('Desempenho','Acompanhe seus resultados por matéria e encontre pontos de atenção.')+`<div class="grid"><div class="stat"><small>Aproveitamento geral</small><strong>${s.rate}%</strong></div><div class="stat"><small>Resolvidas</small><strong>${s.done}</strong></div><div class="stat"><small>Acertos</small><strong>${s.c}</strong></div><div class="stat"><small>Erros</small><strong>${s.wrong}</strong></div></div><div class="card" style="margin-top:16px"><div class="card-head"><h2>Detalhamento por matéria</h2></div>${Object.entries(by).map(([k,v])=>{let p=v.done?Math.round(v.c/v.done*100):0;return `<div class="subject-row"><div class="subject-meta"><b>${esc(k)}</b><span>${v.c} acertos · ${v.done-v.c} erros · ${p}%</span></div><div class="progress"><i style="width:${p}%"></i></div></div>`}).join('')}</div>`}
+function performance(){
+  const s=stats(), by={};
+  const normKey=v=>String(v||'Geral').trim()||'Geral';
+  qs.forEach(q=>{
+    const subject=normKey(q.subject), topic=normKey(q.topic), sub=normKey(q.sub);
+    by[subject]??={done:0,c:0,topics:{}};
+    by[subject].topics[topic]??={done:0,c:0,subs:{}};
+    by[subject].topics[topic].subs[sub]??={done:0,c:0};
+    const a=state.answers[q.id];
+    if(a){
+      by[subject].done++; if(a.correct)by[subject].c++;
+      by[subject].topics[topic].done++; if(a.correct)by[subject].topics[topic].c++;
+      by[subject].topics[topic].subs[sub].done++; if(a.correct)by[subject].topics[topic].subs[sub].c++;
+    }
+  });
+  const pct=(v)=>v.done?Math.round(v.c/v.done*100):0;
+  const progressBar=(v)=>`<div class="performance-detail-bar"><i style="width:${pct(v)}%"></i></div>`;
+  const subjectHtml=Object.entries(by).sort(([a],[b])=>a.localeCompare(b,'pt-BR')).map(([subject,v])=>{
+    const topics=Object.entries(v.topics).sort(([a],[b])=>a.localeCompare(b,'pt-BR')).map(([topic,t])=>{
+      const subs=Object.entries(t.subs).sort(([a],[b])=>a.localeCompare(b,'pt-BR')).map(([sub,u])=>`<div class="performance-sub-row"><div><span class="performance-sub-dot"></span><b>${esc(sub)}</b></div><span class="performance-sub-result">${u.c} acertos · ${u.done-u.c} erros · <strong>${pct(u)}%</strong></span></div>`).join('');
+      return `<details class="performance-topic"><summary><span class="performance-topic-title"><span class="performance-folder">📁</span>${esc(topic)}</span><span class="performance-topic-result">${t.c} acertos · ${t.done-t.c} erros · <strong>${pct(t)}%</strong></span></summary><div class="performance-topic-body">${progressBar(t)}${subs||'<div class="performance-no-sub">Nenhum subassunto respondido ainda.</div>'}</div></details>`;
+    }).join('');
+    return `<details class="performance-subject" open><summary><span class="performance-subject-title"><span class="performance-book-icon">📚</span>${esc(subject)}</span><span class="performance-subject-result">${v.c} acertos · ${v.done-v.c} erros · <strong>${pct(v)}%</strong></span></summary><div class="performance-subject-body">${progressBar(v)}${topics}</div></details>`;
+  }).join('');
+  $('content').innerHTML=pageHead('Desempenho','Acompanhe seus resultados por matéria e veja o índice de acerto de cada assunto e subassunto.')+`<div class="grid"><div class="stat"><small>Aproveitamento geral</small><strong>${s.rate}%</strong></div><div class="stat"><small>Resolvidas</small><strong>${s.done}</strong></div><div class="stat"><small>Acertos</small><strong>${s.c}</strong></div><div class="stat"><small>Erros</small><strong>${s.wrong}</strong></div></div><div class="card performance-details-card" style="margin-top:16px"><div class="card-head"><h2>Índice por matéria, assunto e subassunto</h2><span class="performance-details-hint">Abra uma matéria e depois um assunto para ver os subassuntos.</span></div>${subjectHtml}</div>`;
+}
 function historyPage(){$('content').innerHTML=pageHead('Histórico','Tudo que você já respondeu neste dispositivo.',`<button class="btn secondary" onclick="exportData()">↥ Exportar backup</button>`)+`<div class="card"><div class="table-wrap">${state.history.length?`<table class="table"><tr><th>Questão</th><th>Matéria</th><th>Resultado</th><th>Data</th></tr>${state.history.slice(0,300).map(h=>{let q=qs.find(x=>x.id===h.id);return `<tr><td><b>#${h.id}</b> ${esc(q?.text||'Questão')}</td><td>${esc(q?.subject||'-')}</td><td>${h.correct?'<span class="badge green">Acerto</span>':'<span class="badge red">Erro</span>'}</td><td>${new Date(h.at).toLocaleString('pt-BR')}</td></tr>`}).join('')}</table>`:'<div class="empty"><b>Seu histórico está vazio</b>Resolva questões para começar a acompanhar sua evolução.</div>'}</div></div>`}
 function flashcards(){
   const subjects=[...new Set(qs.map(q=>q.subject).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR'));
