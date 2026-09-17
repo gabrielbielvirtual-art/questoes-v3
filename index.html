@@ -861,18 +861,150 @@ body.filter-mode .filter-page-clean{margin:0!important;width:100%!important;min-
 .performance-sub-result{font-size:10px;color:#808991;white-space:nowrap}.performance-no-sub{padding:7px 2px;font-size:10px;color:#929aa2}
 @media(max-width:650px){.performance-subject>summary,.performance-topic>summary{align-items:flex-start}.performance-subject-result,.performance-topic-result{white-space:normal;text-align:right}.performance-sub-row{align-items:flex-start;flex-direction:column;gap:2px}.performance-sub-result{padding-left:14px}.cartoon-icon{width:27px;height:27px}.cartoon-icon svg{width:27px;height:27px}}
 </style>
+
+<style id="cartoon-navigation-and-flashcards">
+/* Ícones principais: estilo cartoon colorido e uma animação única, sem alterar a navegação. */
+.nav-cartoon-icon{
+  width:42px!important;height:42px!important;display:grid!important;place-items:center!important;
+  text-align:center!important;font-size:0!important;flex:0 0 42px;
+  border-radius:13px;
+  background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.03));
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),filter .22s ease,box-shadow .22s ease;
+}
+.nav-cartoon-icon svg{width:34px;height:34px;display:block;filter:drop-shadow(0 3px 3px rgba(0,0,0,.16));transition:transform .22s ease}
+.nav button:hover .nav-cartoon-icon,
+.nav button.active .nav-cartoon-icon{transform:translateY(-2px) rotate(-2deg);filter:saturate(1.12)}
+.nav button:hover .nav-cartoon-icon svg,
+.nav button.active .nav-cartoon-icon svg{transform:scale(1.08) rotate(2deg)}
+.nav button:nth-child(1) .nav-cartoon-icon{box-shadow:0 6px 14px rgba(102,199,255,.18)}
+.nav button:nth-child(2) .nav-cartoon-icon{box-shadow:0 6px 14px rgba(255,214,107,.18)}
+.nav button:nth-child(3) .nav-cartoon-icon{box-shadow:0 6px 14px rgba(255,113,128,.18)}
+.nav button:nth-child(4) .nav-cartoon-icon{box-shadow:0 6px 14px rgba(199,181,255,.18)}
+.nav button:nth-child(5) .nav-cartoon-icon{box-shadow:0 6px 14px rgba(255,158,176,.18)}
+.nav button:nth-child(6) .nav-cartoon-icon{box-shadow:0 6px 14px rgba(114,214,161,.18)}
+
+/* Área de flashcards: mais acolhedora, colorida e fácil de entender. */
+.flash-overview-pill{
+  border:1px solid #d9e8f7!important;
+  background:linear-gradient(135deg,#f1fbff,#fff8ec)!important;
+  color:#51616e!important;
+  border-radius:18px!important;
+  box-shadow:0 8px 24px rgba(64,125,170,.08)!important;
+}
+.flash-overview-pill b{
+  color:#e86d78!important;
+  font-size:20px!important;
+}
+.flash-decks{display:grid!important;gap:12px!important}
+.flash-deck{
+  position:relative!important;
+  overflow:hidden!important;
+  border:2px solid #e8edf3!important;
+  background:linear-gradient(135deg,#fff 0%,#fbfdff 72%,#fff7ec 100%)!important;
+  border-radius:18px!important;
+  padding:15px 16px!important;
+  box-shadow:0 7px 18px rgba(39,70,100,.06)!important;
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease!important;
+}
+.flash-deck:before{
+  content:"";position:absolute;left:-20px;bottom:-32px;width:86px;height:86px;
+  border-radius:50%;background:rgba(111,205,255,.13);pointer-events:none;
+}
+.flash-deck:hover{
+  transform:translateY(-3px)!important;
+  box-shadow:0 13px 28px rgba(39,70,100,.11)!important;
+  border-color:#b9ddf2!important;
+}
+.flash-deck-icon{
+  width:46px!important;height:46px!important;border-radius:14px!important;
+  display:grid!important;place-items:center!important;flex:none!important;
+  font-size:0!important;background:linear-gradient(145deg,#69c9ff,#b39cff)!important;
+  box-shadow:0 7px 14px rgba(91,157,222,.22)!important;
+  position:relative;
+}
+.flash-deck-icon:before{
+  content:"🗂️";font-size:24px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.12));
+}
+.flash-deck-main b{color:#3f5668!important}
+.flash-deck-main small{color:#8996a2!important}
+.flash-deck-due{
+  border-radius:999px!important;padding:5px 9px!important;
+  background:#eefaf4!important;color:#3e9a70!important;
+  font-weight:800!important;
+}
+.flash-deck-arrow{color:#67b9df!important;font-size:24px!important}
+.flash-study-wrap{max-width:850px!important;margin:0 auto!important}
+.anki-card{
+  border:2px solid #e6edf4!important;
+  border-radius:24px!important;
+  background:linear-gradient(145deg,#ffffff 0%,#fbfdff 65%,#fff8ee 100%)!important;
+  box-shadow:0 16px 42px rgba(48,76,105,.11)!important;
+  overflow:hidden!important;
+  position:relative;
+}
+.anki-card:after{
+  content:"";position:absolute;right:-35px;top:-35px;width:120px;height:120px;border-radius:50%;
+  background:rgba(255,205,94,.14);pointer-events:none;
+}
+.anki-card-top{
+  background:linear-gradient(90deg,#eaf8ff,#f7f0ff)!important;
+  border-bottom:1px solid #e3edf5!important;
+  color:#537080!important;padding:14px 18px!important;
+}
+.anki-card-top b{
+  background:#fff0b9!important;color:#9b751b!important;
+  border:1px solid #f1d879!important;border-radius:999px!important;padding:5px 9px!important;
+}
+.anki-front{padding:30px 28px 22px!important}
+.anki-question{font-size:19px!important;line-height:1.7!important;color:#354957!important}
+.anki-show-area{padding:0 28px 22px!important}
+.anki-show{
+  width:100%!important;border-radius:15px!important;
+  background:linear-gradient(135deg,#62c8a0,#5bb9ea)!important;
+  box-shadow:0 8px 18px rgba(83,187,165,.22)!important;
+}
+.anki-show:hover{filter:saturate(1.1);transform:translateY(-2px)!important}
+.anki-back{
+  margin:0 28px 20px!important;padding:20px!important;
+  border:1px solid #cfe8da!important;border-radius:16px!important;
+  background:#f1fbf5!important;
+}
+.anki-explanation{color:#4d6357!important;line-height:1.65!important}
+.anki-ratings{padding:0 28px 22px!important;gap:9px!important}
+.anki-rating{
+  border:0!important;border-radius:15px!important;padding:12px 10px!important;
+  transition:transform .18s ease,filter .18s ease!important;
+}
+.anki-rating:hover{transform:translateY(-2px)!important;filter:saturate(1.08)}
+.anki-rating.again{background:#ffe1e5!important;color:#b64d5b!important}
+.anki-rating.hard{background:#fff0c9!important;color:#9a751d!important}
+.anki-rating.good{background:#dff7eb!important;color:#3a936b!important}
+.anki-schedule-note{
+  margin:0 28px 22px!important;padding:11px 13px!important;
+  border-radius:12px!important;background:#f4f8fb!important;color:#7c8b96!important;
+}
+@media(max-width:650px){
+  .nav-cartoon-icon{width:36px!important;height:36px!important;flex-basis:36px}
+  .nav-cartoon-icon svg{width:30px;height:30px}
+  .anki-front{padding:24px 20px 18px!important}
+  .anki-show-area,.anki-ratings{padding-left:20px!important;padding-right:20px!important}
+  .anki-back{margin-left:20px!important;margin-right:20px!important}
+  .anki-schedule-note{margin-left:20px!important;margin-right:20px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
 <aside class="sidebar" id="sidebar">
   <div class="logo"><div class="logo-mark">Q</div><div>Questões <span style="color:#6aa7ff">V20</span><small>Plataforma de estudos</small></div></div>
   <nav class="nav">
-    <button data-page="filters" class="active"><span class="icon">⚙</span><span>Filtros</span></button>
-    <button data-page="questions"><span class="icon">☷</span><span>Questões</span></button>
-        <button data-page="performance"><span class="icon">◔</span><span>Estatísticas</span></button>
-    <button data-page="history"><span class="icon">◷</span><span>Histórico</span></button>
-    <button data-page="flashcards"><span class="icon">▣</span><span>Flashcards</span></button>
-    <button data-page="admin"><span class="icon">＋</span><span>Inserir questões</span></button>
+    <button data-page="filters" class="active"><span class="icon nav-cartoon-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" fill="#8bd3ff"/><path d="M14 18h20M17 24h14M20 30h8" stroke="#246bce" stroke-width="4" stroke-linecap="round"/><circle cx="29" cy="18" r="3.5" fill="#ffcf5a"/><circle cx="21" cy="24" r="3.5" fill="#ff7f8a"/><circle cx="27" cy="30" r="3.5" fill="#67d39b"/></svg></span><span>Filtros</span></button>
+    <button data-page="questions"><span class="icon nav-cartoon-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="7" width="30" height="34" rx="7" fill="#ffd66b"/><path d="M16 16h16M16 23h16M16 30h10" stroke="#6b55c7" stroke-width="4" stroke-linecap="round"/><circle cx="34" cy="34" r="7" fill="#66c7ff"/><path d="M31 34l2 2 4-5" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Questões</span></button>
+    <button data-page="performance"><span class="icon nav-cartoon-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" fill="#ffcf66"/><path d="M24 24V9a15 15 0 0 1 13 22z" fill="#ff7180"/><path d="M24 24l13 7a15 15 0 0 1-25 0z" fill="#62d19b"/><path d="M24 24L12 31a15 15 0 0 1 12-22z" fill="#70bfff"/><circle cx="24" cy="24" r="5" fill="#fff"/></svg></span><span>Estatísticas</span></button>
+    <button data-page="history"><span class="icon nav-cartoon-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" fill="#c7b5ff"/><path d="M24 14v11l7 5" fill="none" stroke="#5d46b8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 22a13 13 0 1 0 4-8" fill="none" stroke="#ff7180" stroke-width="4" stroke-linecap="round"/></svg></span><span>Histórico</span></button>
+    <button data-page="flashcards"><span class="icon nav-cartoon-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="13" width="27" height="27" rx="6" fill="#ff9eb0" transform="rotate(-8 8 13)"/><rect x="14" y="8" width="27" height="27" rx="6" fill="#66c7ff" transform="rotate(7 14 8)"/><rect x="18" y="13" width="19" height="15" rx="3" fill="#fff"/><path d="M22 18h11M22 23h8" stroke="#6651bd" stroke-width="2.5" stroke-linecap="round"/><circle cx="34" cy="34" r="5" fill="#ffd15c"/></svg></span><span>Flashcards</span></button>
+    <button data-page="admin"><span class="icon nav-cartoon-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" fill="#72d6a1"/><rect x="21" y="13" width="6" height="22" rx="3" fill="#fff"/><rect x="13" y="21" width="22" height="6" rx="3" fill="#fff"/><circle cx="35" cy="35" r="6" fill="#ffd15c"/><path d="M33 35h4" stroke="#7a5b00" stroke-width="2" stroke-linecap="round"/></svg></span><span>Inserir questões</span></button>
   </nav>
   <div class="header-tools">
     <button class="header-tool" id="printBtn" title="Imprimir">▣ <span>Imprimir</span></button>
