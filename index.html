@@ -1072,6 +1072,7 @@ const old=JSON.parse(localStorage.getItem('questoesV10')||'null');
 const state=old||{answers:{},favorites:[],flashcards:[],notebooks:[{name:'Revisão geral',ids:[]}],history:[],simulados:[],customQuestions:[]};
 state.flashcards=Array.isArray(state.flashcards)?state.flashcards:[];
 state.customQuestions=state.customQuestions||[]; state.notebooks=state.notebooks||[{name:'Revisão geral',ids:[]}]; state.gabaritoOverrides=state.gabaritoOverrides||{}; state.removedQuestionIds=state.removedQuestionIds||[];
+state.questionMarkups=state.questionMarkups||{};
 try{const __mc=JSON.parse(localStorage.getItem('manualComments')||'{}'); let __changed=false; seed.filter(q=>q.manualComment).forEach(q=>{if(!Array.isArray(__mc[q.id])||!__mc[q.id].length){__mc[q.id]=[{id:Number(String(q.id)+String(q.id).slice(-4)),text:q.manualComment,at:new Date().toISOString()}];__changed=true}}); if(__changed)localStorage.setItem('manualComments',JSON.stringify(__mc));}catch(e){}
 
 let qs=[...seed,...state.customQuestions].filter(q=>!state.removedQuestionIds.some(id=>String(id)===String(q.id))); qs.forEach(q=>{if(Object.prototype.hasOwnProperty.call(state.gabaritoOverrides,q.id)) q.answer=state.gabaritoOverrides[q.id]});
@@ -1466,6 +1467,31 @@ function makeQuestionQueue(arr){
   questionQueue=out.map(q=>q.id); questionQueueKey=key; current=0;
 }
 
+function questionMarkupMode(id){
+  const v=String(state.questionMarkups?.[id]||'');
+  return v==='underline'||v==='strike'?v:'';
+}
+function questionMarkupLabel(id){
+  const mode=questionMarkupMode(id);
+  return mode==='underline'?'Remover sublinhado':'Tachar questão';
+}
+function cycleQuestionMarkup(id){
+  state.questionMarkups=state.questionMarkups||{};
+  const mode=questionMarkupMode(id);
+  const next=mode===''?'underline':mode==='underline'?'strike':'';
+  if(next) state.questionMarkups[id]=next; else delete state.questionMarkups[id];
+  save();
+  questions(id);
+}
+function questionMarkupButton(id){
+  const mode=questionMarkupMode(id);
+  const title=mode===''?'Sublinhar/tachar questão':mode==='underline'?'Tachar questão':'Remover marcação';
+  const active=mode?' active':'';
+  return `<button class="top-icon question-markup-btn${active}" onclick="cycleQuestionMarkup(${id})" title="${title}" aria-label="${title}">
+    <span aria-hidden="true">✂</span>
+  </button>`;
+}
+
 function questions(keepId=null){
  // A fila é um retrato do filtro no momento em que ele foi aplicado.
  // Isso impede que o total diminua quando o filtro "Não resolvidas" remove
@@ -1481,9 +1507,9 @@ function questions(keepId=null){
  <div class="question-page-clean">
   <div class="question-header-clean">
    <div class="question-title-clean"><span class="question-link">↗</span><span class="session-position">${sessionPosition} de ${sessionTotal}</span><strong>${esc(q.subject)} - ${esc(q.topic)}${q.sub&&q.sub!=='Geral'?' - '+esc(q.sub):''}</strong></div>
-   <div class="question-nav-clean"><button id="performanceBtn" class="top-icon performance-trigger cartoon-action performance-action" title="Índice de acerto" aria-label="Índice de acerto" onclick="this.focus()"><span class="cartoon-icon pie-cartoon" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#e8edf3"/><path d="M20 6a14 14 0 0 1 12.1 21L20 20Z" fill="#e45861"/><path d="M20 20V6a14 14 0 0 0 0 28 14 14 0 0 0 12.1-7L20 20Z" fill="#49b987"/><circle cx="20" cy="20" r="5.2" fill="#fff"/></svg></span><span id="questionPerformanceRate">${sessionPerformanceStats().rate}%</span></button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
+   <div class="question-nav-clean">${questionMarkupButton(q.id)}<button id="performanceBtn" class="top-icon performance-trigger cartoon-action performance-action" title="Índice de acerto" aria-label="Índice de acerto" onclick="this.focus()"><span class="cartoon-icon pie-cartoon" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#e8edf3"/><path d="M20 6a14 14 0 0 1 12.1 21L20 20Z" fill="#e45861"/><path d="M20 20V6a14 14 0 0 0 0 28 14 14 0 0 0 12.1-7L20 20Z" fill="#49b987"/><circle cx="20" cy="20" r="5.2" fill="#fff"/></svg></span><span id="questionPerformanceRate">${sessionPerformanceStats().rate}%</span></button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
   </div>
-  <section class="question-card-clean">
+  <section class="question-card-clean question-markup-${questionMarkupMode(q.id)}">
    <div class="question-source-clean ${q.bank||q.year||q.exam?'':'empty-source'}">
     <span class="source-label">Origem da questão</span>
     ${q.year?`<span class="source-item source-highlight">Ano: <b>${esc(q.year)}</b></span>`:''}
@@ -2080,14 +2106,19 @@ document.getElementById('shareBtn')?.addEventListener('click',async()=>{
 (function(){
   function updatePerformance(){
     if(typeof state==='undefined') return;
-    const allQs=(typeof qs!=='undefined')?qs:[];
-    const currentIds=new Set(allQs.filter(q=>!q.annulled).map(q=>String(q.id)));
-    const entries=(state.history||[]).filter(h=>h&&currentIds.has(String(h.id)));
+    // O índice aberto acima da questão acompanha SOMENTE a filtragem/sessão atual.
+    // Nunca consulta o histórico global para calcular o gráfico.
+    const ids=(typeof sessionQuestionIds!=='undefined' && Array.isArray(sessionQuestionIds))
+      ? sessionQuestionIds.map(id=>String(id)) : [];
+    const idSet=new Set(ids);
+    const entries=(typeof sessionAnswerHistory!=='undefined' && Array.isArray(sessionAnswerHistory))
+      ? sessionAnswerHistory.filter(h=>h&&idSet.has(String(h.id))) : [];
     const solved=entries.length;
     const correct=entries.filter(x=>x.correct).length;
     const wrong=entries.filter(x=>!x.correct).length;
-    const available=allQs.filter(q=>!q.annulled).length;
-    const remaining=Math.max(0,available-new Set(entries.map(x=>String(x.id))).size);
+    const available=ids.length;
+    const solvedIds=new Set(entries.map(x=>String(x.id)));
+    const remaining=Math.max(0,available-solvedIds.size);
     const rate=solved?Math.round(correct/solved*100):0;
     const degrees=solved?Math.round(correct/solved*360):0;
     const pie=document.getElementById('performancePie');
@@ -2254,6 +2285,108 @@ body.filter-mode .filter-page-clean{width:100%!important;min-height:calc(100vh -
   body.filter-mode .main{margin-left:0!important}
   body.filter-mode .filter-page-clean{min-height:calc(100vh - 106px)!important;height:auto!important}
 }
+</style>
+
+<style id="v31-question-markup-and-size">
+/* Questão: tipografia maior, organizada e marcação por tesourinha */
+.question-statement-clean{
+  font-size:20px!important;
+  line-height:1.72!important;
+  font-weight:500!important;
+  letter-spacing:0!important;
+  max-width:1100px!important;
+  margin:0 auto 30px!important;
+}
+.options-clean{
+  max-width:1100px!important;
+  margin:0 auto!important;
+  border-radius:7px!important;
+}
+.clean-option{
+  min-height:52px!important;
+  padding:10px 14px!important;
+  gap:12px!important;
+  font-size:15.5px!important;
+  line-height:1.45!important;
+}
+.clean-option .letter{
+  width:30px!important;height:30px!important;flex:0 0 30px!important;
+  font-size:13px!important;
+}
+.clean-option .option-text{
+  font-size:15.5px!important;
+  line-height:1.45!important;
+}
+.question-markup-underline .question-statement-clean,
+.question-markup-underline .options-clean,
+.question-markup-underline .options-clean .option-text{
+  text-decoration-line:underline!important;
+  text-decoration-thickness:2px!important;
+  text-underline-offset:4px!important;
+}
+.question-markup-strike .question-statement-clean,
+.question-markup-strike .options-clean,
+.question-markup-strike .options-clean .option-text{
+  text-decoration-line:line-through!important;
+  text-decoration-thickness:2px!important;
+}
+.question-markup-btn{
+  color:#66717c!important;
+  font-size:27px!important;
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif!important;
+}
+.question-markup-btn.active{
+  color:#d48b2d!important;
+  background:#fff7e8!important;
+  border-color:#efd19b!important;
+}
+@media(max-width:800px){
+  .question-statement-clean{
+    font-size:18px!important;
+    line-height:1.62!important;
+    margin-bottom:24px!important;
+  }
+  .clean-option{
+    min-height:48px!important;
+    padding:9px 11px!important;
+  }
+  .clean-option .option-text{
+    font-size:14px!important;
+    line-height:1.4!important;
+  }
+  .clean-option .letter{
+    width:28px!important;height:28px!important;flex-basis:28px!important;
+  }
+  .question-markup-btn{font-size:23px!important}
+}
+</style>
+
+<style id="neutral-navigation-icons-v32">
+/* Ícones das abas: mesma proporção, visual neutro e sem excesso de cor/animação. */
+.nav button{gap:9px!important;font-size:13px!important;font-weight:650!important;}
+.nav-cartoon-icon{
+  width:28px!important;height:28px!important;flex:0 0 28px!important;
+  border-radius:7px!important;background:transparent!important;
+  box-shadow:none!important;transform:none!important;filter:none!important;
+  transition:none!important;
+}
+.nav-cartoon-icon svg{
+  width:24px!important;height:24px!important;
+  filter:grayscale(1) opacity(.72)!important;
+  transform:none!important;
+  transition:none!important;
+}
+.nav button:hover .nav-cartoon-icon,.nav button.active .nav-cartoon-icon{
+  transform:none!important;filter:none!important;
+}
+.nav button:hover .nav-cartoon-icon svg,.nav button.active .nav-cartoon-icon svg{
+  transform:none!important;filter:grayscale(1) opacity(.92)!important;
+}
+.nav button.active .nav-cartoon-icon svg{filter:grayscale(1) opacity(.95)!important;}
+body.filter-mode .nav button .nav-cartoon-icon{
+  width:26px!important;height:26px!important;flex:0 0 26px!important;
+}
+body.filter-mode .nav button .nav-cartoon-icon svg{width:23px!important;height:23px!important;}
 </style>
 </body>
 </html>
