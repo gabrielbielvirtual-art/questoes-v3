@@ -997,7 +997,7 @@ body.filter-mode .filter-page-clean{margin:0!important;width:100%!important;min-
 <style id="final-ux-adjustments">
 /* Comentários: edição e grifo */
 .manual-comment-text.editing{outline:2px solid #b9c8e9;outline-offset:3px;border-radius:5px;background:#fff;min-height:28px;padding:4px;cursor:text}
-.manual-comment-text mark{background:#fff29a!important;color:#252525!important;padding:0 .08em;border-radius:2px}
+.manual-comment-text mark{background:var(--comment-marker,#fff29a)!important;color:#252525!important;padding:0 .08em;border-radius:2px}
 .comment-composer{border:1px solid #dfe4ec;border-radius:10px;background:#fff;padding:10px}
 .comment-toolbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px}
 .comment-toolbar-label{font-size:11px;font-weight:800;color:#4b5563;margin-right:2px}
@@ -1007,7 +1007,7 @@ body.filter-mode .filter-page-clean{margin:0!important;width:100%!important;min-
 .comment-color-btn.active{outline:2px solid #3157d5;outline-offset:1px}
 .comment-editor{min-height:92px;outline:none;line-height:1.72;color:#252525;font-weight:600}
 .comment-editor:empty::before{content:attr(data-placeholder);color:#8b93a1;font-weight:500}
-.comment-editor mark{color:#252525!important;padding:0 .08em;border-radius:2px}
+.comment-editor mark{background:var(--comment-marker,#fff29a)!important;color:#252525!important;padding:0 .08em;border-radius:2px}
 .comment-tone{font-size:11px;border:1px solid #d9dee6;border-radius:6px;padding:5px 7px;background:#fff;color:#374151;font-weight:700}
 
 .comment-edit-actions{flex-wrap:wrap}.comment-edit-actions button{background:#f5f7fa;border:1px solid #d9dee6;color:#4b5563!important}
@@ -1072,7 +1072,7 @@ const old=JSON.parse(localStorage.getItem('questoesV10')||'null');
 const state=old||{answers:{},favorites:[],flashcards:[],notebooks:[{name:'Revisão geral',ids:[]}],history:[],simulados:[],customQuestions:[]};
 state.flashcards=Array.isArray(state.flashcards)?state.flashcards:[];
 state.customQuestions=state.customQuestions||[]; state.notebooks=state.notebooks||[{name:'Revisão geral',ids:[]}]; state.gabaritoOverrides=state.gabaritoOverrides||{}; state.removedQuestionIds=state.removedQuestionIds||[];
-state.optionMarkups=state.optionMarkups||{}; state.questionFontScale=Number(state.questionFontScale)||1;
+state.optionMarkups=state.optionMarkups||{}; state.questionFontScale=Number(state.questionFontScale)||1; state.expandedQuestionText=state.expandedQuestionText||{};
 try{const __mc=JSON.parse(localStorage.getItem('manualComments')||'{}'); let __changed=false; seed.filter(q=>q.manualComment).forEach(q=>{if(!Array.isArray(__mc[q.id])||!__mc[q.id].length){__mc[q.id]=[{id:Number(String(q.id)+String(q.id).slice(-4)),text:q.manualComment,at:new Date().toISOString()}];__changed=true}}); if(__changed)localStorage.setItem('manualComments',JSON.stringify(__mc));}catch(e){}
 
 let qs=[...seed,...state.customQuestions].filter(q=>!state.removedQuestionIds.some(id=>String(id)===String(q.id))); qs.forEach(q=>{if(Object.prototype.hasOwnProperty.call(state.gabaritoOverrides,q.id)) q.answer=state.gabaritoOverrides[q.id]});
@@ -1295,7 +1295,7 @@ function sanitizeCommentHtml(input){
     }
     if(tag==='mark'){
       const c=el.getAttribute('data-color')||el.style.backgroundColor||'#fff29a';
-      el.setAttribute('data-color',c); el.style.backgroundColor=c; el.style.color='#252525';
+      el.setAttribute('data-color',c); el.style.backgroundColor=c; el.style.setProperty('--comment-marker',c); el.style.color='#252525';
     }
   });
   return box.innerHTML;
@@ -1407,6 +1407,45 @@ function removeQuestion(id){
   save(); toast('Questão removida do banco.'); questions();
 }
 
+function organizeCommentHtml(input){
+  const box=document.createElement('div');
+  box.innerHTML=String(input||'');
+  const raw=(box.innerText||'').replace(/\u00a0/g,' ').trim();
+  if(!raw) return '';
+  // Reorganiza sem alterar o conteúdo: separa linhas/parágrafos e destaca termos de atenção.
+  const parts=raw.split(/\n{2,}|\n(?=\S)/).map(x=>x.trim()).filter(Boolean);
+  const out=[];
+  const red=/\b(erro|errado|incorreto|incorreta|não|nao|vedado|vedada|proibido|proibida|exceto|exceção|excecao|atenção|atencao)\b/ig;
+  const green=/\b(correto|correta|certo|regra|permitido|permitida|assegurado|assegurada|garantido|garantida|gabarito|portanto|assim|conclusão|conclusao)\b/ig;
+  parts.forEach((part,idx)=>{
+    let text=esc(part);
+    text=text.replace(red,m=>`<mark data-color="#ffb8b8" style="--comment-marker:#ffb8b8;background-color:#ffb8b8">${m}</mark>`);
+    text=text.replace(green,m=>`<mark data-color="#bfecc7" style="--comment-marker:#bfecc7;background-color:#bfecc7">${m}</mark>`);
+    out.push(`<p class="comment-organized-paragraph">${text}</p>`);
+  });
+  return out.join('');
+}
+function organizeNewComment(){
+  const editor=document.getElementById('manualCommentEditor');
+  if(!editor)return;
+  const html=organizeCommentHtml(editor.innerHTML);
+  if(!html){toast('Escreva um comentário antes de organizar.');return;}
+  editor.innerHTML=html; editor.focus();
+  toast('Comentário organizado e destacado por palavras-chave.');
+}
+function organizeSavedComment(qid,cid){
+  const item=document.querySelector(`.manual-comment-item[data-comment-id="${cid}"]`);
+  const body=item?.querySelector('.manual-comment-text');
+  if(!body)return;
+  const html=organizeCommentHtml(body.innerHTML);
+  if(!html)return;
+  let all={}; try{all=JSON.parse(localStorage.getItem('manualComments')||'{}')}catch(e){}
+  const c=(all[qid]||[]).find(x=>String(x.id)===String(cid));
+  if(!c)return;
+  c.html=html; c.text=body.innerText.trim(); c.at=new Date().toISOString();
+  localStorage.setItem('manualComments',JSON.stringify(all)); questions();
+  toast('Comentário reorganizado.');
+}
 function manualCommentsHtml(qid){
   const cs=getComments(qid);
   const colors=[
@@ -1429,9 +1468,10 @@ function manualCommentsHtml(qid){
       <div style="font-size:11px;color:#7b8493;margin-top:6px">Selecione um trecho no texto e clique em uma cor para aplicar o destaque. As marcações ficam salvas e podem ser editadas depois.</div>
     </div>
     <div class="comment-actions">
+      <button class="btn secondary" type="button" onclick="organizeNewComment()">✨ Organizar e grifar</button>
       <button class="btn primary" onclick="saveManualComment(${qid})">Salvar comentário</button>
     </div>
-    ${cs.length?`<div class="manual-comment-list">${cs.map(c=>`<div class="manual-comment-item" data-comment-id="${c.id}"><div class="manual-comment-text">${c.html||esc(c.text).replace(/\n/g,'<br><br>')}</div><div style="font-size:11px;color:var(--muted);margin-top:7px">${new Date(c.at).toLocaleString('pt-BR')}</div><div class="comment-actions"><button onclick="editManualComment(${qid},${c.id})">✎ Editar</button><button onclick="deleteManualComment(${qid},${c.id})">Excluir</button></div></div>`).join('')}</div>`:''}
+    ${cs.length?`<div class="manual-comment-list">${cs.map(c=>`<div class="manual-comment-item" data-comment-id="${c.id}"><div class="manual-comment-text">${c.html||esc(c.text).replace(/\n/g,'<br><br>')}</div><div style="font-size:11px;color:var(--muted);margin-top:7px">${new Date(c.at).toLocaleString('pt-BR')}</div><div class="comment-actions"><button onclick="organizeSavedComment(${qid},${c.id})">✨ Organizar</button><button onclick="editManualComment(${qid},${c.id})">✎ Editar</button><button onclick="deleteManualComment(${qid},${c.id})">Excluir</button></div></div>`).join('')}</div>`:''}
   </section>`;
 }
 function setNewCommentColor(color,btn){
@@ -1480,6 +1520,32 @@ function cycleOptionMarkup(id,i){
   if(!Object.keys(state.optionMarkups[id]).length) delete state.optionMarkups[id];
   save(); questions(id);
 }
+function questionTextNeedsCollapse(text){
+  return String(text||'').trim().length>420 || String(text||'').split(/\n/).length>5;
+}
+function questionTextPreview(text){
+  const clean=String(text||'').trim();
+  if(!questionTextNeedsCollapse(clean)) return clean;
+  // Fechado: mostra apenas o início/enunciado. Aberto: mostra o texto integral.
+  const firstBlock=clean.split(/\n\s*\n/)[0].trim();
+  if(firstBlock.length<=420) return firstBlock;
+  const cut=firstBlock.slice(0,420);
+  const lastSpace=cut.lastIndexOf(' ');
+  return (lastSpace>280?cut.slice(0,lastSpace):cut).trim()+'…';
+}
+function toggleQuestionText(id){
+  state.expandedQuestionText=state.expandedQuestionText||{};
+  if(state.expandedQuestionText[id]) delete state.expandedQuestionText[id];
+  else state.expandedQuestionText[id]=true;
+  save(); questions(id);
+}
+function questionTextHtml(q){
+  const text=String(q.text||'');
+  if(!questionTextNeedsCollapse(text)) return `<div class="question-statement-clean">${esc(text)}</div>`;
+  const open=!!state.expandedQuestionText?.[q.id];
+  const visible=open?text:questionTextPreview(text);
+  return `<div class="question-statement-row ${open?'question-text-open':'question-text-collapsed'}"><div class="question-statement-clean">${esc(visible)}</div><button type="button" class="question-text-toggle" onclick="toggleQuestionText(${q.id})" title="${open?'Ocultar texto':'Mostrar texto completo'}" aria-label="${open?'Ocultar texto':'Mostrar texto completo'}">${open?'−':'+'}</button></div>`;
+}
 function questionFontScale(){return Math.min(1.35,Math.max(.75,Number(state.questionFontScale)||1));}
 function changeQuestionFont(delta){
   state.questionFontScale=Math.min(1.35,Math.max(.75,Math.round((questionFontScale()+delta)*100)/100));
@@ -1511,7 +1577,7 @@ function questions(keepId=null){
  <div class="question-page-clean">
   <div class="question-header-clean">
    <div class="question-title-clean"><span class="question-link">↗</span><span class="session-position">${sessionPosition} de ${sessionTotal}</span><strong>${esc(q.subject)} - ${esc(q.topic)}${q.sub&&q.sub!=='Geral'?' - '+esc(q.sub):''}</strong></div>
-   <div class="question-nav-clean">${questionFontControls()}<button id="performanceBtn" class="top-icon performance-trigger cartoon-action performance-action" title="Índice de acerto" aria-label="Índice de acerto" onclick="this.focus()"><span class="cartoon-icon pie-cartoon" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#e8edf3"/><path d="M20 6a14 14 0 0 1 12.1 21L20 20Z" fill="#e45861"/><path d="M20 20V6a14 14 0 0 0 0 28 14 14 0 0 0 12.1-7L20 20Z" fill="#49b987"/><circle cx="20" cy="20" r="5.2" fill="#fff"/></svg></span><span id="questionPerformanceRate">${sessionPerformanceStats().rate}%</span></button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
+   <div class="question-nav-clean">${questionFontControls()}<button id="performanceBtn" class="top-icon performance-trigger cartoon-action performance-action" title="Índice de acerto" aria-label="Abrir índice de acerto" onclick="this.focus()"><span class="cartoon-icon pie-cartoon" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#e5e8eb"/><path d="M20 6a14 14 0 0 1 12.1 21L20 20Z" fill="#8a949d"/><path d="M20 20V6a14 14 0 0 0 0 28 14 14 0 0 0 12.1-7L20 20Z" fill="#59636c"/><circle cx="20" cy="20" r="5.2" fill="#fff"/></svg></span></button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
   </div>
   <section class="question-card-clean" style="--q-font-scale:${questionFontScale()}">
    <div class="question-source-clean ${q.bank||q.year||q.exam?'':'empty-source'}">
@@ -1524,7 +1590,7 @@ function questions(keepId=null){
     ${!(q.bank||q.year||q.exam||q.source)?'<span>Cadastre a banca, prova, ano e fonte desta questão.</span>':''}
    </div>
    <div class="question-meta-strip"><span>💬 <b>${getComments(q.id).length}</b> comentário${getComments(q.id).length===1?'':'s'}</span><span class="question-meta-spacer"></span>${!q.annulled?`<button class="gabarito-edit-btn" onclick="toggleGabarito(${q.id})" title="Trocar o gabarito desta questão">✎ Alterar gabarito</button>`:''}</div>
-   <div class="question-statement-clean">${esc(q.text)}</div>
+   ${questionTextHtml(q)}
    <div class="options-clean">${optsHtml}</div>
    ${!q.annulled&&(!a||pendingChoice)?`<div class="answer-actions-clean"><button class="btn primary rounded" ${selected===null?'disabled':''} onclick="confirmAnswer(${q.id})">Responder</button><button class="btn secondary rounded" onclick="pendingChoice=null;questions()">Limpar seleção</button></div>`:''}
    ${q.annulled?`<div class="result-clean"><strong>Questão anulada</strong><span>Gabarito oficial: <b>ANULADA</b></span></div>`:(showResult&&a?`<div class="result-clean ${a.correct?'result-ok':'result-bad'}"><strong>${a.correct?'✓':'✕'} ${a.correct?'Você acertou!':'Você errou!'}</strong><span>Gabarito: <b>${q.type==='tf'?(q.answer===0?'Certo':'Errado'):String.fromCharCode(65+q.answer)}</b><button class="gabarito-edit-btn" onclick="toggleGabarito(${q.id})" title="Trocar o gabarito desta questão">✎ Alterar gabarito</button></span><div class="manual-gabarito-note">Você pode corrigir manualmente o gabarito se discordar do oficial.</div></div>`:'')}
@@ -2083,7 +2149,7 @@ document.getElementById('shareBtn')?.addEventListener('click',async()=>{
     <div class="performance-heading">
       <span class="performance-eyebrow">SEU DESEMPENHO</span>
       <h2>Desempenho</h2>
-      <p>Atualizado ao confirmar cada questão.</p>
+      <p>Desempenho somente deste filtro.</p>
     </div>
     <div class="performance-chart-wrap">
       <div class="pie-chart" id="performancePie">
@@ -2297,16 +2363,23 @@ body.filter-mode .filter-page-clean{width:100%!important;min-height:calc(100vh -
 .font-size-btn{width:29px;height:30px;border:0;border-radius:5px;background:transparent;color:#59636c;font-weight:700;font-size:14px;cursor:pointer;}
 .font-size-btn:hover{background:#eceff1;color:#30363b;}
 .font-size-value{min-width:32px;text-align:center;font-size:10px;font-weight:700;color:#899198;}
-.option-wrap{position:relative;display:flex;align-items:stretch;width:100%;}
-.option-scissors{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:26px;height:26px;border:0;border-radius:6px;background:#e9ebee;color:#68727b;font-size:15px;line-height:1;cursor:pointer;opacity:0;z-index:3;}
+.option-wrap{position:relative;display:flex;align-items:stretch;width:calc(100% - 34px);margin-left:34px;}
+.option-scissors{position:absolute;left:-31px;right:auto;top:50%;transform:translateY(-50%);width:26px;height:26px;border:0;border-radius:6px;background:#e9ebee;color:#68727b;font-size:15px;line-height:1;cursor:pointer;opacity:0;z-index:3;}
 .option-wrap:hover .option-scissors,.option-scissors.active,.option-scissors:focus-visible{opacity:1;}
 .option-scissors:hover,.option-scissors.active{background:#dfe3e7;color:#4f5962;}
 .option-marked-strike .clean-option .option-text{text-decoration:line-through!important;text-decoration-thickness:2px!important;}
 .option-marked-strike .clean-option{opacity:.72;}
 .clean-option{position:relative;}
-@media(max-width:800px){.option-scissors{opacity:1;width:24px;height:24px;font-size:14px;}.question-font-controls{height:33px;}.font-size-btn{width:27px;height:27px;}.font-size-value{display:none;}}
+@media(max-width:800px){.option-wrap{width:calc(100% - 30px);margin-left:30px;}.option-scissors{opacity:1;left:-28px;width:24px;height:24px;font-size:14px;}.question-font-controls{height:33px;}.font-size-btn{width:27px;height:27px;}.font-size-value{display:none;}}
 </style>
 
+<style id="question-text-collapse-v33">
+.question-statement-row{position:relative;display:flex;align-items:flex-start;gap:10px;}
+.question-statement-row .question-statement-clean{flex:1;min-width:0;}
+.question-text-toggle{flex:0 0 30px;width:30px;height:30px;margin-top:14px;border:1px solid #cfd3d7;border-radius:7px;background:#f7f8f9;color:#59636c;font-size:20px;font-weight:700;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+.question-text-toggle:hover{background:#eceff1;color:#30363b;}
+@media(max-width:800px){.question-text-toggle{width:27px;height:27px;flex-basis:27px;margin-top:10px;font-size:18px;}}
+</style>
 <style id="neutral-navigation-icons-v32">
 /* Ícones das abas: mesma proporção, visual neutro e sem excesso de cor/animação. */
 .nav button{gap:9px!important;font-size:13px!important;font-weight:650!important;}
@@ -2333,6 +2406,35 @@ body.filter-mode .nav button .nav-cartoon-icon{
   width:26px!important;height:26px!important;flex:0 0 26px!important;
 }
 body.filter-mode .nav button .nav-cartoon-icon svg{width:23px!important;height:23px!important;}
+</style>
+<style id="question-font-scale-v34">
+/* O controle A-/A+ altera de fato o tamanho do enunciado e das alternativas. */
+.question-card-clean{--q-font-scale:1;}
+.question-card-clean .question-statement-clean{
+  font-size:calc(14px * var(--q-font-scale)) !important;
+  line-height:1.45 !important;
+}
+.question-card-clean .clean-option{
+  font-size:calc(11.5px * var(--q-font-scale)) !important;
+}
+.question-card-clean .clean-option .option-text{
+  font-size:calc(11.5px * var(--q-font-scale)) !important;
+  line-height:1.35 !important;
+}
+@media(max-width:800px){
+  .question-card-clean .question-statement-clean{font-size:calc(14px * var(--q-font-scale)) !important;}
+  .question-card-clean .clean-option,
+  .question-card-clean .clean-option .option-text{font-size:calc(11.5px * var(--q-font-scale)) !important;}
+}
+</style>
+
+<style id="performance-trigger-icon-only-final">
+/* Índice compacto: na barra superior aparece somente o ícone. */
+.performance-trigger{width:34px!important;min-width:34px!important;height:34px!important;padding:0!important;gap:0!important;border-radius:7px!important;}
+.performance-trigger .pie-cartoon{display:inline-flex!important;width:20px!important;height:20px!important;align-items:center!important;justify-content:center!important;}
+.performance-trigger .pie-cartoon svg{width:20px!important;height:20px!important;}
+.performance-trigger #questionPerformanceRate{display:none!important;}
+.performance-trigger:hover{background:#f1f3f5!important;}
 </style>
 </body>
 </html>
@@ -2496,4 +2598,14 @@ body.filter-mode .sidebar .nav button:first-child{min-width:112px!important}
 .active-chip{font-size:11px!important;line-height:1.2!important;}
 .active-chip span{font-size:11px!important;font-weight:650!important;}
 @media(max-width:760px){.filter-list-options,.choice-main-options{grid-template-columns:1fr!important}.filter-quantity-control select{height:28px;}}
+</style>
+<style id="comment-organizer-and-highlight-fix-v35">
+/* Marca-texto: cada cor mantém sua própria cor, sem ser sobrescrita pelo amarelo padrão. */
+.comment-editor mark,.manual-comment-text mark{background:var(--comment-marker,#fff29a)!important;}
+.comment-color-btn::after{background:var(--marker)!important;}
+.comment-organized-paragraph{margin:0 0 9px;line-height:1.62;}
+.comment-organized-paragraph:last-child{margin-bottom:0;}
+.comment-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.question-text-collapsed .question-statement-clean{max-height:180px;overflow:hidden;}
+.question-text-toggle{position:relative;z-index:2;box-shadow:0 1px 3px rgba(0,0,0,.08);}
 </style>
