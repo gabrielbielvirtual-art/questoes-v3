@@ -1086,6 +1086,25 @@ body.filter-mode .filter-page-clean{margin:0!important;width:100%!important;min-
 .comment-fullscreen-open{overflow:hidden!important}
 @media(max-width:900px){.comment-toolbar-editor{overflow-x:auto!important}.comment-editor{min-height:220px!important;height:220px!important}.comment-palette{position:fixed!important;top:auto!important;bottom:72px!important;left:10px!important}.comment-color-palette{width:194px!important}}
 </style>
+<style id="comment-editor-performance-and-colors-v4">
+/* Editor de comentários: resposta imediata e cores independentes. */
+/* As cores aplicadas pelo editor permanecem nas próprias marcações inline. */
+.comment-editor span[style],.manual-comment-text span[style]{
+  font-weight:inherit;
+  font-style:inherit;
+  text-decoration:inherit;
+}
+.comment-editor .comment-color-wrap,.comment-editor .comment-align-wrap{position:relative!important;}
+.comment-toolbar-editor{scroll-behavior:auto!important;}
+.comment-tool,.comment-palette-swatch,.comment-palette-action{transition:none!important;animation:none!important;}
+.comment-palette{will-change:display;contain:layout style paint;}
+.comment-palette-swatch{box-sizing:border-box!important;}
+.comment-editor mark{color:inherit!important;}
+.manual-comment-text mark{color:inherit!important;}
+@media(max-width:900px){
+  .comment-toolbar-editor{overscroll-behavior-x:contain!important;}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1686,20 +1705,37 @@ function closeCommentPalettes(){document.querySelectorAll('.comment-palette.open
 function setNewCommentColor(color,btn){setCommentHighlightColor(color);btn?.classList.add('active');}
 
 function initCommentEditor(){
-  const editor=commentEditor(); if(!editor)return;
-  ['mouseup','keyup','input','focus'].forEach(ev=>editor.addEventListener(ev,()=>{saveCommentSelection();updateCommentStats();}));
+  const editor=commentEditor();
+  if(!editor || editor.dataset.commentReady==='1') return;
+  editor.dataset.commentReady='1';
+  const remember=()=>{saveCommentSelection(); scheduleCommentStats();};
+  editor.addEventListener('mouseup',remember,{passive:true});
+  editor.addEventListener('keyup',remember,{passive:true});
+  editor.addEventListener('input',remember,{passive:true});
+  editor.addEventListener('focus',remember,{passive:true});
   editor.addEventListener('keydown',e=>{
-    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();}
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s') e.preventDefault();
   });
-  document.addEventListener('click',e=>{if(!e.target.closest('.comment-color-wrap'))closeCommentPalettes();},{once:true});
   updateCommentStats();
 }
-
+let commentStatsFrame=0;
+function scheduleCommentStats(){
+  if(commentStatsFrame) return;
+  commentStatsFrame=requestAnimationFrame(()=>{commentStatsFrame=0;updateCommentStats();});
+}
 (function(){
-  let scheduled=false;
-  const boot=()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;initCommentEditor();});};
-  new MutationObserver(boot).observe(document.body,{childList:true,subtree:true});
-  document.addEventListener('selectionchange',saveCommentSelection);
+  if(window.__commentEditorGlobalReady) return;
+  window.__commentEditorGlobalReady=true;
+  document.addEventListener('selectionchange',()=>{
+    const editor=commentEditor();
+    const sel=window.getSelection();
+    if(!editor||!sel||!sel.rangeCount) return;
+    const node=sel.anchorNode;
+    if(node && editor.contains(node)) saveCommentSelection();
+  });
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('.comment-color-wrap') && !e.target.closest('.comment-align-wrap')) closeCommentPalettes();
+  },true);
 })();
 function makeQuestionQueue(arr){
   const key=arr.map(q=>q.id).join(',')+'|'+questionMixMode;
@@ -1824,6 +1860,7 @@ function questions(keepId=null){
   </div>
   <div class="question-page-spacer" aria-hidden="true"></div>
  </div>`;
+ initCommentEditor();
 }
 function selectAnswer(id,ch){if(qs.find(x=>x.id===id)?.annulled)return;pendingChoice={id,choice:ch};questions()}
 function confirmAnswer(id){if(!pendingChoice||pendingChoice.id!==id)return;answer(id,pendingChoice.choice);pendingChoice=null}
@@ -2652,31 +2689,63 @@ body.filter-mode .nav button .nav-cartoon-icon svg{width:23px!important;height:2
 .performance-trigger #questionPerformanceRate{display:none!important;}
 .performance-trigger:hover{background:#f1f3f5!important;}
 </style>
-<script id="comment-editor-final-js-v3">
+<script id="comment-editor-final-js-v4">
 (function(){
-  function execStyled(command,value){
-    const editor=commentEditor(); if(!editor)return;
-    restoreCommentSelection(); editor.focus();
+  function runCommand(command,value){
+    const editor=commentEditor();
+    if(!editor) return false;
+    restoreCommentSelection();
+    editor.focus({preventScroll:true});
     try{document.execCommand('styleWithCSS',false,true);}catch(e){}
-    try{document.execCommand(command,false,value||null);}catch(e){}
-    saveCommentSelection(); updateCommentStats();
+    let ok=false;
+    try{ok=document.execCommand(command,false,value==null?null:value);}catch(e){}
+    saveCommentSelection();
+    scheduleCommentStats();
+    return ok;
   }
-  window.commentCommand=function(command,value=null){execStyled(command,value);};
-  window.setCommentTextColor=function(color){execStyled('foreColor',color);};
+  window.commentCommand=function(command,value=null){runCommand(command,value);};
+  window.setCommentTextColor=function(color){
+    runCommand('foreColor',color);
+    closeCommentPalettes();
+  };
   window.setCommentHighlightColor=function(color){
-    const editor=commentEditor(); if(!editor)return;
-    restoreCommentSelection(); editor.focus();
+    const editor=commentEditor();
+    if(!editor) return;
+    restoreCommentSelection();
+    editor.focus({preventScroll:true});
     let ok=false;
     try{document.execCommand('styleWithCSS',false,true);}catch(e){}
     try{ok=document.execCommand('hiliteColor',false,color);}catch(e){}
     if(!ok){try{ok=document.execCommand('backColor',false,color);}catch(e){}}
-    saveCommentSelection(); updateCommentStats(); closeCommentPalettes();
+    if(!ok){
+      const sel=window.getSelection();
+      if(sel&&sel.rangeCount&&sel.toString().trim()){
+        const range=sel.getRangeAt(0);
+        if(editor.contains(range.commonAncestorContainer)){
+          try{
+            const mark=document.createElement('mark');
+            mark.setAttribute('data-color',color);
+            mark.style.backgroundColor=color;
+            mark.style.setProperty('--comment-marker',color);
+            mark.appendChild(range.extractContents());
+            range.insertNode(mark);
+            range.setStartAfter(mark); range.collapse(true);
+            sel.removeAllRanges(); sel.addRange(range);
+            ok=true;
+          }catch(e){}
+        }
+      }
+    }
+    saveCommentSelection();
+    scheduleCommentStats();
+    closeCommentPalettes();
   };
   window.setCommentAlignment=function(value){
     const map={left:'justifyLeft',center:'justifyCenter',right:'justifyRight',justify:'justifyFull'};
-    execStyled(map[value]||'justifyLeft'); closeCommentPalettes();
+    runCommand(map[value]||'justifyLeft');
+    closeCommentPalettes();
   };
-  window.clearCommentFormatting=function(){execStyled('removeFormat');};
+  window.clearCommentFormatting=function(){runCommand('removeFormat');};
 })();
 </script>
 </body>
