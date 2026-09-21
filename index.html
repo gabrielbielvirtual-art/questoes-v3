@@ -994,6 +994,10 @@ body.filter-mode .filter-page-clean{margin:0!important;width:100%!important;min-
 .manual-comment-text{white-space:normal;line-height:1.72}.manual-comment-text br{line-height:1.72}
 </style>
 
+
+<style id="rich-comment-editor-v1">
+.manual-comment{max-width:920px!important;margin:18px auto!important;background:#fff!important;border:1px solid #d7d9dd!important;border-radius:4px!important;padding:0!important;overflow:visible!important}\n.manual-comment-head{padding:12px 14px!important;margin:0!important;border-bottom:1px solid #e1e3e6!important}\n.manual-comment-title{font-size:13px!important;font-weight:800!important;color:#35393e!important}\n.comment-composer{padding:0!important;border:0!important;border-radius:0!important;background:#fff!important;overflow:visible!important}\n.comment-toolbar-editor{display:flex!important;align-items:center!important;gap:0!important;flex-wrap:nowrap!important;overflow:visible!important;margin:0!important;padding:7px 9px!important;border-bottom:1px solid #d5d7da!important;background:#fafafa!important;min-height:43px!important}\n.comment-tool{width:34px!important;height:32px!important;border:0!important;background:transparent!important;color:#34383d!important;border-radius:2px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:17px!important;font-weight:700!important;cursor:pointer!important;flex:0 0 34px!important;padding:0!important}\n.comment-tool:hover{background:#e9ecef!important}\n.comment-toolbar-sep{width:1px;height:25px;background:#e0e2e5;margin:0 5px;flex:0 0 1px}\n.comment-align-wrap{height:32px;display:inline-flex;align-items:center;border-radius:2px;overflow:hidden;cursor:pointer;position:relative}.comment-align-wrap>span{font-size:19px;font-weight:800;padding:0 3px}.comment-align-wrap select{height:32px;width:20px;border:0;background:transparent;color:#555;cursor:pointer;opacity:.95}.comment-align-wrap:hover{background:#e9ecef}\n.comment-color-wrap{position:relative;display:inline-flex;flex:0 0 auto}.color-trigger{font-size:18px!important;border-bottom:3px solid #2563eb!important}.highlight-trigger{font-size:17px!important;color:#333!important;border-bottom:3px solid #ffd966!important}\n.comment-palette{display:none;position:absolute;top:38px;left:0;z-index:50;background:#fff;border:1px solid #cfd3d8;border-radius:5px;padding:7px;box-shadow:0 6px 18px rgba(0,0,0,.16);width:176px;grid-template-columns:repeat(6,22px);gap:6px}\n.comment-palette.open{display:grid!important}.comment-palette-swatch{width:22px;height:22px;border-radius:3px;border:1px solid #bfc4ca;background:var(--swatch);cursor:pointer;padding:0}.comment-palette-swatch:hover{outline:2px solid #7a8794;outline-offset:1px}.text-swatch{border-radius:50%!important}\n.comment-editor{min-height:210px!important;padding:12px 13px!important;outline:none!important;line-height:1.6!important;color:#252525!important;font-weight:450!important;font-size:15px!important;background:#fff!important;resize:vertical!important;overflow:auto!important}.comment-editor:empty::before{content:attr(data-placeholder);color:#a2a5aa;font-weight:400}.comment-editor strong,.comment-editor b{font-weight:800}.comment-editor u{text-decoration:underline}.comment-editor s,.comment-editor strike,.comment-editor del{text-decoration:line-through}.comment-editor img{max-width:100%;height:auto;border-radius:3px}.comment-editor table,.manual-comment-text table{border-collapse:collapse;width:auto;min-width:240px;margin:8px 0}.comment-editor th,.comment-editor td,.manual-comment-text th,.manual-comment-text td{border:1px solid #bfc3c8;padding:6px 9px;min-width:55px}.comment-editor th,.manual-comment-text th{background:#f1f3f5;font-weight:800}.comment-editor hr,.manual-comment-text hr{border:0;border-top:1px solid #9ea4aa;margin:14px 0}.comment-editor ul,.comment-editor ol{padding-left:28px}.comment-editor blockquote{border-left:3px solid #b7bdc5;margin:8px 0;padding-left:10px;color:#626a73}\n.comment-editor-status{height:27px;border-top:1px solid #e1e3e6;display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:0 9px;font-size:11px;color:#555b62;background:#fafafa}.comment-resize-handle{margin-right:auto;color:#7d858d}.comment-actions{padding:10px 0!important}.manual-comment .comment-actions .btn.primary{padding:9px 15px!important}.manual-comment-item{border-radius:5px!important}.manual-comment-text{font-size:14px!important}.manual-comment-text[contenteditable="true"]{outline:2px solid #b9c8e9;outline-offset:2px;padding:5px;min-height:40px}.comment-fullscreen{position:fixed!important;inset:12px!important;z-index:9999!important;max-width:none!important;margin:0!important;box-shadow:0 14px 40px rgba(0,0,0,.25)!important}.comment-fullscreen .comment-editor{min-height:calc(100vh - 170px)!important}.comment-fullscreen-open{overflow:hidden!important}\n@media(max-width:900px){.comment-toolbar-editor{overflow-x:auto!important}.comment-tool{flex-basis:32px!important;width:32px!important}.comment-palette{position:fixed!important}.manual-comment{margin-left:0!important;margin-right:0!important}}
+</style>
 <style id="final-ux-adjustments">
 /* Comentários: edição e grifo */
 .manual-comment-text.editing{outline:2px solid #b9c8e9;outline-offset:3px;border-radius:5px;background:#fff;min-height:28px;padding:4px;cursor:text}
@@ -1284,21 +1288,100 @@ function getComments(qid){
 }
 function sanitizeCommentHtml(input){
   const box=document.createElement('div'); box.innerHTML=String(input||'');
-  box.querySelectorAll('script,style,iframe,object,embed,form').forEach(el=>el.remove());
+  box.querySelectorAll('script,style,iframe,object,embed,form,meta,link').forEach(el=>el.remove());
+  const allowedTags=['div','p','br','strong','b','em','i','u','s','strike','del','mark','span','font','ul','ol','li','blockquote','table','thead','tbody','tr','th','td','img','hr'];
+  const allowedStyles=['color','background-color','font-weight','font-style','text-decoration','text-align','vertical-align','width','height'];
   box.querySelectorAll('*').forEach(el=>{
     [...el.attributes].forEach(a=>{
-      if(/^on/i.test(a.name)||a.name==='style'&&/url\s*\(|expression\s*\(/i.test(a.value)) el.removeAttribute(a.name);
+      if(/^on/i.test(a.name)||a.name==='contenteditable'||a.name==='data-placeholder') el.removeAttribute(a.name);
+      if(a.name==='style'){
+        const safe=[];
+        a.value.split(';').forEach(part=>{
+          const idx=part.indexOf(':'); if(idx<0)return;
+          const prop=part.slice(0,idx).trim().toLowerCase();
+          const val=part.slice(idx+1).trim();
+          if(allowedStyles.includes(prop) && !/url\s*\(|expression\s*\(|javascript:/i.test(val)) safe.push(prop+':'+val);
+        });
+        if(safe.length) el.setAttribute('style',safe.join(';'));
+        else el.removeAttribute('style');
+      }
+      if(['src','href','action','formaction'].includes(a.name) && !/^(https?:|data:image\/)/i.test(a.value||'')) el.removeAttribute(a.name);
     });
     const tag=el.tagName.toLowerCase();
-    if(!['div','p','br','strong','b','em','i','u','mark','span'].includes(tag)){
-      const frag=document.createDocumentFragment(); while(el.firstChild)frag.appendChild(el.firstChild); el.replaceWith(frag);
+    if(!allowedTags.includes(tag)){
+      const frag=document.createDocumentFragment(); while(el.firstChild)frag.appendChild(el.firstChild); el.replaceWith(frag); return;
+    }
+    if(tag==='font'){
+      const color=el.getAttribute('color');
+      if(color && !el.style.color) el.style.color=color;
+      el.removeAttribute('color');
     }
     if(tag==='mark'){
       const c=el.getAttribute('data-color')||el.style.backgroundColor||'#fff29a';
-      el.setAttribute('data-color',c); el.style.backgroundColor=c; el.style.setProperty('--comment-marker',c); el.style.color='#252525';
+      el.setAttribute('data-color',c); el.style.backgroundColor=c; el.style.setProperty('--comment-marker',c);
+    }
+    if(tag==='img'){
+      el.setAttribute('loading','lazy'); el.removeAttribute('srcset'); el.removeAttribute('onerror');
     }
   });
   return box.innerHTML;
+}
+function commentEditor(){return document.getElementById('manualCommentEditor');}
+let commentSavedRange=null;
+function saveCommentSelection(){
+  const editor=commentEditor(),sel=window.getSelection();
+  if(!editor||!sel||!sel.rangeCount)return;
+  const range=sel.getRangeAt(0);
+  if(editor.contains(range.commonAncestorContainer)) commentSavedRange=range.cloneRange();
+}
+function restoreCommentSelection(){
+  const editor=commentEditor();
+  if(!editor||!commentSavedRange)return false;
+  try{const sel=window.getSelection();sel.removeAllRanges();sel.addRange(commentSavedRange);editor.focus();return true;}catch(e){return false;}
+}
+function commentCommand(command,value=null){
+  const editor=commentEditor(); if(!editor)return;
+  restoreCommentSelection();
+  try{document.execCommand(command,false,value||null);}catch(e){}
+  saveCommentSelection(); updateCommentStats(); editor.focus();
+}
+function setCommentTextColor(color){commentCommand('foreColor',color);}
+function setCommentHighlightColor(color){commentCommand('hiliteColor',color);}
+function clearCommentFormatting(){commentCommand('removeFormat');}
+function setCommentAlignment(value){
+  const map={left:'justifyLeft',center:'justifyCenter',right:'justifyRight',justify:'justifyFull'};
+  commentCommand(map[value]||'justifyLeft');
+}
+function insertCommentImage(){
+  const url=prompt('Cole o endereço da imagem:'); if(!url)return;
+  if(!/^https?:\/\//i.test(url)){toast('Use um endereço de imagem iniciado por http:// ou https://.');return;}
+  restoreCommentSelection(); document.execCommand('insertImage',false,url); saveCommentSelection(); updateCommentStats();
+}
+function insertCommentTable(){
+  const rows=Math.max(1,Math.min(10,parseInt(prompt('Quantas linhas?','2'),10)||2));
+  const cols=Math.max(1,Math.min(8,parseInt(prompt('Quantas colunas?','2'),10)||2));
+  const table=document.createElement('table'); table.className='comment-user-table';
+  for(let r=0;r<rows;r++){
+    const tr=document.createElement('tr');
+    for(let c=0;c<cols;c++){const cell=document.createElement(r===0?'th':'td');cell.innerHTML='&nbsp;';tr.appendChild(cell);}
+    table.appendChild(tr);
+  }
+  restoreCommentSelection(); const sel=window.getSelection(); if(!sel||!sel.rangeCount)return;
+  const range=sel.getRangeAt(0); range.deleteContents(); range.insertNode(table); range.setStartAfter(table); range.collapse(true); sel.removeAllRanges(); sel.addRange(range); saveCommentSelection(); updateCommentStats();
+}
+function insertCommentRule(){restoreCommentSelection();document.execCommand('insertHorizontalRule',false,null);saveCommentSelection();updateCommentStats();}
+function toggleCommentFullscreen(){
+  const panel=document.getElementById('manualCommentPanel'); if(!panel)return;
+  panel.classList.toggle('comment-fullscreen');
+  document.body.classList.toggle('comment-fullscreen-open',panel.classList.contains('comment-fullscreen'));
+}
+function updateCommentStats(){
+  const editor=commentEditor(); if(!editor)return;
+  const text=(editor.innerText||'').replace(/\u00a0/g,' ');
+  const words=text.trim()?text.trim().split(/\s+/).length:0;
+  const chars=text.length;
+  const w=document.getElementById('commentWordCount'),c=document.getElementById('commentCharCount');
+  if(w)w.textContent='Palavras: '+words; if(c)c.textContent='Caracteres: '+chars;
 }
 function commentEditorText(el){return (el?.innerText||'').replace(/\u00a0/g,' ').trim();}
 function saveManualComment(qid){
@@ -1448,43 +1531,66 @@ function organizeSavedComment(qid,cid){
 }
 function manualCommentsHtml(qid){
   const cs=getComments(qid);
-  const colors=[
-    ['#fff29a','Amarelo'],['#ffe066','Amarelo forte'],
-    ['#ffb3b3','Vermelho claro'],['#ff6b6b','Vermelho forte'],
-    ['#b9dcff','Azul claro'],['#5aa9ff','Azul forte'],
-    ['#baf2c2','Verde claro'],['#55c96b','Verde forte'],
-    ['#ffd39a','Laranja claro'],['#ff9f43','Laranja forte'],
-    ['#d9b8ff','Roxo claro'],['#9b59ff','Roxo forte']
+  const highlights=[
+    ['#fff29a','Amarelo'],['#ffd966','Amarelo forte'],['#ffb8b8','Vermelho claro'],['#ff6b6b','Vermelho'],
+    ['#b9dcff','Azul claro'],['#5aa9ff','Azul'],['#bfecc7','Verde claro'],['#55c96b','Verde'],
+    ['#ffd39a','Laranja'],['#ff9f43','Laranja forte'],['#d9b8ff','Roxo'],['#9b59ff','Roxo forte']
   ];
-  const palette=colors.map((c,i)=>`<button type="button" class="comment-color-btn ${i===0?'active':''}" style="--marker:${c[0]}" title="${c[1]}" aria-label="${c[1]}" onclick="setNewCommentColor('${c[0]}',this)"></button>`).join('');
+  const textColors=[['#111827','Preto'],['#dc2626','Vermelho'],['#2563eb','Azul'],['#16a34a','Verde'],['#d97706','Laranja'],['#7c3aed','Roxo'],['#db2777','Rosa'],['#6b7280','Cinza']];
+  const highlightPalette=highlights.map(c=>`<button type="button" class="comment-palette-swatch" style="--swatch:${c[0]}" title="Realce ${c[1]}" aria-label="Realce ${c[1]}" onmousedown="event.preventDefault();setCommentHighlightColor('${c[0]}')"></button>`).join('');
+  const textPalette=textColors.map(c=>`<button type="button" class="comment-palette-swatch text-swatch" style="--swatch:${c[0]}" title="Texto ${c[1]}" aria-label="Texto ${c[1]}" onmousedown="event.preventDefault();setCommentTextColor('${c[0]}')"></button>`).join('');
+  const tool=(icon,title,cmd)=>`<button type="button" class="comment-tool" title="${title}" aria-label="${title}" onmousedown="event.preventDefault();${cmd}">${icon}</button>`;
   return `<section id="manualCommentPanel" class="manual-comment">
     <div class="manual-comment-head">
       <div><div class="manual-comment-title">Meu comentário</div>
-      <div style="font-size:12px;color:var(--muted)">Anote uma explicação, dúvida ou lembrete para esta questão.</div></div>
+      <div style="font-size:12px;color:var(--muted)">Escreva e formate seu comentário como quiser.</div></div>
     </div>
     <div class="comment-composer">
-      <div class="comment-toolbar"><span class="comment-toolbar-label">Marca-texto:</span>${palette}<select id="commentToneSelect" class="comment-tone" title="Intensidade da marcação"><option value="strong">Tom forte</option><option value="light">Tom claro</option></select></div>
-      <div id="manualCommentEditor" class="comment-editor" contenteditable="true" data-placeholder="Escreva seu comentário..."></div>
-      <div style="font-size:11px;color:#7b8493;margin-top:6px">Selecione um trecho no texto e clique em uma cor para aplicar o destaque. As marcações ficam salvas e podem ser editadas depois.</div>
+      <div class="comment-toolbar comment-toolbar-editor">
+        ${tool('↶','Desfazer','commentCommand(\'undo\')')}${tool('↷','Refazer','commentCommand(\'redo\')')}
+        <span class="comment-toolbar-sep"></span>
+        ${tool('<b>B</b>','Negrito','commentCommand(\'bold\')')}${tool('<i>I</i>','Itálico','commentCommand(\'italic\')')}${tool('<u>U</u>','Sublinhado','commentCommand(\'underline\')')}${tool('<s>S</s>','Tachado','commentCommand(\'strikeThrough\')')}
+        ${tool('⌫','Limpar formatação','clearCommentFormatting()')}
+        <span class="comment-toolbar-sep"></span>
+        <label class="comment-align-wrap" title="Alinhamento"><span>≡</span><select onchange="setCommentAlignment(this.value);this.blur()"><option value="left">Esquerda</option><option value="center">Centro</option><option value="right">Direita</option><option value="justify">Justificado</option></select></label>
+        <span class="comment-color-wrap"><button type="button" class="comment-tool color-trigger" title="Cor do texto" onmousedown="event.preventDefault();toggleCommentPalette('textColorPalette')">A</button><span id="textColorPalette" class="comment-palette">${textPalette}</span></span>
+        <span class="comment-color-wrap"><button type="button" class="comment-tool highlight-trigger" title="Cor de realce" onmousedown="event.preventDefault();toggleCommentPalette('highlightPalette')">▰</button><span id="highlightPalette" class="comment-palette">${highlightPalette}</span></span>
+        ${tool('•≡','Lista com marcadores','commentCommand(\'insertUnorderedList\')')}${tool('1≡','Lista numerada','commentCommand(\'insertOrderedList\')')}
+        ${tool('⇤','Diminuir recuo','commentCommand(\'outdent\')')}${tool('⇥','Aumentar recuo','commentCommand(\'indent\')')}
+        ${tool('▧','Inserir imagem','insertCommentImage()')}${tool('▦','Inserir tabela','insertCommentTable()')}${tool('―','Linha horizontal','insertCommentRule()')}${tool('⛶','Tela cheia','toggleCommentFullscreen()')}
+      </div>
+      <div id="manualCommentEditor" class="comment-editor" contenteditable="true" data-placeholder="Escreva aqui seu comentário" spellcheck="true"></div>
+      <div class="comment-editor-status"><span class="comment-resize-handle">◫</span><span id="commentWordCount">Palavras: 0</span><span id="commentCharCount">Caracteres: 0</span></div>
     </div>
     <div class="comment-actions">
-      <button class="btn secondary" type="button" onclick="organizeNewComment()">✨ Organizar e grifar</button>
-      <button class="btn primary" onclick="saveManualComment(${qid})">Salvar comentário</button>
+      <button class="btn primary" type="button" onclick="saveManualComment(${qid})">Salvar comentário</button>
     </div>
-    ${cs.length?`<div class="manual-comment-list">${cs.map(c=>`<div class="manual-comment-item" data-comment-id="${c.id}"><div class="manual-comment-text">${c.html||esc(c.text).replace(/\n/g,'<br><br>')}</div><div style="font-size:11px;color:var(--muted);margin-top:7px">${new Date(c.at).toLocaleString('pt-BR')}</div><div class="comment-actions"><button onclick="organizeSavedComment(${qid},${c.id})">✨ Organizar</button><button onclick="editManualComment(${qid},${c.id})">✎ Editar</button><button onclick="deleteManualComment(${qid},${c.id})">Excluir</button></div></div>`).join('')}</div>`:''}
+    ${cs.length?`<div class="manual-comment-list">${cs.map(c=>`<div class="manual-comment-item" data-comment-id="${c.id}"><div class="manual-comment-text">${c.html||esc(c.text).replace(/\n/g,'<br><br>')}</div><div style="font-size:11px;color:var(--muted);margin-top:7px">${new Date(c.at).toLocaleString('pt-BR')}</div><div class="comment-actions"><button onclick="editManualComment(${qid},${c.id})">✎ Editar</button><button onclick="deleteManualComment(${qid},${c.id})">Excluir</button></div></div>`).join('')}</div>`:''}
   </section>`;
 }
-function setNewCommentColor(color,btn){
-  const editor=document.getElementById('manualCommentEditor'); if(!editor)return;
-  editor.focus();
-  const tone=document.getElementById('commentToneSelect')?.value||'strong';
-  let final=color;
-  if(tone==='light'){
-    const map={'#fff29a':'#fff8c7','#ffe066':'#fff0a8','#ffb3b3':'#ffd6d6','#ff6b6b':'#ffb8b8','#b9dcff':'#dceeff','#5aa9ff':'#b7d8ff','#baf2c2':'#dff7e2','#55c96b':'#bfecc7','#ffd39a':'#ffe7c2','#ff9f43':'#ffc98f','#d9b8ff':'#ecd9ff','#9b59ff':'#cfb0ff'};
-    final=map[color]||color;
-  }
-  if(applyCommentHighlight(editor,final)){document.querySelectorAll('.comment-color-btn').forEach(x=>x.classList.remove('active'));btn?.classList.add('active');}
+function toggleCommentPalette(id){
+  document.querySelectorAll('.comment-palette.open').forEach(x=>{if(x.id!==id)x.classList.remove('open')});
+  document.getElementById(id)?.classList.toggle('open');
 }
+function closeCommentPalettes(){document.querySelectorAll('.comment-palette.open').forEach(x=>x.classList.remove('open'));}
+function setNewCommentColor(color,btn){setCommentHighlightColor(color);btn?.classList.add('active');}
+
+function initCommentEditor(){
+  const editor=commentEditor(); if(!editor)return;
+  ['mouseup','keyup','input','focus'].forEach(ev=>editor.addEventListener(ev,()=>{saveCommentSelection();updateCommentStats();}));
+  editor.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();}
+  });
+  document.addEventListener('click',e=>{if(!e.target.closest('.comment-color-wrap'))closeCommentPalettes();},{once:true});
+  updateCommentStats();
+}
+
+(function(){
+  let scheduled=false;
+  const boot=()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;initCommentEditor();});};
+  new MutationObserver(boot).observe(document.body,{childList:true,subtree:true});
+  document.addEventListener('selectionchange',saveCommentSelection);
+})();
 function makeQuestionQueue(arr){
   const key=arr.map(q=>q.id).join(',')+'|'+questionMixMode;
   if(key===questionQueueKey && questionQueue.length===arr.length) return;
