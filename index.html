@@ -1038,37 +1038,53 @@ body.filter-mode .filter-page-clean{margin:0!important;width:100%!important;min-
 .nav button:hover .nav-cartoon-icon{opacity:.68}
 </style>
 
-<style id="comment-editor-final-v2">
+<style id="comment-editor-final-v3">
 .manual-comment{max-width:920px!important;margin:18px auto!important;background:#fff!important;border:1px solid #cfd2d6!important;border-radius:0!important;padding:0!important;overflow:visible!important;box-shadow:none!important}
 .manual-comment-head{display:none!important}
-.comment-composer{border:0!important;border-radius:0!important;background:#fff!important;padding:0!important;overflow:visible!important}
-.comment-toolbar-editor{display:flex!important;align-items:center!important;flex-wrap:nowrap!important;gap:0!important;overflow-x:auto!important;overflow-y:visible!important;white-space:nowrap!important;margin:0!important;padding:5px 8px!important;min-height:43px!important;border:0!important;border-bottom:1px solid #d1d3d6!important;background:#fafafa!important}
-.comment-tool{width:35px!important;min-width:35px!important;height:34px!important;flex:0 0 35px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:#252525!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-family:Arial,sans-serif!important;font-size:18px!important;font-weight:700!important;cursor:pointer!important}
-.comment-tool:hover{background:#ededed!important}
+.comment-composer{border:0!important;background:#fff!important;padding:0!important;overflow:visible!important}
+.comment-toolbar-editor{display:flex!important;align-items:center!important;flex-wrap:nowrap!important;gap:0!important;overflow-x:auto!important;overflow-y:visible!important;white-space:nowrap!important;margin:0!important;padding:5px 8px!important;min-height:44px!important;border:0!important;border-bottom:1px solid #cfd2d6!important;background:#fafafa!important}
+.comment-tool{width:35px!important;min-width:35px!important;height:34px!important;flex:0 0 35px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:#292d31!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-family:Arial,sans-serif!important;font-size:18px!important;font-weight:700!important;cursor:pointer!important}
+.comment-tool:hover{background:#e8eaed!important}
 .comment-toolbar-sep{width:1px!important;min-width:1px!important;height:27px!important;background:#dedfe1!important;margin:0 5px!important}
-.comment-align-wrap{height:34px!important;min-width:40px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;border-radius:0!important;position:relative!important;overflow:hidden!important}
-.comment-align-wrap>span{font-size:22px!important;line-height:1!important;color:#252525!important;padding:0!important}
-.comment-align-wrap select{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:0!important;cursor:pointer!important}
-.comment-color-wrap{position:relative!important;display:inline-flex!important;flex:0 0 35px!important;height:34px!important;overflow:visible!important}
-.color-trigger{font-size:18px!important;border-bottom:4px solid #2563eb!important}
-.highlight-trigger{font-size:18px!important;color:#252525!important;border-bottom:4px solid #ffd84d!important}
-.comment-palette{display:none!important;position:absolute!important;top:39px!important;left:0!important;z-index:10000!important;width:194px!important;grid-template-columns:repeat(6,24px)!important;gap:7px!important;padding:8px!important;background:#fff!important;border:1px solid #c9cdd2!important;border-radius:3px!important;box-shadow:0 8px 22px rgba(0,0,0,.18)!important}
+.comment-align-wrap,.comment-color-wrap{position:relative!important;display:inline-flex!important;flex:0 0 35px!important;height:34px!important;overflow:visible!important}
+.comment-align-button{font-size:16px!important;letter-spacing:-2px!important}
+.color-trigger{font-family:Georgia,serif!important;font-size:20px!important;border-bottom:4px solid #2563eb!important}
+.highlight-trigger{font-family:Georgia,serif!important;font-size:20px!important;border-bottom:4px solid #ffd84d!important}
+.highlight-icon{background:linear-gradient(transparent 56%,#ffd84d 56%,#ffd84d 92%,transparent 92%);padding:0 1px}
+.comment-palette{display:none!important;position:absolute!important;top:39px!important;left:0!important;z-index:100000!important;background:#fff!important;border:1px solid #c8ccd1!important;border-radius:4px!important;padding:8px!important;box-shadow:0 8px 24px rgba(0,0,0,.18)!important}
 .comment-palette.open{display:grid!important}
-.comment-palette-swatch{width:24px!important;height:24px!important;padding:0!important;border:1px solid #c4c7cb!important;border-radius:2px!important;background:var(--swatch)!important;cursor:pointer!important}
+.comment-color-palette{width:194px!important;grid-template-columns:repeat(6,24px)!important;gap:7px!important}
+.comment-palette-swatch{width:24px!important;height:24px!important;padding:0!important;border:1px solid #bfc4c9!important;border-radius:3px!important;background:var(--swatch)!important;cursor:pointer!important}
 .comment-palette-swatch:hover{outline:2px solid #555!important;outline-offset:1px!important}
 .comment-palette .text-swatch{border-radius:50%!important}
-.comment-editor{display:block!important;min-height:210px!important;height:210px!important;box-sizing:border-box!important;padding:12px 13px!important;outline:none!important;overflow:auto!important;resize:vertical!important;border:0!important;background:#fff!important;color:#252525!important;font-size:15px!important;font-weight:400!important;line-height:1.6!important;text-align:left!important}
+.comment-align-palette{width:150px!important;grid-template-columns:1fr!important;gap:2px!important}
+.comment-palette-action{height:31px!important;border:0!important;background:#fff!important;text-align:left!important;padding:0 8px!important;font-size:12px!important;color:#30343a!important;cursor:pointer!important;border-radius:3px!important;display:flex!important;align-items:center!important;gap:8px!important}
+.comment-palette-action:hover{background:#edf0f2!important}
+.comment-editor{display:block!important;min-height:260px!important;height:260px!important;box-sizing:border-box!important;padding:12px 13px!important;outline:none!important;overflow:auto!important;resize:vertical!important;border:0!important;background:#fff!important;color:#252525!important;font-size:15px!important;font-weight:400!important;line-height:1.6!important;text-align:left!important}
 .comment-editor:empty::before{content:attr(data-placeholder)!important;color:#a4a6aa!important;font-weight:400!important}
 .comment-editor strong,.comment-editor b{font-weight:800!important}.comment-editor em,.comment-editor i{font-style:italic!important}.comment-editor u{text-decoration:underline!important}.comment-editor s,.comment-editor strike,.comment-editor del{text-decoration:line-through!important}
-.comment-editor font[color]{color:inherit}
+.comment-editor span[style*="color"],.manual-comment-text span[style*="color"]{color:inherit}
+.comment-editor mark,.manual-comment-text mark{padding:0 .05em!important;border-radius:1px!important}
+.comment-editor img{max-width:100%!important;height:auto!important;border-radius:3px!important}
+.comment-editor table,.manual-comment-text table{border-collapse:collapse!important;width:auto!important;min-width:240px!important;margin:8px 0!important}
+.comment-editor th,.comment-editor td,.manual-comment-text th,.manual-comment-text td{border:1px solid #bfc3c8!important;padding:6px 9px!important;min-width:55px!important}
+.comment-editor th,.manual-comment-text th{background:#f1f3f5!important;font-weight:800!important}
+.comment-editor hr,.manual-comment-text hr{border:0!important;border-top:1px solid #9ea4aa!important;margin:14px 0!important}
+.comment-editor ul,.comment-editor ol{padding-left:28px!important}
+.comment-editor blockquote{border-left:3px solid #b7bdc5!important;margin:8px 0!important;padding-left:10px!important;color:#626a73!important}
 .comment-editor-status{height:27px!important;box-sizing:border-box!important;border-top:1px solid #dedfe1!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:14px!important;padding:0 8px!important;background:#fafafa!important;color:#555!important;font-size:11px!important}
 .comment-resize-handle{margin-right:auto!important;color:#777!important}
-.manual-comment .comment-actions{padding:10px 0!important}
-.manual-comment .comment-actions .btn.primary{padding:9px 18px!important}
-.manual-comment-item{background:#fff!important;color:#333!important;border:1px solid #d7d9dc!important;border-radius:4px!important}
+.manual-comment .comment-save-row{padding:12px 0!important}
+.manual-comment .comment-save-row .btn.primary{padding:9px 18px!important}
+.manual-comment-list{display:flex!important;flex-direction:column!important;gap:10px!important;margin-top:12px!important}
+.manual-comment-item{background:#fff!important;color:#333!important;border:1px solid #d7d9dc!important;border-radius:4px!important;padding:12px 14px!important}
 .manual-comment-text{font-size:14px!important;line-height:1.65!important;white-space:normal!important}
-.manual-comment-text mark{padding:0 .05em!important;border-radius:1px!important}
-@media(max-width:900px){.comment-toolbar-editor{overflow-x:auto!important}.comment-editor{min-height:180px!important;height:180px!important}.comment-palette{position:fixed!important;top:auto!important;bottom:70px!important;left:10px!important}}
+.comment-date{font-size:11px!important;color:var(--muted)!important;margin-top:7px!important}
+.comment-item-actions{display:flex!important;gap:7px!important;flex-wrap:wrap!important;padding:8px 0 0!important}
+.comment-fullscreen{position:fixed!important;inset:12px!important;z-index:99999!important;max-width:none!important;margin:0!important;box-shadow:0 14px 40px rgba(0,0,0,.25)!important}
+.comment-fullscreen .comment-editor{min-height:calc(100vh - 160px)!important;height:calc(100vh - 160px)!important}
+.comment-fullscreen-open{overflow:hidden!important}
+@media(max-width:900px){.comment-toolbar-editor{overflow-x:auto!important}.comment-editor{min-height:220px!important;height:220px!important}.comment-palette{position:fixed!important;top:auto!important;bottom:72px!important;left:10px!important}.comment-color-palette{width:194px!important}}
 </style>
 </head>
 <body>
@@ -1602,41 +1618,69 @@ function organizeSavedComment(qid,cid){
 function manualCommentsHtml(qid){
   const cs=getComments(qid);
   const highlights=[
-    ['#fff29a','Amarelo'],['#ffd966','Amarelo forte'],['#ffb8b8','Vermelho claro'],['#ff6b6b','Vermelho'],
-    ['#b9dcff','Azul claro'],['#5aa9ff','Azul'],['#bfecc7','Verde claro'],['#55c96b','Verde'],
-    ['#ffd39a','Laranja'],['#ff9f43','Laranja forte'],['#d9b8ff','Roxo'],['#9b59ff','Roxo forte']
+    ['#fff2a8','Amarelo'],['#ffd966','Amarelo forte'],['#ffc7ce','Vermelho claro'],['#ff8a8a','Vermelho'],
+    ['#cfe8ff','Azul claro'],['#72b7ff','Azul'],['#c9f3d0','Verde claro'],['#70d487','Verde'],
+    ['#ffe0b2','Laranja claro'],['#ffad66','Laranja'],['#e0c8ff','Roxo claro'],['#b68cff','Roxo']
   ];
-  const textColors=[['#111827','Preto'],['#dc2626','Vermelho'],['#2563eb','Azul'],['#16a34a','Verde'],['#d97706','Laranja'],['#7c3aed','Roxo'],['#db2777','Rosa'],['#6b7280','Cinza']];
-  const highlightPalette=highlights.map(c=>`<button type="button" class="comment-palette-swatch" style="--swatch:${c[0]}" title="Realce ${c[1]}" aria-label="Realce ${c[1]}" onmousedown="event.preventDefault();setCommentHighlightColor('${c[0]}')"></button>`).join('');
-  const textPalette=textColors.map(c=>`<button type="button" class="comment-palette-swatch text-swatch" style="--swatch:${c[0]}" title="Texto ${c[1]}" aria-label="Texto ${c[1]}" onmousedown="event.preventDefault();setCommentTextColor('${c[0]}')"></button>`).join('');
-  const tool=(icon,title,cmd)=>`<button type="button" class="comment-tool" title="${title}" aria-label="${title}" onmousedown="event.preventDefault();${cmd}">${icon}</button>`;
+  const textColors=[
+    ['#111827','Preto'],['#dc2626','Vermelho'],['#2563eb','Azul'],['#16a34a','Verde'],
+    ['#d97706','Laranja'],['#7c3aed','Roxo'],['#db2777','Rosa'],['#6b7280','Cinza']
+  ];
+  const swatches=(items,kind)=>items.map(c=>`<button type="button" class="comment-palette-swatch ${kind==='text'?'text-swatch':''}" style="--swatch:${c[0]}" title="${kind==='text'?'Cor do texto':'Realce'}: ${c[1]}" aria-label="${kind==='text'?'Cor do texto':'Realce'} ${c[1]}" onmousedown="event.preventDefault();${kind==='text'?`setCommentTextColor('${c[0]}')`:`setCommentHighlightColor('${c[0]}')`}"></button>`).join('');
+  const tool=(icon,title,cmd,extra='')=>`<button type="button" class="comment-tool ${extra}" title="${title}" aria-label="${title}" onmousedown="event.preventDefault();${cmd}">${icon}</button>`;
   return `<section id="manualCommentPanel" class="manual-comment">
     <div class="comment-composer">
-      <div class="comment-toolbar comment-toolbar-editor">
-        ${tool('↶','Desfazer','commentCommand(\'undo\')')}${tool('↷','Refazer','commentCommand(\'redo\')')}
+      <div class="comment-toolbar comment-toolbar-editor" role="toolbar" aria-label="Ferramentas de comentário">
+        ${tool('↶','Desfazer',"commentCommand('undo')")}
+        ${tool('↷','Refazer',"commentCommand('redo')")}
         <span class="comment-toolbar-sep"></span>
-        ${tool('<b>B</b>','Negrito','commentCommand(\'bold\')')}${tool('<i>I</i>','Itálico','commentCommand(\'italic\')')}${tool('<u>U</u>','Sublinhado','commentCommand(\'underline\')')}${tool('<s>S</s>','Tachado','commentCommand(\'strikeThrough\')')}
-        ${tool('⌫','Limpar formatação','clearCommentFormatting()')}
+        ${tool('<b>B</b>','Negrito',"commentCommand('bold')")}
+        ${tool('<i>I</i>','Itálico',"commentCommand('italic')")}
+        ${tool('<u>U</u>','Sublinhado',"commentCommand('underline')")}
+        ${tool('<s>S</s>','Tachado',"commentCommand('strikeThrough')")}
+        ${tool('▱','Limpar formatação','clearCommentFormatting()')}
         <span class="comment-toolbar-sep"></span>
-        <label class="comment-align-wrap" title="Alinhamento"><span>≡</span><select onchange="setCommentAlignment(this.value);this.blur()"><option value="left">Esquerda</option><option value="center">Centro</option><option value="right">Direita</option><option value="justify">Justificado</option></select></label>
-        <span class="comment-color-wrap"><button type="button" class="comment-tool color-trigger" title="Cor do texto" onmousedown="event.preventDefault();toggleCommentPalette('textColorPalette')">A</button><span id="textColorPalette" class="comment-palette">${textPalette}</span></span>
-        <span class="comment-color-wrap"><button type="button" class="comment-tool highlight-trigger" title="Cor de realce" onmousedown="event.preventDefault();toggleCommentPalette('highlightPalette')">▰</button><span id="highlightPalette" class="comment-palette">${highlightPalette}</span></span>
-        ${tool('•≡','Lista com marcadores','commentCommand(\'insertUnorderedList\')')}${tool('1≡','Lista numerada','commentCommand(\'insertOrderedList\')')}
-        ${tool('⇤','Diminuir recuo','commentCommand(\'outdent\')')}${tool('⇥','Aumentar recuo','commentCommand(\'indent\')')}
-        ${tool('▧','Inserir imagem','insertCommentImage()')}${tool('▦','Inserir tabela','insertCommentTable()')}${tool('―','Linha horizontal','insertCommentRule()')}${tool('⛶','Tela cheia','toggleCommentFullscreen()')}
+        <span class="comment-align-wrap" title="Alinhamento">
+          <button type="button" class="comment-tool comment-align-button" onmousedown="event.preventDefault();toggleCommentPalette('alignPalette')">≡⌄</button>
+          <span id="alignPalette" class="comment-palette comment-align-palette">
+            <button type="button" class="comment-palette-action" onmousedown="event.preventDefault();setCommentAlignment('left')">☰ <span>Esquerda</span></button>
+            <button type="button" class="comment-palette-action" onmousedown="event.preventDefault();setCommentAlignment('center')">≡ <span>Centro</span></button>
+            <button type="button" class="comment-palette-action" onmousedown="event.preventDefault();setCommentAlignment('right')">☷ <span>Direita</span></button>
+            <button type="button" class="comment-palette-action" onmousedown="event.preventDefault();setCommentAlignment('justify')">☰ <span>Justificado</span></button>
+          </span>
+        </span>
+        <span class="comment-color-wrap">
+          <button type="button" class="comment-tool color-trigger" title="Cor da letra" onmousedown="event.preventDefault();toggleCommentPalette('textColorPalette')">A</button>
+          <span id="textColorPalette" class="comment-palette comment-color-palette">${swatches(textColors,'text')}</span>
+        </span>
+        <span class="comment-color-wrap">
+          <button type="button" class="comment-tool highlight-trigger" title="Cor de fundo / marca-texto" onmousedown="event.preventDefault();toggleCommentPalette('highlightPalette')"><span class="highlight-icon">A</span></button>
+          <span id="highlightPalette" class="comment-palette comment-color-palette highlight-palette">${swatches(highlights,'highlight')}</span>
+        </span>
+        <span class="comment-toolbar-sep"></span>
+        ${tool('☷','Lista com marcadores',"commentCommand('insertUnorderedList')")}
+        ${tool('1☷','Lista numerada',"commentCommand('insertOrderedList')")}
+        ${tool('⇤','Diminuir recuo',"commentCommand('outdent')")}
+        ${tool('⇥','Aumentar recuo',"commentCommand('indent')")}
+        <span class="comment-toolbar-sep"></span>
+        ${tool('▧','Inserir imagem','insertCommentImage()')}
+        ${tool('▦','Inserir tabela','insertCommentTable()')}
+        ${tool('―','Linha horizontal','insertCommentRule()')}
+        ${tool('⛶','Tela cheia','toggleCommentFullscreen()')}
       </div>
       <div id="manualCommentEditor" class="comment-editor" contenteditable="true" data-placeholder="Escreva aqui seu comentário" spellcheck="true"></div>
       <div class="comment-editor-status"><span class="comment-resize-handle">◫</span><span id="commentWordCount">Palavras: 0</span><span id="commentCharCount">Caracteres: 0</span></div>
     </div>
-    <div class="comment-actions">
+    <div class="comment-actions comment-save-row">
       <button class="btn primary" type="button" onclick="saveManualComment(${qid})">Salvar comentário</button>
     </div>
-    ${cs.length?`<div class="manual-comment-list">${cs.map(c=>`<div class="manual-comment-item" data-comment-id="${c.id}"><div class="manual-comment-text">${c.html||esc(c.text).replace(/\n/g,'<br><br>')}</div><div style="font-size:11px;color:var(--muted);margin-top:7px">${new Date(c.at).toLocaleString('pt-BR')}</div><div class="comment-actions"><button onclick="editManualComment(${qid},${c.id})">✎ Editar</button><button onclick="deleteManualComment(${qid},${c.id})">Excluir</button></div></div>`).join('')}</div>`:''}
+    ${cs.length?`<div class="manual-comment-list">${cs.map(c=>`<div class="manual-comment-item" data-comment-id="${c.id}"><div class="manual-comment-text">${c.html||esc(c.text).replace(/\n/g,'<br><br>')}</div><div class="comment-date">${new Date(c.at).toLocaleString('pt-BR')}</div><div class="comment-actions comment-item-actions"><button onclick="editManualComment(${qid},${c.id})">✎ Editar</button><button onclick="deleteManualComment(${qid},${c.id})">Excluir</button></div></div>`).join('')}</div>`:''}
   </section>`;
 }
 function toggleCommentPalette(id){
-  document.querySelectorAll('.comment-palette.open').forEach(x=>{if(x.id!==id)x.classList.remove('open')});
-  document.getElementById(id)?.classList.toggle('open');
+  const target=document.getElementById(id); if(!target)return;
+  document.querySelectorAll('.comment-palette.open').forEach(x=>{if(x!==target)x.classList.remove('open');});
+  target.classList.toggle('open');
 }
 function closeCommentPalettes(){document.querySelectorAll('.comment-palette.open').forEach(x=>x.classList.remove('open'));}
 function setNewCommentColor(color,btn){setCommentHighlightColor(color);btn?.classList.add('active');}
@@ -2608,6 +2652,33 @@ body.filter-mode .nav button .nav-cartoon-icon svg{width:23px!important;height:2
 .performance-trigger #questionPerformanceRate{display:none!important;}
 .performance-trigger:hover{background:#f1f3f5!important;}
 </style>
+<script id="comment-editor-final-js-v3">
+(function(){
+  function execStyled(command,value){
+    const editor=commentEditor(); if(!editor)return;
+    restoreCommentSelection(); editor.focus();
+    try{document.execCommand('styleWithCSS',false,true);}catch(e){}
+    try{document.execCommand(command,false,value||null);}catch(e){}
+    saveCommentSelection(); updateCommentStats();
+  }
+  window.commentCommand=function(command,value=null){execStyled(command,value);};
+  window.setCommentTextColor=function(color){execStyled('foreColor',color);};
+  window.setCommentHighlightColor=function(color){
+    const editor=commentEditor(); if(!editor)return;
+    restoreCommentSelection(); editor.focus();
+    let ok=false;
+    try{document.execCommand('styleWithCSS',false,true);}catch(e){}
+    try{ok=document.execCommand('hiliteColor',false,color);}catch(e){}
+    if(!ok){try{ok=document.execCommand('backColor',false,color);}catch(e){}}
+    saveCommentSelection(); updateCommentStats(); closeCommentPalettes();
+  };
+  window.setCommentAlignment=function(value){
+    const map={left:'justifyLeft',center:'justifyCenter',right:'justifyRight',justify:'justifyFull'};
+    execStyled(map[value]||'justifyLeft'); closeCommentPalettes();
+  };
+  window.clearCommentFormatting=function(){execStyled('removeFormat');};
+})();
+</script>
 </body>
 </html>
 <style id="question-source-responsive-final">
