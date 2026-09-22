@@ -1962,7 +1962,7 @@ function questions(keepId=null){
  <div class="question-page-clean">
   <div class="question-header-clean">
    <div class="question-title-clean"><span class="question-link">↗</span><span class="session-position">${sessionPosition} de ${sessionTotal}</span><span class="question-topic-mini" title="Assunto da questão"><b>${esc(q.subject)}</b><span>›</span><b>${esc(q.topic)}</b>${q.sub&&q.sub!=='Geral'?`<span>›</span><b>${esc(q.sub)}</b>`:''}</span></div>
-   <div class="question-nav-clean">${questionFontControls()}<button id="performanceBtn" class="top-icon performance-trigger cartoon-action performance-action" title="Índice de acerto" aria-label="Abrir índice de acerto" onclick="this.focus()"><span class="cartoon-icon pie-cartoon" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#e5e8eb"/><path d="M20 6a14 14 0 0 1 12.1 21L20 20Z" fill="#8a949d"/><path d="M20 20V6a14 14 0 0 0 0 28 14 14 0 0 0 12.1-7L20 20Z" fill="#59636c"/><circle cx="20" cy="20" r="5.2" fill="#fff"/></svg></span></button><div class="question-score-mini" title="Acertos e erros nesta sessão"><span class="score-correct"><b>${sessionAnswerHistory.filter(h=>h.correct).length}</b><small>acertos</small></span><span class="score-divider"></span><span class="score-wrong"><b>${sessionAnswerHistory.filter(h=>!h.correct).length}</b><small>erros</small></span></div><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
+   <div class="question-nav-clean">${questionFontControls()}<button id="performanceBtn" class="top-icon performance-trigger cartoon-action performance-action" title="Índice de acerto" aria-label="Abrir índice de acerto" onclick="this.focus()"><span class="cartoon-icon pie-cartoon" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#e5e8eb"/><path d="M20 6a14 14 0 0 1 12.1 21L20 20Z" fill="#8a949d"/><path d="M20 20V6a14 14 0 0 0 0 28 14 14 0 0 0 12.1-7L20 20Z" fill="#59636c"/><circle cx="20" cy="20" r="5.2" fill="#fff"/></svg></span></button><button class="top-icon" title="Questão anterior" onclick="prevQ()">←</button><button class="top-icon" title="Próxima questão" onclick="nextQ()">→</button></div>
   </div>
   <section class="question-card-clean" style="--q-font-scale:${questionFontScale()}">
    <div class="question-source-clean ${q.bank||q.year||q.exam?'':'empty-source'}">
@@ -2945,6 +2945,71 @@ body.filter-mode .nav button .nav-cartoon-icon svg{width:23px!important;height:2
 .question-nav-clean .bottom-icon .cartoon-icon{flex:0 0 28px!important}
 </style>
 </body>
+
+<style id="gabriel-final-adjustments-v4">
+/* 1. Retira a caixa de acertos/erros adicionada na faixa superior. */
+.question-score-mini{display:none!important}
+
+/* 2. Mantém o assunto reduzido e separado, como solicitado. */
+.question-topic-mini{font-size:10px!important;padding:4px 8px!important;max-width:min(55vw,620px)!important}
+.question-topic-mini b{font-size:10px!important}
+
+/* 3. Comentários um pouco maiores e mais confortáveis. */
+.manual-comment{max-width:980px!important;margin:14px auto!important}
+.manual-comment-list{margin-top:10px!important;gap:10px!important}
+.manual-comment-item{padding:12px 14px!important;border-radius:7px!important}
+.manual-comment-text{font-size:15px!important;line-height:1.62!important}
+.manual-comment-empty{padding:14px 16px!important;font-size:13px!important}
+.new-comment-trigger{font-size:13px!important;padding:9px 13px!important;margin-top:13px!important}
+.comment-editor{min-height:125px!important;height:125px!important;font-size:15px!important;line-height:1.6!important}
+
+/* 4. Faixa inferior: ícones cerca de 50% maiores, soltos e sem moldura. */
+.question-bottom-clean{gap:12px!important}
+.question-bottom-clean .bottom-icon,
+.question-bottom-clean .flashcard-add-btn,
+.question-bottom-clean .comment-cartoon,
+.question-bottom-clean .remove-question-bottom{
+  width:51px!important;height:51px!important;min-width:51px!important;max-width:51px!important;
+  flex:0 0 51px!important;padding:0!important;margin:0!important;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+}
+.question-bottom-clean .bottom-icon:hover,
+.question-bottom-clean .flashcard-add-btn:hover,
+.question-bottom-clean .comment-cartoon:hover,
+.question-bottom-clean .remove-question-bottom:hover{background:transparent!important;box-shadow:none!important;transform:translateY(-1px)!important}
+.question-bottom-clean .bottom-icon{font-size:42px!important;line-height:1!important}
+.question-bottom-clean button[title="Próxima"]{font-size:42px!important;font-weight:900!important;color:#173f6d!important;-webkit-text-stroke:.45px #173f6d!important}
+.question-bottom-clean button[title="Anterior"]{font-size:42px!important;font-weight:900!important;color:#173f6d!important;-webkit-text-stroke:.35px #173f6d!important}
+.question-bottom-clean .mix-mode-bottom{font-size:35px!important}
+.question-bottom-clean .remove-question-bottom{font-size:31px!important}
+.question-bottom-clean .flashcard-add-btn .cartoon-icon,
+.question-bottom-clean .comment-cartoon .cartoon-icon{width:40px!important;height:40px!important;min-width:40px!important;flex:0 0 40px!important}
+.question-bottom-clean .flashcard-add-btn .cartoon-icon svg,
+.question-bottom-clean .comment-cartoon .cartoon-icon svg{width:40px!important;height:40px!important}
+
+/* 5. Mantém visível o contador de comentários sobre o ícone. */
+.question-bottom-clean .comment-cartoon{position:relative!important}
+.question-bottom-clean .comment-count-badge{
+  display:inline-flex!important;position:absolute!important;right:-1px!important;top:1px!important;transform:none!important;
+  min-width:17px!important;height:17px!important;padding:0 4px!important;
+  font-size:10px!important;line-height:17px!important;border-radius:9px!important;
+  background:#eef4fb!important;color:#3f8fe7!important;border:1px solid #d8e5f5!important;
+  align-items:center!important;justify-content:center!important;z-index:3!important;
+}
+.question-bottom-clean .comment-count-badge:empty{display:none!important}
+
+@media(max-width:800px){
+  .question-bottom-clean .bottom-icon,
+  .question-bottom-clean .flashcard-add-btn,
+  .question-bottom-clean .comment-cartoon,
+  .question-bottom-clean .remove-question-bottom{width:48px!important;height:48px!important;min-width:48px!important;max-width:48px!important;flex-basis:48px!important}
+  .question-bottom-clean .bottom-icon{font-size:39px!important}
+  .question-bottom-clean button[title="Próxima"],.question-bottom-clean button[title="Anterior"]{font-size:39px!important}
+  .question-bottom-clean .flashcard-add-btn .cartoon-icon,.question-bottom-clean .comment-cartoon .cartoon-icon{width:38px!important;height:38px!important;min-width:38px!important}
+  .question-bottom-clean .flashcard-add-btn .cartoon-icon svg,.question-bottom-clean .comment-cartoon .cartoon-icon svg{width:38px!important;height:38px!important}
+}
+</style>
 </html>
 <style id="question-source-responsive-final">
 @media(max-width:800px){.question-card-clean{padding:0 18px 20px!important}.question-source-clean{margin:0 -18px 22px!important;padding:10px 18px!important}.question-page-spacer{height:380px!important}}
