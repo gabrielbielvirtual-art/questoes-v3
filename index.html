@@ -1105,6 +1105,89 @@ body.filter-mode .filter-page-clean{margin:0!important;width:100%!important;min-
   .comment-toolbar-editor{overscroll-behavior-x:contain!important;}
 }
 </style>
+
+<style id="gabriel-icon-comment-adjustments-v1">
+/* AJUSTE PONTUAL — não altera layout, navegação ou funcionamento do site. */
+
+/* 1) Comentários: três novos comandos de formatação */
+.comment-toolbar-editor .comment-format-btn{
+  width:32px!important;height:30px!important;min-width:32px!important;
+  padding:0!important;border:0!important;border-radius:5px!important;
+  background:transparent!important;color:#34383d!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  font-size:17px!important;line-height:1!important;cursor:pointer!important;
+}
+.comment-toolbar-editor .comment-format-btn:hover{background:#eceff2!important}
+.comment-toolbar-editor .comment-format-btn b{font-weight:900!important}
+.comment-toolbar-editor .comment-format-btn i{font-style:italic!important;font-weight:800!important}
+.comment-toolbar-editor .comment-format-btn s{text-decoration-thickness:2px!important}
+
+/* 2) Todos os ícones das faixas de questão ficam soltos e com a mesma área visual. */
+.question-nav-clean{display:flex!important;align-items:center!important;gap:10px!important}
+.question-nav-clean .top-icon,
+.question-nav-clean .bottom-icon,
+.question-nav-clean .performance-trigger,
+.question-nav-clean .flashcard-cartoon,
+.question-nav-clean .comment-cartoon{
+  width:34px!important;height:34px!important;min-width:34px!important;
+  padding:0!important;margin:0!important;
+  border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  color:#68727c!important;line-height:1!important;
+}
+.question-nav-clean .top-icon:hover,
+.question-nav-clean .bottom-icon:hover,
+.question-nav-clean .performance-trigger:hover,
+.question-nav-clean .flashcard-cartoon:hover,
+.question-nav-clean .comment-cartoon:hover{
+  background:transparent!important;box-shadow:none!important;
+  transform:translateY(-1px)!important;
+}
+
+/* Índice, flashcard e comentário: exatamente o mesmo tamanho. */
+.question-nav-clean .performance-trigger .cartoon-icon,
+.question-nav-clean .flashcard-cartoon .cartoon-icon,
+.question-nav-clean .comment-cartoon .cartoon-icon{
+  width:26px!important;height:26px!important;min-width:26px!important;
+  flex:0 0 26px!important;
+}
+.question-nav-clean .performance-trigger .cartoon-icon svg,
+.question-nav-clean .flashcard-cartoon .cartoon-icon svg,
+.question-nav-clean .comment-cartoon .cartoon-icon svg{
+  width:26px!important;height:26px!important;
+}
+.question-nav-clean .comment-insert-only .comment-count-badge{display:none!important}
+
+/* Setas: somente a seta, mais grossa e visível. */
+.question-nav-clean button[title="Próxima questão"],
+.question-nav-clean button[title="Próxima"]{
+  color:#173f6d!important;
+  font-family:Arial,sans-serif!important;
+  font-size:29px!important;
+  font-weight:900!important;
+  -webkit-text-stroke:.35px #173f6d!important;
+}
+.question-nav-clean button[title="Questão anterior"],
+.question-nav-clean button[title="Anterior"]{
+  color:#173f6d!important;
+  font-family:Arial,sans-serif!important;
+  font-size:29px!important;
+  font-weight:900!important;
+  -webkit-text-stroke:.35px #173f6d!important;
+}
+.question-nav-clean button[title="Próxima questão"]:hover,
+.question-nav-clean button[title="Próxima" ]:hover,
+.question-nav-clean button[title="Questão anterior"]:hover,
+.question-nav-clean button[title="Anterior"]:hover{color:#173f6d!important}
+
+/* A faixa inferior usa a mesma proporção dos ícones superiores. */
+.q-actions .question-nav-clean .bottom-icon .cartoon-icon,
+.q-actions .question-nav-clean .top-icon .cartoon-icon{
+  width:26px!important;height:26px!important;min-width:26px!important;
+  flex:0 0 26px!important;
+}
+</style>
 </head>
 <body>
 <div class="app">
