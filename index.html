@@ -1649,6 +1649,10 @@ function manualCommentsHtml(qid){
   return `<section id="manualCommentPanel" class="manual-comment">
     <div class="comment-composer">
       <div class="comment-toolbar comment-toolbar-editor" role="toolbar" aria-label="Ferramentas de comentário">
+        <button type="button" class="comment-tool comment-format-btn" title="Negrito" aria-label="Negrito" onmousedown="event.preventDefault();commentCommand('bold')"><b>B</b></button>
+        <button type="button" class="comment-tool comment-format-btn comment-italic-btn" title="Itálico" aria-label="Itálico" onmousedown="event.preventDefault();commentCommand('italic')"><i>I</i></button>
+        <button type="button" class="comment-tool comment-format-btn comment-strike-btn" title="Tachado" aria-label="Tachado" onmousedown="event.preventDefault();commentCommand('strikeThrough')"><s>S</s></button>
+        <span class="comment-toolbar-sep minimal-format-sep" aria-hidden="true"></span>
         <span class="comment-color-wrap">
           <button type="button" class="comment-tool minimal-color-text" title="Cor da letra" aria-label="Cor da letra" onmousedown="event.preventDefault();toggleCommentPalette('textColorPalette')">A</button>
           <span id="textColorPalette" class="comment-palette comment-color-palette">${swatches(textColors,'text')}</span>
@@ -2698,6 +2702,69 @@ body.filter-mode .nav button .nav-cartoon-icon svg{width:23px!important;height:2
   window.clearCommentFormatting=function(){runCommand('removeFormat');};
 })();
 </script>
+
+<style id="icons-and-comment-format-final-v1">
+/* Comentários: três formatações básicas + ícones livres e proporcionais. */
+.comment-toolbar-editor .comment-format-btn{
+  width:32px!important;height:30px!important;min-width:32px!important;
+  font-size:17px!important;font-weight:800!important;
+  font-family:Arial,sans-serif!important;
+}
+.comment-toolbar-editor .comment-format-btn b{font-weight:900!important}
+.comment-toolbar-editor .comment-format-btn i{font-style:italic!important;font-weight:800!important}
+.comment-toolbar-editor .comment-format-btn s{text-decoration-thickness:2px!important}
+.comment-toolbar-editor .comment-format-btn:hover{background:#eceff2!important}
+
+/* Faixa de ações das questões: somente o desenho, sem caixa/círculo. */
+.question-nav-clean{display:flex!important;align-items:center!important;gap:12px!important}
+.question-nav-clean .top-icon,
+.question-nav-clean .bottom-icon{
+  width:36px!important;height:36px!important;min-width:36px!important;
+  padding:0!important;margin:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  color:#68727c!important;
+  line-height:1!important;
+  transition:transform .14s ease,color .14s ease,opacity .14s ease!important;
+}
+.question-nav-clean .top-icon:hover,
+.question-nav-clean .bottom-icon:hover{
+  background:transparent!important;box-shadow:none!important;transform:translateY(-1px)!important;
+}
+.question-nav-clean .performance-trigger{width:36px!important;min-width:36px!important;height:36px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:#68727c!important}
+.question-nav-clean .performance-trigger .cartoon-icon,
+.question-nav-clean .flashcard-cartoon .cartoon-icon,
+.question-nav-clean .comment-cartoon .cartoon-icon{
+  width:28px!important;height:28px!important;min-width:28px!important;
+}
+.question-nav-clean .performance-trigger .cartoon-icon svg,
+.question-nav-clean .flashcard-cartoon .cartoon-icon svg,
+.question-nav-clean .comment-cartoon .cartoon-icon svg{
+  width:28px!important;height:28px!important;
+}
+.question-nav-clean .performance-trigger #questionPerformanceRate{display:none!important}
+.question-nav-clean .flashcard-cartoon,
+.question-nav-clean .comment-cartoon{background:transparent!important;border:0!important;box-shadow:none!important;color:#68727c!important}
+.question-nav-clean .flashcard-cartoon:hover,
+.question-nav-clean .comment-cartoon:hover{background:transparent!important;box-shadow:none!important}
+.question-nav-clean .comment-insert-only .comment-count-badge{display:none!important}
+
+/* Setas: apenas a seta, mais espessa e visível; azul escuro para avançar. */
+.question-nav-clean button[title="Próxima questão"]{
+  color:#173f6d!important;font-size:32px!important;font-weight:900!important;
+  font-family:Arial,sans-serif!important;
+}
+.question-nav-clean button[title="Questão anterior"]{
+  color:#66717c!important;font-size:32px!important;font-weight:900!important;
+  font-family:Arial,sans-serif!important;
+}
+.question-nav-clean button[title="Próxima questão"]:hover,
+.question-nav-clean button[title="Questão anterior"]:hover{color:#173f6d!important}
+
+/* Mantém todos os ícones da faixa visualmente na mesma proporção. */
+.question-nav-clean .top-icon .cartoon-icon,
+.question-nav-clean .bottom-icon .cartoon-icon{flex:0 0 28px!important}
+</style>
 </body>
 </html>
 <style id="question-source-responsive-final">
