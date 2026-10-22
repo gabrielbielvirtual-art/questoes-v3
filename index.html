@@ -1885,9 +1885,15 @@ function manualCommentsHtml(qid){
     ['#16a34a','Verde'],['#d97706','Laranja'],['#7c3aed','Roxo'],['#db2777','Rosa']
   ];
   const swatches=(items,kind)=>items.map(c=>`<button type="button" class="comment-palette-swatch ${kind==='text'?'text-swatch':''}" style="--swatch:${c[0]}" title="${kind==='text'?'Cor da letra':'Marca-texto'}: ${c[1]}" aria-label="${kind==='text'?'Cor da letra':'Marca-texto'} ${c[1]}" onmousedown="event.preventDefault();${kind==='text'?`setCommentTextColor('${c[0]}')`:`setCommentHighlightColor('${c[0]}')`};closeCommentPalettes()"></button>`).join('');
-  const commentsHtml=cs.length
+  const importedQuestion=qs.find(x=>String(x.id)===String(qid));
+  const originalComment=String(importedQuestion?.explain||importedQuestion?.manualComment||'').trim();
+  const originalCommentHtml=originalComment
+    ? `<div class="manual-comment-list imported-comment-list"><div class="manual-comment-item imported-original-comment"><div class="manual-comment-text">${esc(originalComment).replace(/\n/g,'<br><br>')}</div><div class="imported-comment-label">Comentário original do arquivo</div></div></div>`
+    : '';
+  const savedCommentsHtml=cs.length
     ? `<div class="manual-comment-list">${cs.map(c=>`<div class="manual-comment-item" data-comment-id="${c.id}"><div class="manual-comment-text">${c.html||esc(c.text).replace(/\n/g,'<br><br>')}</div><div class="comment-actions comment-item-actions"><button onclick="editManualComment(${qid},${c.id})">✎ Editar</button><button onclick="deleteManualComment(${qid},${c.id})">Excluir</button></div></div>`).join('')}</div>`
-    : `<div class="manual-comment-empty">Ainda não há comentário cadastrado para esta questão.</div>`;
+    : (!originalComment ? `<div class="manual-comment-empty">Ainda não há comentário cadastrado para esta questão.</div>` : '');
+  const commentsHtml=originalCommentHtml+savedCommentsHtml;
   return `<section id="manualCommentPanel" class="manual-comment">
     <div class="manual-comment-existing">
       ${commentsHtml}
@@ -3293,4 +3299,8 @@ body.filter-mode .sidebar .nav button:first-child{min-width:112px!important}
 .manual-comment-item{padding:9px 11px!important;border-radius:6px!important}
 .manual-comment-text{font-size:13px!important;line-height:1.55!important}
 @media(max-width:900px){.comment-palette{position:fixed!important;top:auto!important;bottom:70px!important;left:10px!important}.comment-editor{min-height:100px!important;height:100px!important}}
+</style>
+<style id="imported-original-comments-v1">
+.imported-comment-label{margin-top:10px;font-size:11px;color:#64748b;font-weight:600}
+.imported-original-comment{border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:12px}
 </style>
